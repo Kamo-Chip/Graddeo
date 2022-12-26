@@ -1,0 +1,41 @@
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.header h1 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 2em;
+}
+
+.container h2 {
+    text-align: start;
+}
+.header img {
+    margin-right: 1rem;
+    border-radius: 50%;
+}
+
+.header h1 span {
+    font-family: Inter;
+    font-size: 1.2rem;
+}
+
+.benefitsContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 600;
+}
+
+.detailItemsContainer {
+    padding: 0 2em;
+}

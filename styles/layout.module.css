@@ -1,0 +1,16 @@
+.main {
+    width: 100%;
+    padding: 0 5em;
+}
+
+@media screen and (max-width: 850px){
+    .main {
+        padding: 0 2em;
+    }
+}
+
+@media screen and (max-width: 500px){
+    .main {
+        padding: 0 .5em;
+    }
+}

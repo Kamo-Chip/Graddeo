@@ -1,0 +1,190 @@
+.card {
+  background-color: #fff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 1px 7px #00000050;
+  display: flex;
+  flex-direction: row;
+  padding: 1em;
+  font-size: 1rem;
+  margin: 1em 0;
+  height: 160px;
+  min-width: 100%;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1em;
+}
+
+.logoContainer img {
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+
+}
+
+.detailsContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.detailsContainer span {
+  margin-bottom: 0.5em;
+}
+
+.details span {
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.benefitsContainer {
+  width: 60%;
+  margin-right: 1rem;
+}
+
+.benefitsContainer ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: 100%;
+}
+
+.benefitsContainer li {
+  text-align: center;
+  margin: 0.25em;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 20px;
+}
+
+.details {
+  font-size: 0.75rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 2rem;
+    width: 40%;
+}
+
+@media screen and (max-width: 768px) {
+  .logoContainer img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+    .card{
+        flex-direction: column;
+        height: 180px;
+        width: 100%;
+    }
+
+    .start {
+      width: 100%;
+      align-items: flex-start;
+    }
+
+    .benefitsContainer{
+        margin-top: 0;
+        margin-right: 0;
+        width: 100%;
+        max-height: 72px;
+        min-height: 36px;
+        overflow-y:scroll;
+    }
+
+    .details {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+
+    /* .details span {
+      white-space: nowrap;
+      overflow: hidden;
+      height: 36px;
+    } */
+    .logoContainer {
+        align-self: flex-start;
+    }
+
+    .start {
+        margin-right: 0;
+    }
+    .date{ 
+      position: absolute;
+      right: 50px;
+    }
+
+    .detailsContainer {
+      width: 100%;
+    }
+
+    .benefitsContainer::-webkit-scrollbar{
+      width: 5px;
+    }
+
+    .benefitsContainer::-webkit-scrollbar-track{
+      background-color: rgba(255, 255, 255, 0);
+    }
+
+    .benefitsContainer::-webkit-scrollbar-thumb{
+      border-radius: 10px;
+      background-color:rgba(125, 125, 125, 0.5)
+    }
+}
+
+@media screen and (max-width: 500px) {
+  .date {
+    right: 40px;
+  }
+
+  .card {
+    height: 220px;
+  }
+
+  .details {
+    width: 100%;
+    overflow-x: scroll;
+  }
+
+  .logoContainer img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .details::-webkit-scrollbar{
+    height: 5px;
+  }
+
+  .details::-webkit-scrollbar-track{
+    background-color: rgba(255, 255, 255, 0);
+  }
+
+  .details::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color:rgba(125, 125, 125, 0.5)
+
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .date {
+    right: 15px;
+  }
+}

@@ -1,0 +1,19 @@
+.experience {
+  margin-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+}
+
+.experience input {
+  width: 210px;
+}
+
+.experience button {
+    margin-top: 1em;
+    align-self: center;
+}
+
+.projects {
+  display: flex;
+  flex-direction: column;
+}
