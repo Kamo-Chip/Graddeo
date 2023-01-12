@@ -38,7 +38,16 @@ body {
   align-items: center;
 }
 
-h1, h2, h3 {
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+h1,
+h2,
+h3 {
   font-family: mabry;
   text-align: center;
   text-transform: capitalize;

@@ -1,5 +1,7 @@
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import utilityStyles from "../styles/utilities.module.css";
+import candidateListStyles from "../styles/candidateList.module.css";
+import { useState } from "react";
 
 const CustomSelect = ({
   name,
@@ -8,41 +10,48 @@ const CustomSelect = ({
   setStateTracker,
   onChangeHandler,
   options,
-  value
+  value,
 }) => {
+
+  const [showOptions, setShowOptions] = useState(false); 
+
   const displayDropDown = () => {
-    setStateTracker(true);
+    setShowOptions(true);
   };
 
   const hideDropDown = () => {
-    setStateTracker(false);
+    setShowOptions(false);
   };
 
   return (
     <div name={name} id={name}>
-      <div className={utilityStyles.filterOption}>
-        <div id={`${name}Title`} style={{whiteSpace: "nowrap"}}>{value ? value : title}</div>
+      <div
+        className={`${utilityStyles.filterOption} ${candidateListStyles.filterOption}`}
+      >
+        <div id={`${name}Title`} style={{ whiteSpace: "nowrap" }}>
+          {value ? value : title}
+        </div>
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
-          onClick={!stateTracker ? displayDropDown : hideDropDown}
+          onClick={!showOptions ? displayDropDown : hideDropDown}
         >
-          {!stateTracker ? (
+          {!showOptions ? (
             <RiArrowDropDownLine size="2rem" />
           ) : (
             <RiArrowDropUpLine size="2rem" />
           )}
         </div>
       </div>
-      {stateTracker ? (
+      {showOptions ? (
         <div
           className={utilityStyles.filterResults}
           onClick={(e) => {
             onChangeHandler(e);
-            setStateTracker(false);
+            setShowOptions(false);
           }}
         >
           {options.map((option, idx) => {

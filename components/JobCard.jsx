@@ -22,6 +22,7 @@ const JobCard = ({
   companyEmail,
   invoiceEmail,
   jobId,
+  salaryType,
 }) => {
   return (
     <div className={jobCardStyles.card} style={{ backgroundColor: background }}>
@@ -41,6 +42,7 @@ const JobCard = ({
               alt="company logo"
               height={60}
               width={60}
+              className={utilityStyles.profilePhoto}
             />
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -56,7 +58,7 @@ const JobCard = ({
             >
               {position ? position : "Position"}
             </span>
-            <span>{companyName? companyName: "Company"}</span>
+            <span>{companyName ? companyName : "Company"}</span>
           </div>
         </div>
 
@@ -66,16 +68,24 @@ const JobCard = ({
               className={utilityStyles.roundOut}
               style={{ marginRight: ".5em" }}
             >
-              📍{location? location : "Location"}
+              📍{location ? location : "Location"}
             </span>
             <span
               className={utilityStyles.roundOut}
               style={{ marginRight: ".5em" }}
             >
-              💵{salary? "R" + formatSalary(salary) : "Salary"}
-              {salaryIsNegotiable ? "*" : null}
+              💵{salary ? "R" + formatSalary(salary) : "Salary"}
+              {salaryType.includes("year")
+                ? "/yr"
+                : salaryType.includes("month")
+                ? "/mo"
+                : salaryType.includes("hour")
+                ? "/hr"
+                : null}
             </span>
-            <span className={utilityStyles.roundOut}>{jobType? jobType : "Job type"}</span>
+            <span className={utilityStyles.roundOut}>
+              {jobType ? jobType : "Job type"}
+            </span>
           </div>
         </div>
       </div>
@@ -83,11 +93,16 @@ const JobCard = ({
       <div className={jobCardStyles.benefitsContainer}>
         <ul className={jobCardStyles.benefitsList}>
           {benefits.map((attribute, idx) => {
-            return (
-              <li key={`jobAttribute${idx}`} className={utilityStyles.roundOut}>
-                {attribute}
-              </li>
-            );
+            if (idx < 6) {
+              return (
+                <li
+                  key={`jobAttribute${idx}`}
+                  className={utilityStyles.roundOut}
+                >
+                  {attribute}
+                </li>
+              );
+            }
           })}
         </ul>
       </div>

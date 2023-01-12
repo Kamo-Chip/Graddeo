@@ -1,17 +1,33 @@
 .container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .personalContainer {
-   display: flex;
-   flex-direction: row;
-   margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  margin-top: 2rem;
+  /* color: rgb(255, 27, 27); */
+}
+
+.contactContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.contactBtns {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-top: 1rem;
+  width: fit-content;
 }
 
 .bio {
-    width: 70%;
-    margin: 1rem 0 0 0;
+  width: 80%;
+  margin: 1rem 0 0 0;
 }
 
 .section {
@@ -20,20 +36,20 @@
 }
 
 .section h2 {
-    max-width: 100%;
-    margin-bottom: 0;
+  max-width: 100%;
+  margin-bottom: 0;
 }
 
 .section a {
-    color: var(--link-color);
-    white-space: nowrap;
-    max-width: 90%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  color: var(--link-color);
+  white-space: nowrap;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .section span {
-    line-height: 1.28rem;
+  line-height: 1.28rem;
 }
 .section:last-child {
   border: none;
@@ -45,32 +61,44 @@
 }
 
 .projectDescription {
-    width: 80%;
+  width: 80%;
 }
 
 .resume {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 @media screen and (max-width: 425px) {
-    .projectDescription{
-        width: 100%;
-    }
+  .projectDescription {
+    width: 100%;
+  }
 
-    .personalContainer {
-        flex-direction: column;
-    }
+  .personalContainer {
+    flex-direction: column;
+  }
 
-    .bio {
-        width: 100%;
-    }
+  .bio {
+    width: 100%;
+  }
 
-    .personalContainer img{
-        align-self: center;
-        margin: 1rem 0 !important;
-    }
+  .personalContainer img {
+    align-self: center;
+    margin: 1rem 0 !important;
+  }
 
-    .section div {
-        min-width: 100% !important;
-    }
+  /* .section div {
+    min-width: 100% !important;
+  } */
+}
+
+@media screen and (max-width: 375px) {
+  .contactContainer {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+
+  .contactBtns {
+    margin: 1rem auto;
+    margin-bottom: 0;
+  }
 }

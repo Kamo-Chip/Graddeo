@@ -1,5 +1,3 @@
-//Create Links Array
-
 import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
@@ -26,20 +24,20 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { HiUserCircle } from "react-icons/hi";
+import { v1 as uuidv1 } from "uuid";
+import { formatLink } from "../../lib/format";
+import FieldContainer from "../../components/FieldContainer";
+import { schoolYears, jobTypes } from "../../lib/filterOptions.json";
 
 const CreateCandidateProfile = () => {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const [userDetails, setUserDetails] = useState({
     name: "",
     bio: "",
     sex: "",
     profilePhoto: "",
     imageName: "",
-    degree: "",
     schoolYear: "",
-    institution: "",
-    graduationYear: "",
-    highSchool: "",
     resume: "",
     resumeName: "",
     courses: [],
@@ -48,17 +46,29 @@ const CreateCandidateProfile = () => {
     skills: [],
     roles: [],
     projects: [],
+    education: [
+      {
+        institution: "",
+        educationLevel: "",
+        major: "",
+        graduationMonth: "",
+        graduationYear: "",
+      },
+    ],
     hasExperience: false,
     jobType: "",
     hasProjects: false,
     hasPersonalWebsite: false,
     portfolio: "",
     location: "",
+    visaStatus: "",
+    bookmarkedJobs: [],
   });
 
   const [showSchoolYears, setShowSchoolYears] = useState(false);
   const [showSex, setShowSex] = useState(false);
   const [showJobType, setShowJobType] = useState(false);
+  const [isDone, setIsDone] = useState(false);
   const router = useRouter();
   const { query } = router;
 
@@ -84,9 +94,51 @@ const CreateCandidateProfile = () => {
     });
   };
 
+  const handleChangeForEducation = (e) => {
+    let tokens = "";
+    let source = e.target.parentElement.parentElement.id;
+
+    if (source == "educationLevel") {
+      tokens =
+        e.target.parentElement.parentElement.parentElement.parentElement.id.split(
+          "-"
+        );
+    } else if (source == "graduationMonth") {
+      tokens =
+        e.target.parentElement.parentElement.parentElement.parentElement.parentElement.id.split(
+          "-"
+        );
+    } else if (source == "") {
+      tokens = e.target.parentElement.parentElement.parentElement.id.split("-");
+    } else {
+      tokens = e.target.parentElement.parentElement.id.split("-");
+    }
+
+    let id = tokens[0];
+    let source2 = tokens[1];
+
+    let arr = [];
+
+    arr = userDetails[source2];
+    if (source != "graduationMonth" && source != "educationLevel") {
+      arr[id][e.target.id] = e.target.value;
+    } else {
+      arr[id][e.target.parentElement.parentElement.id] = e.target.innerText;
+    }
+
+    if (arr[id].educationLevel == "High School") {
+      arr[id].major = "";
+      arr[id].graduationMonth = "";
+    }
+
+    console.log(arr);
+    setUserDetails({ ...userDetails, [source2]: arr });
+  };
+
   const handleChangeForMultiItems = (e) => {
     let tokens =
       e.target.parentElement.parentElement.parentElement.id.split("-");
+
     let id = tokens[0];
     let source = tokens[1];
 
@@ -94,11 +146,12 @@ const CreateCandidateProfile = () => {
 
     arr = userDetails[source];
     arr[id][e.target.id] = e.target.value;
+    console.log(arr);
     setUserDetails({ ...userDetails, [source]: arr });
   };
 
   const addSkill = (e) => {
-    let skill = document.querySelector("#skills").value;
+    let skill = document.querySelector("#skills").value.toUpperCase();
     document.querySelector("#skills").value = "";
 
     if (!userDetails.skills.includes(skill)) {
@@ -166,6 +219,21 @@ const CreateCandidateProfile = () => {
     });
   };
 
+  const addEducation = () => {
+    setUserDetails({
+      ...userDetails,
+      education: [
+        ...userDetails.education,
+        {
+          institution: "",
+          educationLevel: "",
+          major: "",
+          graduationMonth: "",
+          graduationYear: "",
+        },
+      ],
+    });
+  };
   const removeSkill = (e) => {
     e.preventDefault();
 
@@ -280,41 +348,38 @@ const CreateCandidateProfile = () => {
 
   const createProfile = async (e) => {
     e.preventDefault();
+    console.log(userDetails);
+    // if (
+    //   !userDetails.name ||
+    //   !userDetails.bio ||
+    //   !userDetails.email ||
+    //   !userDetails.schoolYear ||
+    //   !userDetails.jobType ||
+    //   !userDetails.roles.length ||
+    //   !userDetails.skills.length ||
+    //   !userDetails.location ||
+    //   !userDetails.visaStatus
+    // ) {
+    //   window.alert("Enter details in all required (*) fields");
+    // } else {
+    setUserDetails((prevState) => ({
+      ...prevState,
+      candidateId: user.uid,
+      hasPersonalWebsite: userDetails.portfolio != "",
+      hasProjects: userDetails.projects.length > 0,
+    }));
 
-    if (
-      !userDetails.name ||
-      !userDetails.bio ||
-      !userDetails.degree ||
-      !userDetails.schoolYear ||
-      !userDetails.institution ||
-      !userDetails.graduationYear ||
-      !userDetails.highSchool ||
-      !userDetails.jobType ||
-      !userDetails.roles.length
-    ) {
-      window.alert("Enter details in all required (*) fields");
-    } else {
-      setUserDetails({
-        ...userDetails,
-        hasExperience: userDetails.experience.length > 0,
-      });
-      setUserDetails({
-        ...userDetails,
-        hasPersonalWebsite: userDetails.portfolio != "",
-      });
-      setUserDetails({
-        ...userDetails,
-        hasProjects: userDetails.projects.length > 0,
-      });
+    setIsDone(true);
+    // }
+  };
 
-      await setDoc(doc(db, "candidates", user.uid), userDetails);
-      router.push({ pathname: "/candidates/jobs" });
-    }
+  const addItemToCollection = async (item, collectionToAdd, id) => {
+    await setDoc(doc(db, collectionToAdd, id), item);
   };
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/login");
+      router.push("/candidate/login");
     }
     if (user) {
       setUserDetails({ ...userDetails, name: user.displayName });
@@ -334,88 +399,151 @@ const CreateCandidateProfile = () => {
   }, [userDetails.schoolYear]);
 
   useEffect(() => {
-    if (query) {
+    if (isDone) {
+      addItemToCollection(userDetails, "candidates", user.uid);
+      router.push({ pathname: "/candidates/jobs" });
+    }
+  }, [isDone]);
+
+  useEffect(() => {
+    if (query.data) {
       setUserDetails(JSON.parse(query.data));
     }
   }, []);
 
   return (
-    <div className={jobFormStyles.container}>
- 
+    <div className={utilityStyles.containerFlex}>
       <form className={utilityStyles.form}>
-        <section>
+        <section className={utilityStyles.formSection}>
           <h2>{"Let's get started"}</h2>
-          <div className={`${utilityStyles.fieldContainer}`}>
-            <div className={utilityStyles.labelContainer}>
-              <label htmlFor="name" className={utilityStyles.required}>
-                Name
-              </label>
-              <small>Your first and lastname </small>
-            </div>
-
-            <input
-              className={utilityStyles.roundOut}
-              type="text"
-              name="name"
-              id="name"
-              onChange={handleChangeForInput}
-              value={userDetails.name}
-            />
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={`${utilityStyles.labelContainer}`}>
-              <label htmlFor="bio" className={utilityStyles.required}>
-                Bio
-              </label>
-              <small>Tell your story. Try to keep it short</small>
-            </div>
-
-            <textarea
-              maxLength={200}
-              className={utilityStyles.roundOut}
-              name="bio"
-              id="bio"
-              onChange={handleChangeForInput}
-              value={userDetails.bio}
-            />
-          </div>
-          <div className={`${utilityStyles.fieldContainer}`}>
-            <div className={utilityStyles.labelContainer}>
-              <label htmlFor="location" className={utilityStyles.required}>
-                Location
-              </label>
-              {/* <small>Your location</small> */}
-            </div>
-
-            <input
-              className={utilityStyles.roundOut}
-              type="text"
-              name="location"
-              id="location"
-              onChange={handleChangeForInput}
-              placeholder="City, Province"
-              value={userDetails.location}
-            />
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label htmlFor="gender">Sex</label>
-              <small>
-                Will be beneficial in the case that companies are looking to
-                diversify their team. For example looking to employ more women.
-              </small>
-            </div>
-
-            <CustomSelect
-              title="Select"
-              name="sex"
-              stateTracker={showSex}
-              setStateTracker={setShowSex}
-              onChangeHandler={handleChangeForSelect}
-              options={["♂️ Male", "♀️ Female", "Prefer not to say"]}
-              value={userDetails.sex}
-            />
-          </div>
+          <FieldContainer
+            name="name"
+            required={true}
+            label="Name"
+            smallText="Your first and lastname"
+            fieldType={
+              <input
+                className={utilityStyles.roundOut}
+                type="text"
+                name="name"
+                id="name"
+                onChange={handleChangeForInput}
+                defaultValue={
+                  userDetails.name
+                    ? userDetails.name
+                    : !loading
+                    ? user.displayName
+                    : ""
+                }
+              />
+            }
+          />
+          <FieldContainer
+            name="bio"
+            required={true}
+            label="Bio"
+            smallText="Tell your story. Try to keep it short"
+            fieldType={
+              <textarea
+                maxLength={200}
+                className={utilityStyles.roundOut}
+                name="bio"
+                id="bio"
+                onChange={handleChangeForInput}
+                value={userDetails.bio}
+              />
+            }
+          />
+          <FieldContainer
+            name="location"
+            required={true}
+            label="Location"
+            fieldType={
+              <input
+                className={utilityStyles.roundOut}
+                type="text"
+                name="location"
+                id="location"
+                onChange={handleChangeForInput}
+                placeholder="City, Province"
+                value={userDetails.location}
+              />
+            }
+          />
+          <FieldContainer
+            name="email"
+            required={true}
+            label="Email"
+            smallText="The email address where employers can contact you"
+            fieldType={
+              <input
+                className={utilityStyles.roundOut}
+                type="text"
+                name="email"
+                id="email"
+                onChange={handleChangeForInput}
+                defaultValue={
+                  userDetails.email
+                    ? userDetails.email
+                    : !loading
+                    ? user.email
+                    : ""
+                }
+              />
+            }
+          />
+          <FieldContainer
+            name="schoolYear"
+            required={true}
+            label="School year"
+            smallText="Select the point where you currently are in your schooling career"
+            fieldType={
+              <CustomSelect
+                title="Select"
+                name="schoolYear"
+                onChangeHandler={handleChangeForSelect}
+                options={schoolYears}
+                value={userDetails.schoolYear}
+              />
+            }
+          />
+          <FieldContainer
+            name="visaStatus"
+            required={true}
+            label="Visa status"
+            smallText="Is beneficial in the case that companies are looking to
+            diversify their team by hiring foreigners. Also reduces friction by letting employers know your work eligibility ahead of time"
+            fieldType={
+              <CustomSelect
+                title="Select"
+                name="visaStatus"
+                onChangeHandler={handleChangeForSelect}
+                options={[
+                  "Eligible to work in S.A",
+                  "Will require a sponsorship",
+                  "Citizen",
+                ]}
+                value={userDetails.visaStatus}
+              />
+            }
+          />
+          <FieldContainer
+            name="gender"
+            label="Biological Sex"
+            smallText="Will be beneficial in the case that companies are looking to
+            diversify their team. For example looking to employ more women"
+            fieldType={
+              <CustomSelect
+                title="Select"
+                name="sex"
+                stateTracker={showSex}
+                setStateTracker={setShowSex}
+                onChangeHandler={handleChangeForSelect}
+                options={["♂️Male", "♀️Female"]}
+                value={userDetails.sex}
+              />
+            }
+          />
           <div className={utilityStyles.fieldContainer}>
             <div className={utilityStyles.labelContainer}>
               <label htmlFor="photo">Profile photo</label>
@@ -429,9 +557,6 @@ const CreateCandidateProfile = () => {
                 className={utilityStyles.fileInput}
                 onChange={handleProfilePhotoUpload}
               />
-              {/* <button onClick={handleProfilePhotoUpload} id="profilePhoto">
-                Upload
-              </button> */}
             </div>
             <div style={{ display: "flex", alignItems: "center" }}>
               {userDetails.profilePhoto == "" ? (
@@ -459,129 +584,26 @@ const CreateCandidateProfile = () => {
             </div>
           </div>
         </section>
-        <section>
+        <section className={utilityStyles.formSection}>
           <h2>Education</h2>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label htmlFor="degree" className={utilityStyles.required}>
-                Degree
-              </label>
-            </div>
-            <input
-              className={utilityStyles.roundOut}
-              type="text"
-              name="degree"
-              id="degree"
-              onChange={handleChangeForInput}
-              value={userDetails.degree}
-            />
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label htmlFor="schoolYear" className={utilityStyles.required}>
-                School year
-              </label>
-            </div>
-            <CustomSelect
-              title="Select"
-              name="schoolYear"
-              stateTracker={showSchoolYears}
-              setStateTracker={setShowSchoolYears}
-              onChangeHandler={handleChangeForSelect}
-              options={["🐣Undergraduate", "🐥Postgraduate", "🐔Alumni"]}
-              value={userDetails.schoolYear}
-            />
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label htmlFor="institution" className={utilityStyles.required}>
-                Institution
-              </label>
-              <small>
-                The tertiary institution that you{" "}
-                {userDetails.currentlyStudying ? "are studying " : "studied "}at{" "}
-                {"(university, college, bootcamp)"}
-              </small>
-            </div>
-            <input
-              className={utilityStyles.roundOut}
-              type="text"
-              name="institution"
-              id="institution"
-              onChange={handleChangeForInput}
-              value={userDetails.institution}
-            />
-          </div>
-
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label
-                htmlFor="graduationYear"
-                className={utilityStyles.required}
-              >
-                Graduation Year
-              </label>
-              <small>
-                The year that you{" "}
-                {userDetails.currentlyStudying
-                  ? "expect to graduate"
-                  : "graduated"}
-              </small>
-            </div>
-
-            <input
-              className={utilityStyles.roundOut}
-              type="number"
-              name="graduationYear"
-              id="graduationYear"
-              onChange={handleChangeForInput}
-              value={userDetails.graduationYear}
-            />
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label htmlFor="highSchool" className={utilityStyles.required}>
-                High school
-              </label>
-              <small>The high school that you attended</small>
-            </div>
-            <input
-              className={utilityStyles.roundOut}
-              type="text"
-              name="highSchool"
-              id="highSchool"
-              onChange={handleChangeForInput}
-              value={userDetails.highSchool}
-            />
-          </div>
-        </section>
-        <section>
-          <h2>Courses</h2>
-          <small
-            style={{
-              color: "rgb(56, 56, 56)",
-              marginBottom: "1rem",
-              textAlign: "center",
-            }}
-          >
-            Udemy courses, YouTube courses, MOOCS, Certifications, etc.
-          </small>
-          {userDetails.courses.map((element, idx) => {
+          {userDetails.education.map((element, idx) => {
             return (
-              <Course
-                key={`course${idx}`}
+              <Education
+                key={`education${idx}`}
                 index={idx}
-                handleChange={handleChangeForMultiItems}
+                handleChange={handleChangeForEducation}
                 removeItem={removeItem}
                 userDetails={userDetails}
               />
             );
           })}
-          <span onClick={addCourse}>
+
+          <span onClick={addEducation}>
             <MdAddCircle size="2rem" />
           </span>
         </section>
-        <section>
+
+        <section className={utilityStyles.formSection}>
           <h2>Experience</h2>
           {userDetails.experience.map((element, idx) => {
             return (
@@ -598,7 +620,7 @@ const CreateCandidateProfile = () => {
             <MdAddCircle size="2rem" />
           </span>
         </section>
-        <section>
+        <section className={utilityStyles.formSection}>
           <h2>Skills</h2>
           <small
             style={{
@@ -640,107 +662,155 @@ const CreateCandidateProfile = () => {
             })}
           </div>
         </section>
-        <section>
+        <section className={utilityStyles.formSection}>
           <h2>Links</h2>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label>
-                <BsLinkedin /> LinkedIn
-              </label>
-              <small>Your LinkedIn profile username</small>
-              <input
+          <FieldContainer
+            name="linkedIn"
+            icon={<BsLinkedin />}
+            label={" LinkedIn"}
+            smallText="Your LinkedIn profile username"
+            fieldType={
+              <div
                 className={utilityStyles.roundOut}
-                type="text"
-                name="linkedIn"
-                id="linkedIn"
-                onChange={handleChangeForInput}
-                value={userDetails.linkedIn}
-              />
-            </div>
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label>
-                <BsGithub /> GitHub
-              </label>
-              <small>Your GitHub profile username</small>
-              <input
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <div>https://www.linkedin.com/in/</div>
+                <input
+                  className={utilityStyles.roundOut}
+                  type="text"
+                  name="linkedIn"
+                  id="linkedIn"
+                  onChange={handleChangeForInput}
+                  value={userDetails.linkedIn}
+                />
+              </div>
+            }
+          />
+          <FieldContainer
+            name="gitHub"
+            icon={<BsGithub />}
+            label="GitHub"
+            smallText="Your GitHub profile username"
+            fieldType={
+              <div
                 className={utilityStyles.roundOut}
-                type="text"
-                name="gitHub"
-                id="gitHub"
-                onChange={handleChangeForInput}
-                value={userDetails.gitHub}
-              />
-            </div>
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label>
-                <BsTwitter /> Twitter
-              </label>
-              <small>Your Twitter profile username</small>
-              <input
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <div>https://github.com/</div>
+                <input
+                  type="text"
+                  name="gitHub"
+                  id="gitHub"
+                  onChange={handleChangeForInput}
+                  value={userDetails.gitHub}
+                />
+              </div>
+            }
+          />
+          <FieldContainer
+            name="twitter"
+            icon={<BsTwitter />}
+            label="Twitter"
+            smallText="Your Twitter profile username"
+            fieldType={
+              <div
                 className={utilityStyles.roundOut}
-                type="text"
-                name="twitter"
-                id="twitter"
-                onChange={handleChangeForInput}
-                value={userDetails.twitter}
-              />
-            </div>
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label>
-                <BsYoutube /> YouTube
-              </label>
-              <small>Your YouTube profile handle</small>
-              <input
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <div>https://twitter.com/</div>
+                <input
+                  className={utilityStyles.roundOut}
+                  type="text"
+                  name="twitter"
+                  id="twitter"
+                  onChange={handleChangeForInput}
+                  value={userDetails.twitter}
+                />
+              </div>
+            }
+          />
+          <FieldContainer
+            name="youTube"
+            icon={<BsYoutube />}
+            label={"YouTube"}
+            smallText="Your YouTube profile handle"
+            fieldType={
+              <div
                 className={utilityStyles.roundOut}
-                type="text"
-                name="youTube"
-                id="youTube"
-                onChange={handleChangeForInput}
-                value={userDetails.youTube}
-              />
-            </div>
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label>
-                <BsLink45Deg /> Portfolio website
-              </label>
-              <small>Your portfolio site</small>
-              <input
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <div>https://www.youtube.com/@</div>
+                <input
+                  className={utilityStyles.roundOut}
+                  type="text"
+                  name="youTube"
+                  id="youTube"
+                  onChange={handleChangeForInput}
+                  value={userDetails.youTube}
+                />
+              </div>
+            }
+          />
+          <FieldContainer
+            name="portfolio"
+            icon={<BsLink45Deg />}
+            label={"Portfolio website"}
+            smallText="Your portfolio site"
+            fieldType={
+              <div
                 className={utilityStyles.roundOut}
-                type="text"
-                name="portfolio"
-                id="portfolio"
-                onChange={handleChangeForInput}
-                value={userDetails.portfolio}
-              />
-            </div>
-          </div>
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <div>http://</div>
+                <input
+                  className={utilityStyles.roundOut}
+                  type="text"
+                  name="portfolio"
+                  id="portfolio"
+                  onChange={handleChangeForInput}
+                  value={userDetails.portfolio}
+                />
+              </div>
+            }
+          />
         </section>
-        <section>
+        <section className={utilityStyles.formSection}>
           <h2>Desired Roles</h2>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label htmlFor="jobType" className={utilityStyles.required}>
-                Job Type
-              </label>
-            </div>
-            <CustomSelect
-              title="💼Select"
-              name="jobType"
-              stateTracker={showJobType}
-              setStateTracker={setShowJobType}
-              onChangeHandler={handleChangeForSelect}
-              options={["🕛Full-time", "🕧Part-time", "⌚Internship"]}
-              value={userDetails.jobType}
-            />
-          </div>
+          <FieldContainer
+            name="jobType"
+            label="Job type"
+            fieldType={
+              <CustomSelect
+                title="💼Select"
+                name="jobType"
+                stateTracker={showJobType}
+                setStateTracker={setShowJobType}
+                onChangeHandler={handleChangeForSelect}
+                options={jobTypes}
+                value={userDetails.jobType}
+              />
+            }
+          />
           <div className={utilityStyles.fieldContainer}>
             <div className={utilityStyles.labelContainer}>
               <label htmlFor="jobType" className={utilityStyles.required}>
@@ -782,7 +852,7 @@ const CreateCandidateProfile = () => {
             })}
           </div>
         </section>
-        <section>
+        <section className={utilityStyles.formSection}>
           <h2>Projects</h2>
           <small style={{ marginBottom: "1rem", textAlign: "center" }}>
             Show off any projects {"you've"} worked on {":)"}
@@ -832,13 +902,144 @@ const CreateCandidateProfile = () => {
           </div>
         </section>
         <button style={{ marginTop: "2rem" }} onClick={createProfile}>
-          {query? "Save changes" : "Create profile"}
+          {query.data ? "Save changes" : "Create profile"}
         </button>
       </form>
     </div>
   );
 };
 
+const Education = ({ index, handleChange, removeItem, userDetails }) => {
+  return (
+    <div style={{ width: "70%" }} id={`${index}-education`}>
+      <FieldContainer
+        name="institution"
+        required={true}
+        label="Institution"
+        fieldType={
+          <input
+            className={utilityStyles.roundOut}
+            type="text"
+            name="institution"
+            id="institution"
+            onChange={handleChange}
+            value={userDetails.education[index]["institution"]}
+          />
+        }
+      />
+      <FieldContainer
+        name="educationLevel"
+        required={true}
+        label="Education level"
+        fieldType={
+          <CustomSelect
+            title="Select"
+            name="educationLevel"
+            onChangeHandler={handleChange}
+            options={[
+              "High School",
+              "Associates",
+              "Certificate",
+              "Bachelors",
+              "Masters",
+              "Doctorate",
+            ]}
+            value={userDetails.education[index]["educationLevel"]}
+          />
+        }
+      />
+      {userDetails.education[index].educationLevel == "Associates" ||
+      userDetails.education[index].educationLevel == "Bachelors" ||
+      userDetails.education[index].educationLevel == "Masters" ||
+      userDetails.education[index].educationLevel == "Doctorate" ? (
+        <FieldContainer
+          name="major"
+          required={true}
+          label="Major"
+          smallText="Your major degree e.g) Computer Science, Business, Economics, etc."
+          fieldType={
+            <input
+              className={utilityStyles.roundOut}
+              type="text"
+              name="major"
+              id="major"
+              onChange={handleChange}
+              value={userDetails.education[index]["major"]}
+            />
+          }
+        />
+      ) : userDetails.education[index].educationLevel == "Certificate" ? (
+        <FieldContainer
+          name="major"
+          required={true}
+          label="Name"
+          smallText="The name of the certification"
+          fieldType={
+            <input
+              className={utilityStyles.roundOut}
+              type="text"
+              name="major"
+              id="major"
+              onChange={handleChange}
+              value={userDetails.education[index]["major"]}
+            />
+          }
+        />
+      ) : null}
+
+      <FieldContainer
+        name="graduationYear"
+        required={true}
+        label="Graduation date"
+        fieldType={
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {userDetails.education[index].educationLevel != "High School" ? (
+              <CustomSelect
+                name="graduationMonth"
+                title="Month"
+                onChangeHandler={handleChange}
+                options={[
+                  "January",
+                  "February",
+                  "March",
+                  "April",
+                  "May",
+                  "June",
+                  "July",
+                  "August",
+                  "September",
+                  "October",
+                  "November",
+                  "December",
+                ]}
+                value={userDetails.education[index]["graduationMonth"]}
+              />
+            ) : null}
+
+            <input
+              type="number"
+              name="graduationYear"
+              id="graduationYear"
+              className={utilityStyles.roundOut}
+              style={{
+                height: "38px",
+                width: "180px",
+                marginLeft: ".5rem",
+                marginTop: ".5rem",
+              }}
+              placeholder="Year"
+              onChange={handleChange}
+              value={userDetails.education[index]["graduationYear"]}
+            />
+          </div>
+        }
+      />
+      <span id={`${index}-rem-education`} onClick={removeItem}>
+        <MdCancel size="2rem" />
+      </span>
+    </div>
+  );
+};
 const Item = ({ skill, removeSkill }) => {
   return (
     <div

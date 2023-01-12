@@ -1,3 +1,12 @@
-.container {
-    min-height: 100vh;
+.fieldExtension {
+    width: 70%;
+}
+
+.selected {
+    background-color: #f0f0f0;
+}
+@media screen and (max-width: 425px) {
+    .fieldExtension {
+        width: 90%;
+    }
 }

@@ -12,8 +12,8 @@ import { isAfter, isBefore } from "date-fns";
 import Link from "next/link";
 import jobCardStyles from "../styles/jobCardStyles.module.css";
 import CustomSelect from "../components/CustomSelect";
-
-const Jobs = () => {
+import { useRouter } from "next/router";
+const Jobs = ({isPreview}) => {
   const [jobs, setJobs] = useState([]);
   const [jobsToDisplay, setJobsToDisplay] = useState([]);
   const [filters, setFilters] = useState([]);
@@ -33,6 +33,7 @@ const Jobs = () => {
   const [showJobTypes, setShowJobTypes] = useState(false);
   const [showLocations, setShowLocations] = useState(false);
   const [showSorts, setShowSorts] = useState(false);
+  const router = useRouter();
 
   const searchJob = () => {
     let searchValue = document.querySelector("#searchBar").value;
@@ -492,12 +493,13 @@ const Jobs = () => {
             })
           : null}
       </div>
+      {!isPreview ? <div onClick={() => {router.push("/candidates/bookmarked-jobs")}}>Bookmarked jobs</div> : null}
       <div className={jobStyles.jobListContainer}>
         {jobsToDisplay.length && !isLoading ? (
           jobsToDisplay.map((job, idx) => {
             return (
               <Link
-                href={`/jobs/${job.jobId}`}
+                href={!isPreview ? `/candidates/jobs/${job.jobId}` : `/jobs/${job.jobId}`}
                 className={jobCardStyles.link}
                 key={`jobCard${idx}`}
               >
@@ -519,6 +521,7 @@ const Jobs = () => {
                   description={job.description}
                   salaryIsNegotiable={job.salaryIsNegotiable}
                   jobId={job.jobId}
+                  salaryType={job.salaryType}
                 />
               </Link>
             );

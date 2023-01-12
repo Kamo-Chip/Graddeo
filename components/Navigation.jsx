@@ -49,7 +49,17 @@ const Navigation = () => {
   return (
     <nav className="navigation">
       <header className="logo">
-        <Link href="/">Logo</Link>
+        <Link
+          href={
+            router.pathname.split("/")[1] == "candidates"
+              ? "/candidates/jobs"
+              : router.pathname.split("/")[1] == "companies"
+              ? "/companies/candidate-list"
+              : "/"
+          }
+        >
+          Logo
+        </Link>
       </header>
       <div className="nav-items-container">
         <div onClick={toggleNav} className="nav-icon-container">
@@ -57,9 +67,8 @@ const Navigation = () => {
         </div>
 
         <ul className="nav-list">
-          {router.pathname == "/candidates/jobs" ||
-          router.pathname == "/candidates/companies" ||
-          router.pathname == "/candidates/profile" ? (
+          {router.pathname.split("/")[1] == "candidates" &&
+          router.pathname.split("/").length > 2 ? (
             <>
               <li>
                 <Link href="/candidates/jobs" onClick={closeNav}>
@@ -67,7 +76,7 @@ const Navigation = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/candidates/companies" onClick={closeNav}>
+                <Link href="/candidates/company-list" onClick={closeNav}>
                   Companies
                 </Link>
               </li>
@@ -77,7 +86,26 @@ const Navigation = () => {
                 </Link>
               </li>
             </>
-          ) : (
+          ) : router.pathname.split("/")[1] == "companies" &&
+            router.pathname.split("/").length > 2 ? (
+            <>
+              <li>
+                <Link href="/companies/candidate-list" onClick={closeNav}>
+                  Candidates
+                </Link>
+              </li>
+              <li>
+                <Link href="/companies/post-job" onClick={closeNav}>
+                  Post Job
+                </Link>
+              </li>
+              <li>
+                <Link href="/companies/profile" onClick={closeNav}>
+                  Profile
+                </Link>
+              </li>
+            </>
+          ) : router.pathname.includes("create-profile") ? null : (
             <>
               <li>
                 <Link href="/candidates/" onClick={closeNav}>
@@ -94,13 +122,6 @@ const Navigation = () => {
                   About
                 </Link>
               </li>
-              {!loading && !user ? (
-                <li>
-                  <Link href="/login" onClick={closeNav}>
-                    Sign up
-                  </Link>
-                </li>
-              ) : null}
             </>
           )}
         </ul>

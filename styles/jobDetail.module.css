@@ -5,15 +5,18 @@
 
 .header {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem 2rem 0 2rem;
+}
+
+.header button {
+    margin-left: auto;
 }
 
 .header h1 {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-right: 2em;
+    margin-bottom: 0;
+    text-align: left;
 }
 
 .container h2 {
@@ -21,12 +24,6 @@
 }
 .header img {
     margin-right: 1rem;
-    border-radius: 50%;
-}
-
-.header h1 span {
-    font-family: Inter;
-    font-size: 1.2rem;
 }
 
 .benefitsContainer {
@@ -38,4 +35,50 @@
 
 .detailItemsContainer {
     padding: 0 2em;
+}
+
+.roleDetailsContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.roleItem {
+    margin-bottom: 2rem;
+}
+
+@media screen and (max-width: 700px) {
+    .roleDetailsContainer {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+    }   
+}
+
+@media screen and (max-width: 425px) {
+    .detailItemsContainer {
+        padding: 0 1em;
+    }
+
+    .roleDetailsContainer {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+    }
+
+    .roleDetailsContainer div {
+        min-height: unset !important;
+        margin-bottom: 1rem
+    }
+
+    .header {
+        padding: 1em 1em 0 1em;
+    }
+
+    .header img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .header button {
+        align-self: flex-start;
+    }
 }

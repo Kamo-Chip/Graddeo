@@ -37,6 +37,8 @@
   justify-content: space-evenly;
   margin-bottom: 1rem;
   flex-wrap: wrap;
+  max-width: 1000px;
+  align-self: center;
 }
 
 .jobListContainer {
@@ -68,5 +70,28 @@
 
   .jobListContainer {
     width: 100%;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .filtersContainer {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    width: 100%;
+    justify-content: unset;
+  }
+
+  
+  .filtersContainer::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  .filtersContainer::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0);
+  }
+
+  .filtersContainer::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: rgba(125, 125, 125, 0.5);
   }
 }
