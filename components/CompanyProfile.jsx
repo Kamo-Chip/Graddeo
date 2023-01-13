@@ -98,24 +98,7 @@ const CompanyProfile = ({
                       className={jobCardStyles.link}
                     >
                       <JobCard
-                        companyName={job.companyName}
-                        companyLogo={job.companyLogo}
-                        position={job.position}
-                        location={job.location}
-                        salary={job.salary}
-                        datePosted={job.datePosted}
-                        benefits={job.benefits}
-                        jobType={job.jobType}
-                        companyEmail={job.companyEmail}
-                        invoiceEmail={job.invoicEmail}
-                        background={job.background}
-                        hasCustomBackground={job.hasCustomBackground}
-                        applicationEmail={job.applicationEmail}
-                        applitcationURL={job.applicationURL}
-                        description={job.description}
-                        salaryIsNegotiable={job.salaryIsNegotiable}
-                        jobId={job.jobId}
-                        salaryType={job.salaryType}
+                        job={job}
                       />
                     </Link>
                     {!candidateIsViewing ? <span onClick={deleteJob} id={`rem-${job.jobId}`}><MdDelete/></span> : null}

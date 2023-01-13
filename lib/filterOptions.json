@@ -20,7 +20,23 @@
   "salaryTypes": ["📅Per year", "📆Per month", "⏲️Per hour"],
   "schoolYears": ["🐣Undergraduate", "🐥Postgraduate", "🐔Alumni"],
   "sexes": ["♂️Male", "♀️Female"],
-  "industries": ["Telecommunications", "Consumer services", "Consumer goods", "Energy", "Financials", "Healthcare", "Industrials", "Technology", "Materials", "Real estate", "Utilities"],
+  "industries": [
+    "Telecommunications",
+    "Consumer services",
+    "Consumer goods",
+    "Energy",
+    "Financials",
+    "Healthcare",
+    "Industrials",
+    "Technology",
+    "Materials",
+    "Real estate",
+    "Utilities"
+  ],
+  "visaStatusses": [
+    "Eligible to work in S.A",
+    "Will require a sponsorship"
+  ],
   "employeeCounts": ["11-50", "51-200", "201-1 000", "> 1 000"],
   "locations": [
     "Gauteng",

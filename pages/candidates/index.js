@@ -8,7 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 const CandidateLandingPage = () => {
   const provider = new GoogleAuthProvider();
   const router = useRouter();
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading ] = useAuthState(auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +28,11 @@ const CandidateLandingPage = () => {
     }
   };
 
-  useEffect(() => {}, []);
+  useState(() => {
+    if (!loading && !user) {
+      router.push("/candidates");
+    }
+  }, [loading, user]);
 
   return (
     <div>

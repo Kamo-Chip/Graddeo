@@ -3,11 +3,6 @@ What I do:
 - Facilitate communication between companies and universities
 
 Tasks
-- Add filter option for visa status (companies searching candidatess)
-- Fix candidate display errors since updating fields
-- Update <Jobs/> component to operate like the other searches (company-list, candidate-list)
-- Add protected routes
-- Add form data validation
 - Add authentication checks (user already exists, email link login, etc.)
 - Populate with content
 - Design app
@@ -16,3 +11,4 @@ Tasks
 Ideas
 - Premium business package:
     - Free job posting, but customisations require a subscription
+- Specify degrees in job post

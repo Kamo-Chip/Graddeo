@@ -7,7 +7,7 @@ import { signOut } from "firebase/auth";
 import CompanyProfile from "../../components/CompanyProfile";
 
 const CompanyProfilePage = () => {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading ] = useAuthState(auth);
   const [companyDetails, setCompanyDetails] = useState({});
   const [jobsList, setJobsList] = useState([]);
   const [bookmarkedCandidates, setBookmarkedCandidates] = useState([]);

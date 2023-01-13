@@ -67,8 +67,10 @@ const Navigation = () => {
         </div>
 
         <ul className="nav-list">
-          {router.pathname.split("/")[1] == "candidates" &&
-          router.pathname.split("/").length > 2 ? (
+          {router.pathname.includes(
+            "create-profile"
+          ) ? null : router.pathname.split("/")[1] == "candidates" &&
+            router.pathname.split("/").length > 2 ? (
             <>
               <li>
                 <Link href="/candidates/jobs" onClick={closeNav}>
@@ -105,7 +107,7 @@ const Navigation = () => {
                 </Link>
               </li>
             </>
-          ) : router.pathname.includes("create-profile") ? null : (
+          ) : (
             <>
               <li>
                 <Link href="/candidates/" onClick={closeNav}>

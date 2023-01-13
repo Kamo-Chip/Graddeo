@@ -1,16 +1,14 @@
-import {
-  collection,
-  getDocs,
-  getDoc,
-  doc,
-} from "firebase/firestore";
-import { db } from "../../../firebase";
+import { collection, getDocs, getDoc, doc } from "firebase/firestore";
+import { db, auth } from "../../../firebase";
 import { useState } from "react";
 import CompanyProfile from "../../../components/CompanyProfile";
+import { useAuthState } from "react-firebase-hooks";
+import { useRouter } from "next/router";
 
 export const getStaticProps = async (context) => {
   const id = context.params.id;
   const res = await getDoc(doc(db, "companies", id));
+
   let company = res.data();
   return {
     props: { company: company },
@@ -37,6 +35,8 @@ export const getStaticPaths = async () => {
 };
 const CompanyDetails = ({ company }) => {
   const [jobsList, setJobsList] = useState([]);
+  const router = useRouter();
+  const [user, loading] = useAuthState(auth);
 
   const getJobs = async () => {
     let list = [];
@@ -52,11 +52,17 @@ const CompanyDetails = ({ company }) => {
   }, []);
 
   useState(() => {
-    console.log(jobsList);
-  }, [jobsList]);
+    if (!loading && !user) {
+      router.push("/candidates");
+    }
+  }, [loading, user]);
 
   return (
-    <CompanyProfile companyDetails={company} jobsList={jobsList} candidateIsViewing={true} />
+    <CompanyProfile
+      companyDetails={company}
+      jobsList={jobsList}
+      candidateIsViewing={true}
+    />
   );
 };
 

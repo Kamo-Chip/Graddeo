@@ -1,13 +1,12 @@
 import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
-import jobFormStyles from "../../styles/jobForm.module.css";
 import utilityStyles from "../../styles/utilities.module.css";
 import CustomSelect from "../../components/CustomSelect";
 import { MdAddCircle, MdCancel } from "react-icons/md";
 import createProfileStyles from "../../styles/createProfile.module.css";
 import { db, storage } from "../../firebase";
-import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import {
   BsLinkedin,
@@ -15,6 +14,7 @@ import {
   BsTwitter,
   BsYoutube,
   BsLink45Deg,
+  BsInstagram,
 } from "react-icons/bs";
 import Image from "next/image";
 import {
@@ -24,10 +24,13 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { HiUserCircle } from "react-icons/hi";
-import { v1 as uuidv1 } from "uuid";
-import { formatLink } from "../../lib/format";
 import FieldContainer from "../../components/FieldContainer";
-import { schoolYears, jobTypes } from "../../lib/filterOptions.json";
+import {
+  schoolYears,
+  jobTypes,
+  visaStatusses,
+} from "../../lib/filterOptions.json";
+import { checkLink } from "../../lib/format";
 
 const CreateCandidateProfile = () => {
   const [user, loading] = useAuthState(auth);
@@ -35,13 +38,12 @@ const CreateCandidateProfile = () => {
     name: "",
     bio: "",
     sex: "",
+    email: "",
     profilePhoto: "",
     imageName: "",
     schoolYear: "",
     resume: "",
     resumeName: "",
-    courses: [],
-    currentlyStudying: false,
     experience: [],
     skills: [],
     roles: [],
@@ -55,17 +57,17 @@ const CreateCandidateProfile = () => {
         graduationYear: "",
       },
     ],
-    hasExperience: false,
     jobType: "",
-    hasProjects: false,
-    hasPersonalWebsite: false,
     portfolio: "",
+    linkedIn: "",
+    gitHub: "",
+    twitter: "",
+    youTube: "",
     location: "",
     visaStatus: "",
     bookmarkedJobs: [],
   });
 
-  const [showSchoolYears, setShowSchoolYears] = useState(false);
   const [showSex, setShowSex] = useState(false);
   const [showJobType, setShowJobType] = useState(false);
   const [isDone, setIsDone] = useState(false);
@@ -172,22 +174,6 @@ const CreateCandidateProfile = () => {
         roles: [...userDetails.roles, role],
       });
     }
-  };
-
-  const addCourse = (e) => {
-    setUserDetails({
-      ...userDetails,
-      courses: [
-        ...userDetails.courses,
-        {
-          courseName: "",
-          courseInstitution: "",
-          start: "",
-          end: "",
-          linkToCourse: "",
-        },
-      ],
-    });
   };
 
   const addProject = () => {
@@ -346,31 +332,72 @@ const CreateCandidateProfile = () => {
       });
   };
 
+  const checkEducation = () => {
+    let isValid = false;
+    if (
+      userDetails.education[0].institution &&
+      userDetails.education[0].educationLevel &&
+      userDetails.education[0].graduationYear &&
+      userDetails.education[0].educationLevel == "High School"
+    ) {
+      isValid = true;
+    } else if (
+      userDetails.education[0].institution &&
+      userDetails.education[0].educationLevel &&
+      userDetails.education[0].graduationYear &&
+      userDetails.education[0].educationLevel != "High School" &&
+      userDetails.education[0].major &&
+      userDetails.education[0].graduationMonth
+    ) {
+      isValid = true;
+    }
+    return isValid;
+  };
+
+  const inputIsValid = () => {
+    let isValid = false;
+    if (
+      userDetails.name &&
+      userDetails.bio &&
+      userDetails.location &&
+      userDetails.email &&
+      userDetails.schoolYear &&
+      userDetails.visaStatus &&
+      checkEducation() &&
+      userDetails.jobType &&
+      userDetails.roles.length
+    ) {
+      isValid = true;
+    }
+    return isValid;
+  };
+
+  const linksAreValid = () => {
+    return (
+      checkLink(userDetails.gitHub) &&
+      checkLink(userDetails.linkedIn) &&
+      checkLink(userDetails.twitter) &&
+      checkLink(userDetails.youTube) &&
+      checkLink(userDetails.portfolio) &&
+      checkLink(userDetails.instagram)
+    );
+  };
+
   const createProfile = async (e) => {
     e.preventDefault();
     console.log(userDetails);
-    // if (
-    //   !userDetails.name ||
-    //   !userDetails.bio ||
-    //   !userDetails.email ||
-    //   !userDetails.schoolYear ||
-    //   !userDetails.jobType ||
-    //   !userDetails.roles.length ||
-    //   !userDetails.skills.length ||
-    //   !userDetails.location ||
-    //   !userDetails.visaStatus
-    // ) {
-    //   window.alert("Enter details in all required (*) fields");
-    // } else {
-    setUserDetails((prevState) => ({
-      ...prevState,
-      candidateId: user.uid,
-      hasPersonalWebsite: userDetails.portfolio != "",
-      hasProjects: userDetails.projects.length > 0,
-    }));
+    if (!inputIsValid()) {
+      window.alert("Fill in all required (*) fields");
+    } else if (!linksAreValid()) {
+      window.alert("Format links correctly as indicated")
+    } else {
+      setUserDetails((prevState) => ({
+        ...prevState,
+        candidateId: user.uid,
+      }));
 
-    setIsDone(true);
-    // }
+      setIsDone(true);
+    }
   };
 
   const addItemToCollection = async (item, collectionToAdd, id) => {
@@ -379,10 +406,14 @@ const CreateCandidateProfile = () => {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/candidate/login");
+      router.push("/candidates");
     }
     if (user) {
-      setUserDetails({ ...userDetails, name: user.displayName });
+      setUserDetails({
+        ...userDetails,
+        name: user.displayName,
+        email: user.email,
+      });
     }
   }, [user, loading]);
 
@@ -478,7 +509,7 @@ const CreateCandidateProfile = () => {
             fieldType={
               <input
                 className={utilityStyles.roundOut}
-                type="text"
+                type="email"
                 name="email"
                 id="email"
                 onChange={handleChangeForInput}
@@ -518,11 +549,7 @@ const CreateCandidateProfile = () => {
                 title="Select"
                 name="visaStatus"
                 onChangeHandler={handleChangeForSelect}
-                options={[
-                  "Eligible to work in S.A",
-                  "Will require a sponsorship",
-                  "Citizen",
-                ]}
+                options={visaStatusses}
                 value={userDetails.visaStatus}
               />
             }
@@ -586,6 +613,7 @@ const CreateCandidateProfile = () => {
         </section>
         <section className={utilityStyles.formSection}>
           <h2>Education</h2>
+          <span>First is your prime education</span>
           {userDetails.education.map((element, idx) => {
             return (
               <Education
@@ -711,6 +739,31 @@ const CreateCandidateProfile = () => {
                   id="gitHub"
                   onChange={handleChangeForInput}
                   value={userDetails.gitHub}
+                />
+              </div>
+            }
+          />
+          <FieldContainer
+            name="instagram"
+            icon={<BsInstagram/>}
+            label="Instagram"
+            smallText="Your Instagram profile username"
+            fieldType={
+              <div
+                className={utilityStyles.roundOut}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <div>https://www.instagram.com/</div>
+                <input
+                  type="text"
+                  name="instagram"
+                  id="instagram"
+                  onChange={handleChangeForInput}
+                  value={userDetails.instagram}
                 />
               </div>
             }

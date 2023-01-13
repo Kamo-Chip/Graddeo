@@ -81,7 +81,7 @@ const CandidateDetails = ({ candidate }) => {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/company");
+      router.push("/companies");
     }
 
     if (!loading && user) {

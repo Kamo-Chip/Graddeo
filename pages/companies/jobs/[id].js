@@ -1,5 +1,5 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../../../firebase";
+import { db, auth } from "../../../firebase";
 import {
   timeSincePosted,
   convertToDate,
@@ -7,6 +7,9 @@ import {
   formatDateDayMonth,
 } from "../../../lib/format";
 import JobDetails from "../../../components/JobDetails";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export const getStaticProps = async (context) => {
   const q = query(
@@ -55,6 +58,15 @@ export const getStaticPaths = async () => {
 };
 
 const CompanyJobDetails = ({ job }) => {
+  const [user, loading] = useAuthState(auth);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/companies");
+    }
+  }, [loading, user]);
+
   return <JobDetails job={job} candidateIsViewing={false} />;
 };
 

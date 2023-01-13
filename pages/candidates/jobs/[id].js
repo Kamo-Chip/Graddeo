@@ -90,7 +90,7 @@ const CandidateJobDetails = ({ job }) => {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/company");
+      router.push("/candidates");
     }else if(!loading && user) {
       getBookmarkedJobs();
     }

@@ -2,7 +2,7 @@ import jobStyles from "../../styles/jobs.module.css";
 import utilityStyles from "../../styles/utilities.module.css";
 import { MdCancel } from "react-icons/md";
 import { useEffect, useState } from "react";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import Link from "next/link";
 import CustomSelect from "../../components/CustomSelect";
@@ -15,6 +15,7 @@ import {
 } from "../../lib/filterOptions.json";
 import { useRouter } from "next/router";
 import CompanyCard from "../../components/CompanyCard";
+import { useAuthState } from "react-firebase-hooks";
 
 const CandidateCompanyPage = () => {
   const [companies, setCompanies] = useState([]);
@@ -27,6 +28,7 @@ const CandidateCompanyPage = () => {
   const [benefitsList, setBenefitsList] = useState([]);
   const [locationList, setLocationList] = useState([]);
   const [employeeCountList, setEmployeeCountList] = useState([]);
+  const [user, loading] = useAuthState(auth);
   const router = useRouter();
 
   const searchJob = () => {
@@ -224,6 +226,12 @@ const CandidateCompanyPage = () => {
       searchWithFilters(companies);
     }
   }, [filters]);
+
+  useState(() => {
+    if (!loading && !user) {
+      router.push("/candidates");
+    }
+  }, [loading, user]);
 
   return (
     <section className={jobStyles.container}>

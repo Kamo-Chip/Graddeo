@@ -11,24 +11,20 @@ export default function Home() {
 
   const checkUserExists = async () => {
     try {
-      const response = await getDoc(doc(db, "candidates", user.uid));
-
-      if (response.data()) {
+      const candidate = await getDoc(doc(db, "candidates", user.uid));
+      if (candidate.data()) {
         router.push("/candidates/jobs");
       } else {
-        router.push("/candidates/create-profile");
-      }
-    } catch (err) {
-      console.error(err);
-    }
-
-    try {
-      const response = await getDoc(doc(db, "companies", user.uid));
-
-      if (response.data()) {
-        router.push("/companies/candidate-list");
-      } else {
-        router.push("/companies/create-profile");
+        try {
+          const company = await getDoc(doc(db, "companies", user.uid));
+          if (company.data()) {
+            router.push("/companies/candidate-list");
+          }
+          return;
+        } catch (err) {
+          console.error(err);
+        }
+        router.push("/");
       }
     } catch (err) {
       console.error(err);
@@ -36,7 +32,7 @@ export default function Home() {
   };
   useEffect(() => {
     if (user) {
-      // checkUserExists();
+      checkUserExists();
     }
   }, [user]);
 

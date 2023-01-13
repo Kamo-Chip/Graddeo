@@ -2,7 +2,7 @@ import jobStyles from "../../styles/jobs.module.css";
 import utilityStyles from "../../styles/utilities.module.css";
 import { MdCancel } from "react-icons/md";
 import { useEffect, useState } from "react";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import Link from "next/link";
 import CustomSelect from "../../components/CustomSelect";
@@ -16,8 +16,10 @@ import {
   salaryTypes,
   schoolYears,
   sexes,
+  visaStatusses
 } from "../../lib/filterOptions.json";
 import { useRouter } from "next/router";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const CompanyCandidateList = () => {
   const [candidates, setCandidates] = useState([]);
@@ -26,6 +28,7 @@ const CompanyCandidateList = () => {
   const [searchIsOn, setSearchIsOn] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [skillsList, setSkillsList] = useState([]);
+  const [visaList, setVisaList] = useState([]);
   const [sexList, setSexList] = useState([]);
   const [degreeList, setDegreeList] = useState([]);
   const [institutionList, setInstitutionList] = useState([]);
@@ -37,6 +40,7 @@ const CompanyCandidateList = () => {
   const [locationList, setLocationList] = useState([]);
   const [sortList, setSortList] = useState([]);
   const router = useRouter();
+  const [user, loading] = useAuthState(auth);
 
   const searchJob = () => {
     let searchValue = document.querySelector("#searchBar").value;
@@ -95,6 +99,7 @@ const CompanyCandidateList = () => {
     removeFilterFromList(institutionList, filterToRemove, setInstitutionList);
     removeFilterFromList(roleList, filterToRemove, setRoleList);
     removeFilterFromList(sexList, filterToRemove, setSexList);
+    removeFilterFromList(visaList, filterToRemove, setVisaList);
     removeFilterFromList(schoolYearList, filterToRemove, setSchoolYearList);
     if (filterToRemove == "🧪Has projects") {
       setProjectFilterIsOn(false);
@@ -121,6 +126,7 @@ const CompanyCandidateList = () => {
       schoolYearIsValid = true,
       projectIsValid = true,
       sexIsValid = true,
+      visaIsValid = true,
       portfolioIsValid = true,
       jobTypeIsValid = true,
       locationIsValid = true;
@@ -134,14 +140,14 @@ const CompanyCandidateList = () => {
 
       if (degreeList.length) {
         degreeIsValid = filters.some(
-          (filter) => filter.toLowerCase() == candidate.degree.toLowerCase()
+          (filter) => filter.toLowerCase() == candidate.education[0].major.toLowerCase()
         );
       }
 
       if (institutionList.length) {
         institutionIsValid = filters.some(
           (filter) =>
-            filter.toLowerCase() == candidate.institution.toLowerCase()
+            filter.toLowerCase() == candidate.education[0].institution.toLowerCase()
         );
       }
 
@@ -153,6 +159,10 @@ const CompanyCandidateList = () => {
 
       if (sexList.length) {
         sexIsValid = candidate.sex === sexList[0];
+      }
+
+      if(visaList.length) {
+        visaIsValid = candidate.visaStatus === visaList[0];
       }
 
       if (schoolYearList.length) {
@@ -185,7 +195,8 @@ const CompanyCandidateList = () => {
         jobTypeIsValid &&
         locationIsValid &&
         roleIsValid &&
-        sexIsValid
+        sexIsValid &&
+        visaIsValid
       ) {
         result.push(candidate);
       }
@@ -295,12 +306,20 @@ const CompanyCandidateList = () => {
           setSortList([...sortList, filterToAdd]);
           break;
         case "sex":
-          let newFilters = filters.filter(
+          let newSexFilters = filters.filter(
             (filter) => filter !== "♂️Male" && filter !== "♀️Female"
           );
-          newFilters.push(filterToAdd);
-          setFilters(newFilters);
+          newSexFilters.push(filterToAdd);
+          setFilters(newSexFilters);
           setSexList([filterToAdd]);
+          break;
+        case "visaStatus":
+          let newVisaFilters = filters.filter(
+            (filter) => filter !== "Eligible to work in S.A" && filter !== "Will require a sponshorship"
+          );
+          newVisaFilters.push(filterToAdd);
+          setFilters(newVisaFilters);
+          setVisaList([filterToAdd]);
           break;
       }
     }
@@ -358,6 +377,12 @@ const CompanyCandidateList = () => {
     }
   }, [filters]);
 
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/companies");
+    }
+  }, [loading, user]);
+
   return (
     <section className={jobStyles.container} id="candidates">
       <div
@@ -373,7 +398,6 @@ const CompanyCandidateList = () => {
           onChange={handleChange}
         />
       </div>
-
       <div className={jobStyles.filtersContainer}>
         <CustomSearch
           name="skills"
@@ -422,6 +446,12 @@ const CompanyCandidateList = () => {
           title="💼Job type"
           options={jobTypes}
         />
+
+        <CustomSelect
+          onChangeHandler={addFilterSelect}
+          name="visaStatus"
+          title="🌐 Visa status"
+          options={visaStatusses}/>
         <CustomSelect
           onChangeHandler={addFilterSelect}
           name="sex"
@@ -451,7 +481,7 @@ const CompanyCandidateList = () => {
           options={[
             "🎪Most skills",
             "🧑‍🔬Most projects",
-            "📆Earliest graduation year",
+            // "📆Earliest graduation year",
           ]}
         />
       </div>
@@ -487,20 +517,7 @@ const CompanyCandidateList = () => {
                 key={`candidate${idx}`}
               >
                 <CandidateCard
-                  bio={candidate.bio}
-                  candidateId={candidate.candidateId}
-                  courses={candidate.courses}
-                  currentlyStudying={candidate.currentlyStudying}
-                  degree={candidate.degree}
-                  email={candidate.email}
-                  experience={candidate.experience}
-                  gitHub={candidate.gitHub}
-                  skills={candidate.skills}
-                  schoolYear={candidate.schoolYear}
-                  location={candidate.location}
-                  profilePhoto={candidate.profilePhoto}
-                  name={candidate.name}
-                  institution={candidate.institution}
+                  candidate={candidate}
                 />
               </Link>
             );

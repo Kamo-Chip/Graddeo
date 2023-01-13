@@ -47,7 +47,7 @@ const CompanyCard = ({ company }) => {
             </span>
           </div>
         </div>
-        <div className={`${companyCardStyles.bioContainer} ${companyCardStyles.readMore}`}>
+        <div className={`${companyCardStyles.bioContainer}`}>
             {company.bio}
         </div>
         <div className={jobCardStyles.detailsContainer}>

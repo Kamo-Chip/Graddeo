@@ -8,7 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 const CompanyLandingPage = () => {
   const provider = new GoogleAuthProvider();
   const router = useRouter();
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading ] = useAuthState(auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +28,11 @@ const CompanyLandingPage = () => {
     }
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/companies");
+    }
+  }, [loading, user]);
 
   return (
     <div>

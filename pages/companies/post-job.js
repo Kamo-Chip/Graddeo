@@ -13,12 +13,11 @@ import {
   getDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 import { formatLink, formatTextRemoveSpaces } from "../../lib/format";
 import { useRouter } from "next/router";
 import CustomSelect from "../../components/CustomSelect";
 import CustomSearch from "../../components/CustomSearch";
-import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   benefits,
@@ -30,6 +29,7 @@ import FieldContainer from "../../components/FieldContainer";
 import { v1 as uuidv1 } from "uuid";
 import Image from "next/image";
 import { HiUserCircle } from "react-icons/hi";
+import { checkLink } from "../../lib/format";
 
 const JobForm = () => {
   const [jobDetails, setJobDetails] = useState({
@@ -178,35 +178,51 @@ const JobForm = () => {
     setJobDetails({ ...jobDetails, background: e.target.value });
   };
 
+  const inputIsValid = () => {
+    let isValid = false;
+    if (
+      (jobDetails.position &&
+        jobDetails.jobType &&
+        jobDetails.duration &&
+        jobDetails.benefits.length &&
+        jobDetails.skills.length &&
+        jobDetails.description &&
+        jobDetails.salary &&
+        jobDetails.salaryType &&
+        jobDetails.location &&
+        jobDetails.deadline &&
+        jobDetails.applicationEmail) ||
+      jobDetails.applicationURL
+    ) {
+      isValid = true;
+    }
+    return isValid;
+  };
+
+  const linksAreValid = () => {
+    return checkLink(jobDetails.applicationURL);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let valid = false;
-    valid =
-      !jobDetails.position ||
-      !jobDetails.jobType ||
-      !jobDetails.duration ||
-      !jobDetails.benefits.length ||
-      !jobDetails.skills.length ||
-      !jobDetails.description ||
-      !jobDetails.location ||
-      !jobDetails.deadline;
-
-    if (jobDetails.applicationEmail == "" && jobDetails.applicationURL == "") {
-      valid = false;
-    } else {
-      valid = true;
-    }
+    let valid = inputIsValid();
+    let durationIsValid = true;
+    let openToTalkIsValid = true;
 
     if (jobDetails.duration.includes("Temporary")) {
-      valid = jobDetails.jobStartDate && jobDetails.jobEndDate;
+      durationIsValid =
+        !isNaN(jobDetails.jobStartDate.seconds) &&
+         !isNaN(jobDetails.jobEndDate.seconds);
     }
 
     if (jobDetails.openToTalk) {
-      valid = jobDetails.emailForCandidates != "";
+      openToTalkIsValid = jobDetails.hiringManager.name != ""
     }
 
-    if (!valid) {
-      window.alert("Enter details in all required (*) fields");
+    if (!valid || !durationIsValid || !openToTalkIsValid) {
+      window.alert("Fill in all required (*) fields");
+    } else if (!linksAreValid()) {
+      window.alert("Format links correctly as indicated");
     } else {
       let options = {
         msecs: new Date().getTime(),
@@ -215,7 +231,10 @@ const JobForm = () => {
       setJobDetails((prevDetails) => ({
         ...prevDetails,
         datePosted: Timestamp.now(),
-        companyId: formatTextRemoveSpaces(jobDetails.companyName).concat("-").concat(user.uid),
+        industry: companyDetails.industry,
+        companyId: formatTextRemoveSpaces(jobDetails.companyName)
+          .concat("-")
+          .concat(user.uid),
         jobId:
           formatLink(jobDetails.companyName + jobDetails.position) +
           uuidv1(options),
@@ -223,6 +242,7 @@ const JobForm = () => {
 
       setIsDone(true);
     }
+    //console.log(valid);
   };
 
   const selectHiringManager = (e) => {
@@ -255,7 +275,7 @@ const JobForm = () => {
     });
     await updateDoc(doc(db, "jobs", jobRef.id), {
       jobId: jobRef.id,
-    })
+    });
   };
 
   useEffect(() => {
@@ -269,7 +289,7 @@ const JobForm = () => {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/companies/login");
+      router.push("/companies");
     }
     if (user) {
       getCompanyDetails();
@@ -737,30 +757,40 @@ const JobForm = () => {
             smallText="Link to the application page for the job on your company's
   website"
             fieldType={
-              <input
+              <div
                 className={utilityStyles.roundOut}
-                type="text"
-                name="applicationURL"
-                id="applicationURL"
-                onChange={handleChangeInput}
-                style={{ marginLeft: ".5rem" }}
-                readOnly={false}
-                onClick={(e) => {
-                  e.target.readOnly = false;
-                  e.target.style.backgroundColor = "#fff";
-                  document
-                    .querySelector("#lbl-url")
-                    .classList.add(utilityStyles.required);
-                  let email = document.querySelector("#applicationEmail");
-                  document
-                    .querySelector("#lbl-email")
-                    .classList.remove(utilityStyles.required);
-                  email.readOnly = true;
-                  email.style.backgroundColor = "#f0f0f0";
-                  email.value = "";
-                  setJobDetails({ ...jobDetails, applicationEmail: "" });
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
                 }}
-              />
+              >
+                <div>http://</div>
+                <input
+                  className={utilityStyles.roundOut}
+                  type="text"
+                  name="applicationURL"
+                  id="applicationURL"
+                  onChange={handleChangeInput}
+                  style={{ marginLeft: ".5rem" }}
+                  readOnly={false}
+                  onClick={(e) => {
+                    e.target.readOnly = false;
+                    e.target.style.backgroundColor = "#fff";
+                    document
+                      .querySelector("#lbl-url")
+                      .classList.add(utilityStyles.required);
+                    let email = document.querySelector("#applicationEmail");
+                    document
+                      .querySelector("#lbl-email")
+                      .classList.remove(utilityStyles.required);
+                    email.readOnly = true;
+                    email.style.backgroundColor = "#f0f0f0";
+                    email.value = "";
+                    setJobDetails({ ...jobDetails, applicationEmail: "" });
+                  }}
+                />
+              </div>
             }
           />
           <span style={{ marginTop: "1rem" }}>or</span>
@@ -837,21 +867,7 @@ const JobForm = () => {
         </section>
         <section>
           <h2>Preview job Post</h2>
-          <JobCard
-            companyName={jobDetails.companyName}
-            companyLogo={jobDetails.companyLogo}
-            position={jobDetails.position}
-            location={jobDetails.location}
-            salary={jobDetails.salary}
-            benefits={jobDetails.benefits}
-            jobType={jobDetails.jobType}
-            background={jobDetails.background}
-            hasCustomBackground={jobDetails.hasCustomBackground}
-            applicationEmail={jobDetails.applicationEmail}
-            applitcationURL={jobDetails.applicationURL}
-            description={jobDetails.description}
-            salaryType={jobDetails.salaryType}
-          />
+          <JobCard job={jobDetails} />
         </section>
         <button onClick={handleSubmit}>Post</button>
       </div>

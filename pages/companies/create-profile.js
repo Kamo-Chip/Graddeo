@@ -17,8 +17,13 @@ import { addItemToCollection } from "../../lib/db";
 import { useRouter } from "next/router";
 import FieldContainer from "../../components/FieldContainer";
 import { benefits } from "../../lib/filterOptions.json";
-import { v1 as uuidv1 } from "uuid";
-import { formatTextRemoveSpaces } from "../../lib/format";
+import {
+  BsLinkedin,
+  BsTwitter,
+  BsInstagram,
+  BsLink45Deg,
+} from "react-icons/bs";
+import { checkLink, formatTextRemoveSpaces } from "../../lib/format";
 
 const CompanyCreateProfile = () => {
   const [companyDetails, setCompanyDetails] = useState({
@@ -38,10 +43,7 @@ const CompanyCreateProfile = () => {
     logoName: "",
     bookmarkedCandidates: [],
   });
- 
 
-  // const [logoName, setLogoName] = useState("");
-  // const [memberImgNames, setMemberImgNames] = useState([]);
   const [user, loading] = useAuthState(auth);
   const [isDone, setIsDone] = useState(false);
   const router = useRouter();
@@ -73,44 +75,53 @@ const CompanyCreateProfile = () => {
     document.querySelector("#memberName").value = "";
 
     let memberEmail = document.querySelector("#memberEmail").value;
-    document.querySelector("#memberEmail").value = ""; 
+    document.querySelector("#memberEmail").value = "";
 
     let memberImg = "";
 
     let file = document.querySelector("#memberImg").files[0];
     document.querySelector("#memberImg").value = "";
-    if (file) {
-      const storageRef = ref(storage, `${user.uid}/team/${file.name}`);
-      uploadBytes(storageRef, file)
-        .then(() => {
-          getDownloadURL(storageRef)
-            .then((url) => {
-              memberImg = url;
-              // setMemberImgNames([...memberImgNames, file.name]);
-              // setCompanyDetails({...companyDetails, memberImgNames: [...companyDetails.memberImgNames, file.name]})
-              if (memberName) {
-                setCompanyDetails({
-                  ...companyDetails,
-                  team: [
-                    ...companyDetails.team,
-                    { name: memberName, email: memberEmail, image: memberImg, imgName: file.name},
-                  ],
-                });
-              }
-            })
-            .catch((err) => console.error(err));
-        })
-        .catch((err) => console.log(err));
-    } else {
-      // setMemberImgNames([...memberImgNames, ""]);
-      // setCompanyDetails({...companyDetails, memberImgNames: [...companyDetails.memberImgNames, ""]})
-      setCompanyDetails({
-        ...companyDetails,
-        team: [
-          ...companyDetails.team,
-          { name: memberName, email: memberEmail, image: memberImg, imgName: ""},
-        ],
-      });
+
+    if (memberEmail && memberName) {
+      if (file) {
+        const storageRef = ref(storage, `${user.uid}/team/${file.name}`);
+        uploadBytes(storageRef, file)
+          .then(() => {
+            getDownloadURL(storageRef)
+              .then((url) => {
+                memberImg = url;
+                if (memberName) {
+                  setCompanyDetails({
+                    ...companyDetails,
+                    team: [
+                      ...companyDetails.team,
+                      {
+                        name: memberName,
+                        email: memberEmail,
+                        image: memberImg,
+                        imgName: file.name,
+                      },
+                    ],
+                  });
+                }
+              })
+              .catch((err) => console.error(err));
+          })
+          .catch((err) => console.log(err));
+      } else {
+        setCompanyDetails({
+          ...companyDetails,
+          team: [
+            ...companyDetails.team,
+            {
+              name: memberName,
+              email: memberEmail,
+              image: memberImg,
+              imgName: "",
+            },
+          ],
+        });
+      }
     }
   };
 
@@ -122,26 +133,24 @@ const CompanyCreateProfile = () => {
     companyDetails.team.forEach((member, index) => {
       if (index != memberIndex) {
         newMembers.push(member);
+      } else {
+        const storageRef = ref(storage, `${user.uid}/team/${member.imgName}`);
+        deleteObject(storageRef).catch((err) => {
+          console.log(err);
+        });
       }
       setCompanyDetails({ ...companyDetails, team: newMembers });
     });
-
-    if (member.imgName) {
-      const storageRef = ref(
-        storage,
-        `${user.uid}/team/${member.imgName}`
-      );
-      deleteObject(storageRef).catch((err) => {
-        console.log(err);
-      });
-    }
   };
   const deleteLogo = async () => {
-    const storageRef = ref(storage, `${user.uid}/logo/${companyDetails.logoName}`);
+    const storageRef = ref(
+      storage,
+      `${user.uid}/logo/${companyDetails.logoName}`
+    );
 
     deleteObject(storageRef)
       .then(() => {
-        setCompanyDetails({ ...companyDetails, logo: "", logoName: ""});
+        setCompanyDetails({ ...companyDetails, logo: "", logoName: "" });
       })
       .catch((err) => {
         console.log(err);
@@ -162,7 +171,7 @@ const CompanyCreateProfile = () => {
             setCompanyDetails((prevState) => ({
               ...prevState,
               logo: url,
-              logoName: file.name
+              logoName: file.name,
             }));
             // setLogoName(file.name);
             document.querySelector("#logo").value = "";
@@ -180,27 +189,48 @@ const CompanyCreateProfile = () => {
     setCompanyDetails({ ...companyDetails, benefits: newBenefits });
   };
 
+  const inputIsValid = () => {
+    let isValid = false;
+    if (
+      companyDetails.name &&
+      companyDetails.bio &&
+      companyDetails.employeeCount &&
+      companyDetails.location &&
+      companyDetails.email &&
+      companyDetails.industry &&
+      companyDetails.culture &&
+      companyDetails.whyUs &&
+      companyDetails.interviewProcess
+    ) {
+      isValid = true;
+    }
+    return isValid;
+  };
+
+  const linksAreValid = () => {
+    return (
+      checkLink(companyDetails.linkedIn) &&
+      checkLink(companyDetails.twitter) &&
+      checkLink(companyDetails.instagram) &&
+      checkLink(companyDetails.site)
+    );
+  };
+
   const createProfile = (e) => {
     e.preventDefault();
 
-    if (
-      !companyDetails.name &&
-      !companyDetails.bio &&
-      !companyDetails.employeeCount &&
-      !companyDetails.location &&
-      !companyDetails.email &&
-      !companyDetails.culture &&
-      !companyDetails.whyUs &&
-      !companyDetails.interviewProcess &&
-      !companyDetails.industry
-    ) {
-      window.alert("Enter all required (*) fields");
+    if (!inputIsValid()) {
+      window.alert("Fill in all required (*) fields");
+    } else if (!linksAreValid()) {
+      window.alert("Format links correctly as indicated");
     } else {
       setCompanyDetails((prevState) => ({
         ...prevState,
-        companyId: formatTextRemoveSpaces(companyDetails.name).concat("-").concat(user.uid),
+        companyId: formatTextRemoveSpaces(companyDetails.name)
+          .concat("-")
+          .concat(user.uid),
       }));
-  
+
       setIsDone(true);
     }
   };
@@ -218,6 +248,18 @@ const CompanyCreateProfile = () => {
       setCompanyDetails(JSON.parse(query.data));
     }
   }, []);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/companies");
+    }
+    if (user) {
+      setCompanyDetails({
+        ...companyDetails,
+        email: user.email,
+      });
+    }
+  }, [loading, user]);
 
   return (
     <div className={utilityStyles.containerFlex}>
@@ -310,8 +352,13 @@ const CompanyCreateProfile = () => {
                 name="email"
                 id="email"
                 onChange={handleChangeInput}
-                defaultValue={user && !loading ? user.email : ""}
-                value={companyDetails.email}
+                defaultValue={
+                  companyDetails.email
+                    ? companyDetails.email
+                    : !loading
+                    ? user.email
+                    : ""
+                }
               />
             }
           />
@@ -368,23 +415,6 @@ const CompanyCreateProfile = () => {
                 id="industry"
                 onChange={handleChangeInput}
                 value={companyDetails.industry}
-              />
-            }
-          />
-
-          <FieldContainer
-            name="site"
-            required={true}
-            label="Company website"
-            smallText="Your company's official website"
-            fieldType={
-              <input
-                className={utilityStyles.roundOut}
-                type="text"
-                name="site"
-                id="site"
-                onChange={handleChangeInput}
-                value={companyDetails.site}
               />
             }
           />
@@ -501,6 +531,111 @@ const CompanyCreateProfile = () => {
               );
             })}
           </div>
+        </section>
+        <section className={utilityStyles.formSection}>
+          <h2>Links</h2>
+          <FieldContainer
+            name="site"
+            icon={<BsLink45Deg />}
+            label={"Company website"}
+            smallText="Your company's official website"
+            fieldType={
+              <div
+                className={utilityStyles.roundOut}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <div>http://</div>
+                <input
+                  className={utilityStyles.roundOut}
+                  type="text"
+                  name="site"
+                  id="site"
+                  onChange={handleChangeInput}
+                  value={companyDetails.site}
+                />
+              </div>
+            }
+          />
+          <FieldContainer
+            name="linkedIn"
+            icon={<BsLinkedin />}
+            label={" LinkedIn"}
+            smallText="Your LinkedIn profile username"
+            fieldType={
+              <div
+                className={utilityStyles.roundOut}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <div>https://www.linkedin.com/in/</div>
+                <input
+                  className={utilityStyles.roundOut}
+                  type="text"
+                  name="linkedIn"
+                  id="linkedIn"
+                  onChange={handleChangeInput}
+                  value={companyDetails.linkedIn}
+                />
+              </div>
+            }
+          />
+          <FieldContainer
+            name="instagram"
+            icon={<BsInstagram />}
+            label="Instagram"
+            smallText="Your Instagram profile username"
+            fieldType={
+              <div
+                className={utilityStyles.roundOut}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <div>https://www.instagram.com/</div>
+                <input
+                  type="text"
+                  name="instagram"
+                  id="instagram"
+                  onChange={handleChangeInput}
+                  value={companyDetails.instagram}
+                />
+              </div>
+            }
+          />
+          <FieldContainer
+            name="twitter"
+            icon={<BsTwitter />}
+            label="Twitter"
+            smallText="Your Twitter profile username"
+            fieldType={
+              <div
+                className={utilityStyles.roundOut}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <div>https://twitter.com//</div>
+                <input
+                  type="text"
+                  name="twitter"
+                  id="twitter"
+                  onChange={handleChangeInput}
+                  value={companyDetails.twitter}
+                />
+              </div>
+            }
+          />
         </section>
         <section
           className={profileStyles.section}

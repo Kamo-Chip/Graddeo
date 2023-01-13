@@ -42,7 +42,7 @@ const BookmarkedJobs = () => {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/companies");
+      router.push("/candidates");
     } else if (!loading && user) {
       getBookmarkedJobs();
     }

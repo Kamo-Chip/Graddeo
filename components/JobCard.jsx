@@ -5,27 +5,10 @@ import utilityStyles from "../styles/utilities.module.css";
 import { timeSincePosted, formatSalary } from "../lib/format";
 
 const JobCard = ({
-  companyName,
-  position,
-  jobType,
-  benefits,
-  location,
-  salary,
-  salaryIsNegotiable,
-  description,
-  applitcationURL,
-  applicationEmail,
-  companyLogo,
-  hasCustomBackground,
-  background,
-  datePosted,
-  companyEmail,
-  invoiceEmail,
-  jobId,
-  salaryType,
+job
 }) => {
   return (
-    <div className={jobCardStyles.card} style={{ backgroundColor: background }}>
+    <div className={jobCardStyles.card} style={{ backgroundColor: job.background }}>
       <div className={jobCardStyles.start}>
         <div
           style={{
@@ -37,8 +20,8 @@ const JobCard = ({
         >
           <div className={jobCardStyles.logoContainer}>
             <Image
-              loader={() => companyLogo}
-              src={companyLogo}
+              loader={() => job.companyLogo}
+              src={job.companyLogo}
               alt="company logo"
               height={60}
               width={60}
@@ -56,9 +39,9 @@ const JobCard = ({
                 textOverflow: "ellipsis",
               }}
             >
-              {position ? position : "Position"}
+              {job.position ? job.position : "Position"}
             </span>
-            <span>{companyName ? companyName : "Company"}</span>
+            <span>{job.companyName ? job.companyName : "Company"}</span>
           </div>
         </div>
 
@@ -68,23 +51,23 @@ const JobCard = ({
               className={utilityStyles.roundOut}
               style={{ marginRight: ".5em" }}
             >
-              📍{location ? location : "Location"}
+              📍{job.location ? job.location : "Location"}
             </span>
             <span
               className={utilityStyles.roundOut}
               style={{ marginRight: ".5em" }}
             >
-              💵{salary ? "R" + formatSalary(salary) : "Salary"}
-              {salaryType.includes("year")
+              💵{job.salary ? "R" + formatSalary(job.salary) : "Salary"}
+              {job.salaryType.includes("year")
                 ? "/yr"
-                : salaryType.includes("month")
+                : job.salaryType.includes("month")
                 ? "/mo"
-                : salaryType.includes("hour")
+                : job.salaryType.includes("hour")
                 ? "/hr"
                 : null}
             </span>
             <span className={utilityStyles.roundOut}>
-              {jobType ? jobType : "Job type"}
+              {job.jobType ? job.jobType : "Job type"}
             </span>
           </div>
         </div>
@@ -92,7 +75,7 @@ const JobCard = ({
 
       <div className={jobCardStyles.benefitsContainer}>
         <ul className={jobCardStyles.benefitsList}>
-          {benefits.map((attribute, idx) => {
+          {job.benefits.map((attribute, idx) => {
             if (idx < 6) {
               return (
                 <li
@@ -106,7 +89,7 @@ const JobCard = ({
           })}
         </ul>
       </div>
-      {datePosted ? (
+      {job.datePosted ? (
         <div
           style={{
             display: "flex",
@@ -117,7 +100,7 @@ const JobCard = ({
           }}
           className={jobCardStyles.date}
         >
-          {timeSincePosted(datePosted)}
+          {timeSincePosted(job.datePosted)}
         </div>
       ) : null}
     </div>
