@@ -19,7 +19,7 @@
   "durations": ["🖊️Permanent", "✏️Temporary"],
   "salaryTypes": ["📅Per year", "📆Per month", "⏲️Per hour"],
   "schoolYears": ["🐣Undergraduate", "🐥Postgraduate", "🐔Alumni"],
-  "sexes": ["♂️Male", "♀️Female"],
+  "sexes": ["♂️Male", "♀️Female", "Non-binary", "Transgender", "Prefer not to say "],
   "industries": [
     "Telecommunications",
     "Consumer services",

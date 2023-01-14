@@ -3,7 +3,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
 import utilityStyles from "../../styles/utilities.module.css";
 import CustomSelect from "../../components/CustomSelect";
-import { MdAddCircle, MdCancel } from "react-icons/md";
+import { MdAddCircle, MdCancel, MdOutlineFileUpload } from "react-icons/md";
 import createProfileStyles from "../../styles/createProfile.module.css";
 import { db, storage } from "../../firebase";
 import { setDoc, doc } from "firebase/firestore";
@@ -23,7 +23,7 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { HiUserCircle } from "react-icons/hi";
+import { HiUser } from "react-icons/hi";
 import FieldContainer from "../../components/FieldContainer";
 import {
   schoolYears,
@@ -44,10 +44,23 @@ const CreateCandidateProfile = () => {
     schoolYear: "",
     resume: "",
     resumeName: "",
-    experience: [],
+    experience: [
+      {
+        position: "",
+        company: "",
+        start: "",
+        end: "",
+      },
+    ],
     skills: [],
     roles: [],
-    projects: [],
+    projects: [
+      {
+        name: "",
+        description: "",
+        link: "",
+      },
+    ],
     education: [
       {
         institution: "",
@@ -389,7 +402,7 @@ const CreateCandidateProfile = () => {
     if (!inputIsValid()) {
       window.alert("Fill in all required (*) fields");
     } else if (!linksAreValid()) {
-      window.alert("Format links correctly as indicated")
+      window.alert("Format links correctly as indicated");
     } else {
       setUserDetails((prevState) => ({
         ...prevState,
@@ -454,7 +467,7 @@ const CreateCandidateProfile = () => {
             smallText="Your first and lastname"
             fieldType={
               <input
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 type="text"
                 name="name"
                 id="name"
@@ -469,6 +482,68 @@ const CreateCandidateProfile = () => {
               />
             }
           />
+          <div className={utilityStyles.fieldContainer}>
+            <div className={utilityStyles.labelContainer}>
+              <label htmlFor="photo">Profile photo</label>
+              <small>A photo of your pretty face {":)"}</small>
+            </div>
+            <div className={utilityStyles.fileInputContainer}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "120px",
+                  height: "94px",
+                }}
+              >
+                {userDetails.profilePhoto == "" ? (
+                  <span
+                    style={{
+                      marginRight: "1rem",
+                    }}
+                  >
+                    <HiUser size="90px" color="#000" />
+                  </span>
+                ) : (
+                  <Image
+                    loader={() => userDetails.profilePhoto}
+                    src={userDetails.profilePhoto}
+                    alt="profile photo"
+                    height={90}
+                    width={90}
+                    style={{
+                      marginRight: "1rem",
+                    }}
+                    className={utilityStyles.profilePhoto}
+                  />
+                )}
+              </div>
+              {userDetails.profilePhoto !== "" ? (
+                <span
+                  onClick={deleteProfilePhoto}
+                  className={utilityStyles.formButton}
+                >
+                  Delete photo
+                </span>
+              ) : (
+                <label
+                  for="photo"
+                  style={{ width: "fit-content" }}
+                  className={utilityStyles.formButton}
+                >
+                  Upload photo
+                </label>
+              )}
+
+              <input
+                type="file"
+                name="photo"
+                id="photo"
+                className={utilityStyles.fileInput}
+                onChange={handleProfilePhotoUpload}
+              />
+            </div>
+          </div>
           <FieldContainer
             name="bio"
             required={true}
@@ -477,7 +552,7 @@ const CreateCandidateProfile = () => {
             fieldType={
               <textarea
                 maxLength={200}
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 name="bio"
                 id="bio"
                 onChange={handleChangeForInput}
@@ -491,7 +566,7 @@ const CreateCandidateProfile = () => {
             label="Location"
             fieldType={
               <input
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 type="text"
                 name="location"
                 id="location"
@@ -501,6 +576,7 @@ const CreateCandidateProfile = () => {
               />
             }
           />
+
           <FieldContainer
             name="email"
             required={true}
@@ -508,7 +584,7 @@ const CreateCandidateProfile = () => {
             smallText="The email address where employers can contact you"
             fieldType={
               <input
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 type="email"
                 name="email"
                 id="email"
@@ -571,49 +647,9 @@ const CreateCandidateProfile = () => {
               />
             }
           />
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label htmlFor="photo">Profile photo</label>
-              <small>A photo of your pretty face {":)"}</small>
-            </div>
-            <div className={utilityStyles.fileInputContainer}>
-              <input
-                type="file"
-                name="photo"
-                id="photo"
-                className={utilityStyles.fileInput}
-                onChange={handleProfilePhotoUpload}
-              />
-            </div>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              {userDetails.profilePhoto == "" ? (
-                <HiUserCircle size="90px" color="gray" />
-              ) : (
-                <Image
-                  loader={() => userDetails.profilePhoto}
-                  src={userDetails.profilePhoto}
-                  alt="profile photo"
-                  height={90}
-                  width={90}
-                  style={{
-                    marginTop: "1rem",
-                    marginRight: "1rem",
-                    borderRadius: "50%",
-                  }}
-                />
-              )}
-
-              {userDetails.profilePhoto !== "" ? (
-                <span onClick={deleteProfilePhoto}>
-                  <MdCancel />
-                </span>
-              ) : null}
-            </div>
-          </div>
         </section>
         <section className={utilityStyles.formSection}>
           <h2>Education</h2>
-          <span>First is your prime education</span>
           {userDetails.education.map((element, idx) => {
             return (
               <Education
@@ -625,10 +661,15 @@ const CreateCandidateProfile = () => {
               />
             );
           })}
-
-          <span onClick={addEducation}>
-            <MdAddCircle size="2rem" />
-          </span>
+          <div className={utilityStyles.fieldContainer}>
+            <span
+              className={utilityStyles.formButton}
+              style={{ marginTop: "1rem", marginLeft: ".2rem" }}
+              onClick={addEducation}
+            >
+              Add
+            </span>
+          </div>
         </section>
 
         <section className={utilityStyles.formSection}>
@@ -644,37 +685,45 @@ const CreateCandidateProfile = () => {
               />
             );
           })}
-          <span onClick={addExperience}>
-            <MdAddCircle size="2rem" />
-          </span>
+          <div className={utilityStyles.fieldContainer}>
+            <span
+              className={utilityStyles.formButton}
+              style={{ marginLeft: ".2rem", marginTop: "1rem" }}
+              onClick={addExperience}
+            >
+              Add
+            </span>
+          </div>
         </section>
         <section className={utilityStyles.formSection}>
           <h2>Skills</h2>
-          <small
-            style={{
-              color: "rgb(56, 56, 56)",
-              marginBottom: "1rem",
-              textAlign: "center",
-            }}
-          >
-            Include both technical and soft skills
-          </small>
-          <div className={utilityStyles.inputAndAddButton}>
-            <input
-              className={utilityStyles.roundOut}
-              type="text"
-              name="skills"
-              id="skills"
-            />
-            <span onClick={addSkill} id="btn-skills">
-              <MdAddCircle size="2rem" />
-            </span>
-          </div>
 
+          <FieldContainer
+            name="skills"
+            label="Skills"
+            smallText="Include both technical and soft skills"
+            fieldType={
+              <div className={utilityStyles.inputAndAddButton}>
+                <input
+                  className={utilityStyles.input}
+                  type="text"
+                  name="skills"
+                  id="skills"
+                />
+                <span
+                  onClick={addSkill}
+                  id="btn-skills"
+                  className={utilityStyles.formButton}
+                >
+                  Add
+                </span>
+              </div>
+            }
+          />
           <div
+            className={createProfileStyles.fieldContainer}
             style={{
               marginTop: "1rem",
-              width: "250px",
               display: "flex",
               flexWrap: "wrap",
             }}
@@ -699,7 +748,7 @@ const CreateCandidateProfile = () => {
             smallText="Your LinkedIn profile username"
             fieldType={
               <div
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -708,7 +757,7 @@ const CreateCandidateProfile = () => {
               >
                 <div>https://www.linkedin.com/in/</div>
                 <input
-                  className={utilityStyles.roundOut}
+                  className={utilityStyles.linkInput}
                   type="text"
                   name="linkedIn"
                   id="linkedIn"
@@ -725,7 +774,7 @@ const CreateCandidateProfile = () => {
             smallText="Your GitHub profile username"
             fieldType={
               <div
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -734,6 +783,7 @@ const CreateCandidateProfile = () => {
               >
                 <div>https://github.com/</div>
                 <input
+                  className={utilityStyles.linkInput}
                   type="text"
                   name="gitHub"
                   id="gitHub"
@@ -745,12 +795,12 @@ const CreateCandidateProfile = () => {
           />
           <FieldContainer
             name="instagram"
-            icon={<BsInstagram/>}
+            icon={<BsInstagram />}
             label="Instagram"
             smallText="Your Instagram profile username"
             fieldType={
               <div
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -759,6 +809,7 @@ const CreateCandidateProfile = () => {
               >
                 <div>https://www.instagram.com/</div>
                 <input
+                  className={utilityStyles.linkInput}
                   type="text"
                   name="instagram"
                   id="instagram"
@@ -775,7 +826,7 @@ const CreateCandidateProfile = () => {
             smallText="Your Twitter profile username"
             fieldType={
               <div
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -784,7 +835,7 @@ const CreateCandidateProfile = () => {
               >
                 <div>https://twitter.com/</div>
                 <input
-                  className={utilityStyles.roundOut}
+                  className={utilityStyles.linkInput}
                   type="text"
                   name="twitter"
                   id="twitter"
@@ -801,7 +852,7 @@ const CreateCandidateProfile = () => {
             smallText="Your YouTube profile handle"
             fieldType={
               <div
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -810,7 +861,7 @@ const CreateCandidateProfile = () => {
               >
                 <div>https://www.youtube.com/@</div>
                 <input
-                  className={utilityStyles.roundOut}
+                  className={utilityStyles.linkInput}
                   type="text"
                   name="youTube"
                   id="youTube"
@@ -827,7 +878,7 @@ const CreateCandidateProfile = () => {
             smallText="Your portfolio site"
             fieldType={
               <div
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -836,7 +887,7 @@ const CreateCandidateProfile = () => {
               >
                 <div>http://</div>
                 <input
-                  className={utilityStyles.roundOut}
+                  className={utilityStyles.linkInput}
                   type="text"
                   name="portfolio"
                   id="portfolio"
@@ -852,6 +903,8 @@ const CreateCandidateProfile = () => {
           <FieldContainer
             name="jobType"
             label="Job type"
+            smallText="The type of job that you are looking for"
+            required={true}
             fieldType={
               <CustomSelect
                 title="💼Select"
@@ -864,32 +917,34 @@ const CreateCandidateProfile = () => {
               />
             }
           />
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label htmlFor="jobType" className={utilityStyles.required}>
-                Roles {"you're"} interested in
-              </label>
-              <small>
-                Enter the titles of jobs that your are interested in. For
-                example front end developer, software engineer, etc.
-              </small>
-            </div>
-            <div className={utilityStyles.inputAndAddButton}>
-              <input
-                className={utilityStyles.roundOut}
-                type="text"
-                name="roles"
-                id="roles"
-              />
-              <span onClick={addRole} id="btn-roles">
-                <MdAddCircle size="2rem" />
-              </span>
-            </div>
-          </div>
+          <FieldContainer
+            name="roles"
+            label="Roles you're interested in"
+            smallText="Enter the titles of jobs that you are interested in. For
+            example front end developer, software engineer, etc."
+            required={true}
+            fieldType={
+              <div className={utilityStyles.inputAndAddButton}>
+                <input
+                  className={utilityStyles.input}
+                  type="text"
+                  name="roles"
+                  id="roles"
+                />
+                <span
+                  onClick={addRole}
+                  id="btn-roles"
+                  className={utilityStyles.formButton}
+                >
+                  Add
+                </span>
+              </div>
+            }
+          />
           <div
+            className={createProfileStyles.fieldContainer}
             style={{
               marginTop: "1rem",
-              width: "300px",
               display: "flex",
               flexWrap: "wrap",
             }}
@@ -921,11 +976,17 @@ const CreateCandidateProfile = () => {
               />
             );
           })}
-          <span onClick={addProject}>
-            <MdAddCircle size="2rem" />
-          </span>
+          <div className={utilityStyles.fieldContainer}>
+            <span
+              className={utilityStyles.formButton}
+              style={{ marginTop: "1rem", marginLeft: ".2rem" }}
+              onClick={addProject}
+            >
+              Add
+            </span>
+          </div>
         </section>
-        <section>
+        <section className={utilityStyles.formSection}>
           <h2>Documents</h2>
           <div className={utilityStyles.fieldContainer}>
             <div
@@ -937,6 +998,22 @@ const CreateCandidateProfile = () => {
             </div>
             <div className={utilityStyles.fileInputContainer}>
               <div style={{ display: "flex", flexDirection: "column" }}>
+                {userDetails.resume ? (
+                  <span
+                    onClick={deleteResume}
+                    className={utilityStyles.formButton}
+                  >
+                    Delete resume
+                  </span>
+                ) : (
+                  <label
+                    for="resume"
+                    style={{ width: "fit-content" }}
+                    className={utilityStyles.formButton}
+                  >
+                    Upload resume
+                  </label>
+                )}
                 <input
                   type="file"
                   name="resume"
@@ -964,14 +1041,22 @@ const CreateCandidateProfile = () => {
 
 const Education = ({ index, handleChange, removeItem, userDetails }) => {
   return (
-    <div style={{ width: "70%" }} id={`${index}-education`}>
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+      id={`${index}-education`}
+    >
       <FieldContainer
         name="institution"
         required={true}
         label="Institution"
         fieldType={
           <input
-            className={utilityStyles.roundOut}
+            className={utilityStyles.input}
             type="text"
             name="institution"
             id="institution"
@@ -1009,10 +1094,10 @@ const Education = ({ index, handleChange, removeItem, userDetails }) => {
           name="major"
           required={true}
           label="Major"
-          smallText="Your major degree e.g) Computer Science, Business, Economics, etc."
+          smallText="The main focus of your degree, e.g) Computer Science, Computer Engineering, Informatics, etc."
           fieldType={
             <input
-              className={utilityStyles.roundOut}
+              className={utilityStyles.input}
               type="text"
               name="major"
               id="major"
@@ -1026,10 +1111,10 @@ const Education = ({ index, handleChange, removeItem, userDetails }) => {
           name="major"
           required={true}
           label="Name"
-          smallText="The name of the certification"
+          smallText="The name of the certification you obtained, e.g) Microsoft MTA"
           fieldType={
             <input
-              className={utilityStyles.roundOut}
+              className={utilityStyles.input}
               type="text"
               name="major"
               id="major"
@@ -1073,11 +1158,11 @@ const Education = ({ index, handleChange, removeItem, userDetails }) => {
               type="number"
               name="graduationYear"
               id="graduationYear"
-              className={utilityStyles.roundOut}
+              className={utilityStyles.input}
               style={{
                 height: "38px",
                 width: "180px",
-                marginLeft: ".5rem",
+                marginLeft: ".2rem",
                 marginTop: ".5rem",
               }}
               placeholder="Year"
@@ -1087,24 +1172,30 @@ const Education = ({ index, handleChange, removeItem, userDetails }) => {
           </div>
         }
       />
-      <span id={`${index}-rem-education`} onClick={removeItem}>
-        <MdCancel size="2rem" />
-      </span>
+      {index > 0 ? (
+        <div className={utilityStyles.fieldContainer}>
+          <span
+            id={`${index}-rem-education`}
+            className={utilityStyles.formButton}
+            style={{ marginTop: "1rem", marginLeft: ".2rem" }}
+            onClick={removeItem}
+          >
+            Remove
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 };
 const Item = ({ skill, removeSkill }) => {
   return (
     <div
-      className={utilityStyles.roundOut}
+      className={utilityStyles.itemBar}
       style={{
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         fontSize: "12px",
-        maxWidth: "fit-content",
-        margin: ".5em",
-        marginLeft: "0",
       }}
     >
       <span
@@ -1132,11 +1223,19 @@ const Item = ({ skill, removeSkill }) => {
 
 const Project = ({ index, handleChange, removeItem, userDetails }) => {
   return (
-    <div id={`${index}-projects`} className={utilityStyles.fieldContainer}>
-      <div>
+    <div
+      id={`${index}-projects`}
+      style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <div className={createProfileStyles.fieldExtension}>
         <div className={createProfileStyles.projects}>
           <input
-            className={utilityStyles.roundOut}
+            className={utilityStyles.input}
             type="text"
             name="name"
             id="name"
@@ -1146,114 +1245,68 @@ const Project = ({ index, handleChange, removeItem, userDetails }) => {
           />
 
           <textarea
-            className={utilityStyles.roundOut}
+            className={utilityStyles.input}
             name="description"
             id="description"
             placeholder="Description"
             onChange={handleChange}
             value={userDetails.projects[index]["description"]}
-            style={{ marginTop: ".5rem" }}
+            style={{ marginTop: "1rem" }}
           />
-
-          <input
-            className={utilityStyles.roundOut}
-            type="text"
-            name="link"
-            id="link"
-            placeholder="Link to project"
-            onChange={handleChange}
-            value={userDetails.projects[index]["link"]}
-            style={{ margin: ".5rem 0 1rem 0" }}
-          />
+          <div
+            className={utilityStyles.input}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: "1rem",
+            }}
+          >
+            <div>http://</div>
+            <input
+              className={utilityStyles.linkInput}
+              type="text"
+              name="link"
+              id="link"
+              onChange={handleChange}
+              value={userDetails.projects[index]["link"]}
+            />
+          </div>
         </div>
       </div>
-
-      <span id={`${index}-rem-projects`} onClick={removeItem}>
-        <MdCancel size="2rem" />
-      </span>
-    </div>
-  );
-};
-
-const Course = ({ index, handleChange, removeItem, userDetails }) => {
-  return (
-    <div id={`${index}-courses`} className={createProfileStyles.experience}>
-      <div>
-        <div style={{ marginBottom: "1em" }}>
-          <input
-            className={utilityStyles.roundOut}
-            type="text"
-            name="courseName"
-            id="courseName"
-            placeholder="Name of the course"
-            onChange={handleChange}
-            value={userDetails.courses[index]["courseName"]}
-          />
-          <span style={{ margin: "0 1em" }}>by</span>
-          <input
-            className={utilityStyles.roundOut}
-            type="text"
-            name={`courseInstitution`}
-            id={`courseInstitution`}
-            placeholder="Creator of the course"
-            onChange={handleChange}
-            value={userDetails.courses[index]["courseInstitution"]}
-          />
-        </div>
-        <div>
-          <input
-            className={utilityStyles.roundOut}
-            type="text"
-            name={`start`}
-            id={`start`}
-            placeholder="From"
-            onChange={handleChange}
-            onFocus={(e) => {
-              e.target.type = "date";
-            }}
-            value={userDetails.courses[index]["start"]}
-          />
-          <span style={{ margin: "0 1em" }}>to</span>
-          <input
-            className={utilityStyles.roundOut}
-            type="text"
-            name={`end`}
-            id={`end`}
-            placeholder="To"
-            onChange={handleChange}
-            onFocus={(e) => {
-              e.target.type = "date";
-            }}
-            value={userDetails.courses[index]["end"]}
-          />
-        </div>
-        <div>
-          <input
-            className={utilityStyles.roundOut}
-            type="text"
-            name="linkToCourse"
-            id="linkToCourse"
-            placeholder="Link to course"
-            onChange={handleChange}
-            value={userDetails.courses[index]["linkToCourse"]}
-            style={{ margin: "1rem 0" }}
-          />
-        </div>
+      <div className={utilityStyles.fieldContainer}>
+        <span
+          id={`${index}-rem-projects`}
+          onClick={removeItem}
+          className={utilityStyles.formButton}
+          style={{ marginLeft: ".2rem", marginTop: "1rem" }}
+        >
+          Remove
+        </span>
       </div>
-      <span id={`${index}-rem-courses`} onClick={removeItem}>
-        <MdCancel size="2rem" />
-      </span>
     </div>
   );
 };
 
 const Experience = ({ index, handleChange, removeItem, userDetails }) => {
   return (
-    <div id={`${index}-experience`} className={createProfileStyles.experience}>
-      <div>
-        <div style={{ marginBottom: "1em" }}>
+    <div
+      id={`${index}-experience`}
+      style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginTop: "1rem",
+      }}
+    >
+      <div className={createProfileStyles.fieldContainer}>
+        <div
+          className={createProfileStyles.experienceInputContainer}
+          style={{ marginBottom: "1rem" }}
+        >
           <input
-            className={utilityStyles.roundOut}
+            className={utilityStyles.input}
             type="text"
             name="position"
             id="position"
@@ -1261,9 +1314,9 @@ const Experience = ({ index, handleChange, removeItem, userDetails }) => {
             onChange={handleChange}
             value={userDetails.experience[index]["position"]}
           />
-          <span style={{ margin: "0 1em" }}>at</span>
+          {/* <span style={{ margin: "0 1em" }}>@</span> */}
           <input
-            className={utilityStyles.roundOut}
+            className={utilityStyles.input}
             type="text"
             name={`company`}
             id={`company`}
@@ -1272,26 +1325,26 @@ const Experience = ({ index, handleChange, removeItem, userDetails }) => {
             value={userDetails.experience[index]["company"]}
           />
         </div>
-        <div>
+        <div className={createProfileStyles.experienceInputContainer}>
           <input
-            className={utilityStyles.roundOut}
+            className={utilityStyles.input}
             type="text"
             name={`start`}
             id={`start`}
-            placeholder="From"
+            placeholder="Start date"
             onChange={handleChange}
             onFocus={(e) => {
               e.target.type = "date";
             }}
             value={userDetails.experience[index]["start"]}
           />
-          <span style={{ margin: "0 1em" }}>to</span>
+          {/* <span style={{ margin: "0 1em" }}>to</span> */}
           <input
-            className={utilityStyles.roundOut}
+            className={utilityStyles.input}
             type="text"
             name={`end`}
             id={`end`}
-            placeholder="To"
+            placeholder="End date"
             onChange={handleChange}
             onFocus={(e) => {
               e.target.type = "date";
@@ -1300,13 +1353,17 @@ const Experience = ({ index, handleChange, removeItem, userDetails }) => {
           />
         </div>
       </div>
-      <span
-        id={`${index}-rem-experience`}
-        onClick={removeItem}
-        style={{ marginTop: "1rem" }}
-      >
-        <MdCancel size="2rem" />
-      </span>
+
+      <div className={utilityStyles.fieldContainer}>
+        <span
+          id={`${index}-rem-experience`}
+          onClick={removeItem}
+          style={{ marginTop: "1rem", marginLeft: ".2rem" }}
+          className={utilityStyles.formButton}
+        >
+          Remove
+        </span>
+      </div>
     </div>
   );
 };

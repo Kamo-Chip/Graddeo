@@ -21,7 +21,7 @@ const FieldContainer = ({
           {icon} {label}
         </label>
         {smallText ? (
-          <small className={utilityStyles.grayedOutText}>{smallText}</small>
+          <small className={utilityStyles.grayedOutText} style={{marginLeft: ".2rem"}}>{smallText}</small>
         ) : null}
       </div>
       {fieldType}

@@ -19,5 +19,32 @@
 }
 
 .fieldExtension {
-  width: 90%
+  width: 70%
+}
+
+.fieldContainer {
+  width: 70%;
+}
+
+.fieldContainer div input{
+  width: calc(50% - 8px);
+}
+
+@media screen and (max-width: 425px) {
+  .fieldContainer {
+    width: 100%;
+  }
+
+  .fieldExtension {
+    width: 100%;
+  }
+
+  .fieldContainer div input {
+    width: 100%
+  }
+
+  .experienceInputContainer {
+    display: flex;
+    flex-direction: column;
+  }
 }

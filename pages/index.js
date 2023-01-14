@@ -1,15 +1,37 @@
 import Hero from "../sections/Hero";
 import { auth, db } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { getDoc, doc } from "firebase/firestore";
+import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
 
 export default function Home() {
   const [user] = useAuthState(auth);
+  const [ companyInfo, setCompanyInfo] = useState({});
   const router = useRouter();
 
   const checkUserExists = async () => {
+    // if(isSignInWithEmailLink(auth, window.location.href)) {
+    //   let email = window.localStorage.getItem("emailForSignIn");
+    //   console.log(email);
+
+    //   if(!email) {
+    //     email = window.prompt("Please provide your email for confirmation");
+    //   }
+
+    //   signInWithEmailLink(auth, email, window.location.href)
+    //   .then((res) => {
+    //     setCompanyInfo(res);
+    //     // window.localStorage.removeItem("emailForSignIn");
+    //     // if(res.additionalUserInfo.isNewUser){
+    //     //   router.push("/companies/create-profile")
+    //     // }
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   })
+    // }
     try {
       const candidate = await getDoc(doc(db, "candidates", user.uid));
       if (candidate.data()) {
@@ -31,10 +53,15 @@ export default function Home() {
     }
   };
   useEffect(() => {
-    if (user) {
+    if(user) {
       checkUserExists();
     }
   }, [user]);
+
+  // useEffect(() => {
+  //   console.log(companyInfo);
+  //   console.log(companyInfo.additionalUserInfo);
+  // }, [companyInfo])
 
   return (
     <>

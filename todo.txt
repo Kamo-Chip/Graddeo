@@ -1,3 +1,6 @@
+Graddeo
+- Online recruting platform for higher education students and alumni in the STEM fields
+
 What I do:
 - Offer interview prep material to candidates
 - Facilitate communication between companies and universities

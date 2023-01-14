@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { getDoc, doc, collection } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { useRouter } from "next/router";
@@ -20,7 +20,18 @@ const CandidateLandingPage = () => {
         if (response.data()) {
           router.push("/candidates/jobs");
         } else {
-          router.push("/candidates/create-profile");
+          try {
+            const company = await getDoc(doc(db, "companies", user.uid));
+            if (company.data()) {
+              window.alert("User already exists");
+              await signOut(auth);
+              return;
+            }else {
+              router.push("/candidates/create-profile");
+            }
+          } catch (err) {
+            console.error(err);
+          }
         }
       }
     } catch (err) {

@@ -51,14 +51,16 @@ const Navigation = () => {
       <header className="logo">
         <Link
           href={
-            router.pathname.split("/")[1] == "candidates"
+            router.pathname.split("/")[1] == "candidates" &&
+            router.pathname.split("/").length > 2
               ? "/candidates/jobs"
-              : router.pathname.split("/")[1] == "companies"
+              : router.pathname.split("/")[1] == "companies" &&
+                router.pathname.split("/").length > 2
               ? "/companies/candidate-list"
               : "/"
           }
         >
-          Logo
+          Graddeo
         </Link>
       </header>
       <div className="nav-items-container">
@@ -111,12 +113,12 @@ const Navigation = () => {
             <>
               <li>
                 <Link href="/candidates/" onClick={closeNav}>
-                  For job seekers
+                  Students
                 </Link>
               </li>
               <li>
                 <Link href="/companies/" onClick={closeNav}>
-                  For employers
+                  Employers
                 </Link>
               </li>
               <li>
