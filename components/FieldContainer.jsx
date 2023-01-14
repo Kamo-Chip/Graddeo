@@ -15,13 +15,14 @@ const FieldContainer = ({
       <div className={utilityStyles.labelContainer}>
         <label
           htmlFor={name}
-          className={required ? utilityStyles.required : ""}
+          className={required ? `${utilityStyles.required} ${utilityStyles.headerTextNSmall}`: utilityStyles.headerTextNSmall}
           id={labelId ? labelId : ""}
+          
         >
           {icon} {label}
         </label>
         {smallText ? (
-          <small className={utilityStyles.grayedOutText} style={{marginLeft: ".2rem"}}>{smallText}</small>
+          <small className={utilityStyles.grayedOutText} style={{marginLeft: ".5rem"}}>{smallText}</small>
         ) : null}
       </div>
       {fieldType}

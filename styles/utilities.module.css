@@ -1,14 +1,21 @@
 .headerText {
   font-size: 1.2rem;
   font-weight: bold;
-  font-family: mabry;
+  font-family: clashDisplayRegular;
   text-transform: capitalize;
 }
 
 .headerTextN {
   font-size: 1.2rem;
   font-weight: bold;
-  font-family: Inter;
+  font-family: satoshi;
+  text-transform: capitalize;
+}
+
+.headerTextNSmall {
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: satoshi;
   text-transform: capitalize;
 }
 
@@ -35,6 +42,10 @@
   border-bottom: solid rgba(128, 128, 128, 0.408) 1px;
 }
 
+.formSection:last-of-type{
+  border: none;
+}
+
 .containerFlex {
   display: flex;
   flex-direction: column;
@@ -47,7 +58,7 @@
   align-items: center;
   max-width: 800px;
   width: 100%;
-  background-color: #f5f5ed;
+  background-color: var(--color-4);
   margin: 3rem 0;
   margin-bottom: 1rem;
   padding-bottom: 2em;
@@ -85,10 +96,10 @@
   font-size: 1rem;
   padding: 0.5em;
   border: solid #000 2px;
-  border-radius: 5px;
+  border-radius: 3px;
   box-shadow: #000 3px 3px;
   background-color: #fff;
-  margin-left: 0.2rem;
+  margin-left: 0.5rem;
 }
 
 .itemBar {
@@ -173,16 +184,19 @@
   width: fit-content;
   border: solid #000 2px;
   padding: 0.5em;
-  background-color: #000;
-  color: #fff;
+  background-color: var(--color-1);
+  color: #000;
   cursor: pointer;
   transition: background-color 500ms, color 500ms, box-shadow 500ms;
+  font-family: clashDisplayRegular;
+  font-weight: 600;
+  padding: .35em 1em;
+  box-shadow: #000 3px 3px;
 }
 
 .formButton:hover {
-  background-color: #fff;
-  color: #000;
-  box-shadow: #000 3px 3px;
+  box-shadow: none;
+  background-color: var(--dark-color-1);
 }
 
 .checkBoxLabel {
@@ -213,12 +227,6 @@
   border-radius: 5px;
 }
 
-@media screen and (max-width: 600px) {
-  .form section {
-    padding: 0 2em;
-  }
-}
-
 @media screen and (max-width: 500px) {
   .headerText {
     max-width: 260px !important;
@@ -228,17 +236,15 @@
 @media screen and (max-width: 425px) {
   .formSection {
     width: 100%;
+    padding-left: 1em;
+    padding-right: 1em;
   }
   .fieldContainer {
     width: 100%;
   }
 
-  .form {
-    padding-right: 1em !important;
-    padding-left: 1em !important;
-  }
-  .form section {
-    padding: 0 1em;
+  .input {
+    width: 95% !important;
   }
 }
 

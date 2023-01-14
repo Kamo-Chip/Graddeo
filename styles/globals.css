@@ -11,6 +11,25 @@
 }
 
 @font-face {
+  font-family: clashDisplayRegular;
+  src: url("/fonts/ClashDisplay-Regular.ttf");
+}
+
+@font-face {
+  font-family: chillaxMedium;
+  src: url("/fonts/Chillax-Medium.ttf");
+}
+
+@font-face {
+  font-family: chillaxRegular;
+  src: url("/fonts/Chillax-Regular.ttf");
+}
+
+@font-face {
+  font-family: satoshi;
+  src: url("/fonts/Satoshi-Regular.ttf");
+}
+@font-face {
   font-family: mabry;
   src: url("/fonts/Mabry-Pro-Medium.ttf");
   font-display: swap;
@@ -21,13 +40,19 @@
 
 :root {
   --link-color: rgb(0, 106, 255);
+  --color-1: #ceff1a;
+  --dark-color-1: #e0ff6e;
+  --color-2: #3A3752;
+  --color-3: #73EAD7;
+  --color-4: #f2f5f2;
+  --color-5: #6637ee;
 }
 
 body {
   margin: 0;
   overflow-x: hidden;
   background-color: #fff;
-  font-family: "Inter";
+  font-family: satoshi;
 }
 
 #__next {
@@ -36,6 +61,17 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+input, select, textarea {
+  font-family: satoshi;
+}
+
+button {
+  font-family: clashDisplayRegular;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: .35em 1em;
 }
 
 input:focus,
@@ -48,19 +84,17 @@ button:focus {
 h1,
 h2,
 h3 {
-  font-family: mabry;
+  font-family: clashDisplayRegular;
   text-align: center;
   text-transform: capitalize;
 }
 
 h1 {
   font-size: 3rem;
-  font-weight: 500;
 }
 
 h2 {
   font-size: 2.25rem;
-  font-weight: lighter;
 }
 
 h3 {

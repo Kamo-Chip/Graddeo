@@ -6,6 +6,8 @@ What I do:
 - Facilitate communication between companies and universities
 
 Tasks
+- Fix input formatting. Capitalise first letter and lower everuthing. 
+- Make mini text editor for descriptions
 - Add authentication checks (user already exists, email link login, etc.)
 - Populate with content
 - Design app

@@ -29,6 +29,7 @@ import {
   schoolYears,
   jobTypes,
   visaStatusses,
+  sexes
 } from "../../lib/filterOptions.json";
 import { checkLink } from "../../lib/format";
 
@@ -169,7 +170,7 @@ const CreateCandidateProfile = () => {
     let skill = document.querySelector("#skills").value.toUpperCase();
     document.querySelector("#skills").value = "";
 
-    if (!userDetails.skills.includes(skill)) {
+    if (!userDetails.skills.includes(skill) && skill) {
       setUserDetails({
         ...userDetails,
         skills: [...userDetails.skills, skill],
@@ -181,7 +182,7 @@ const CreateCandidateProfile = () => {
     let role = document.querySelector("#roles").value;
     document.querySelector("#roles").value = "";
 
-    if (!userDetails.roles.includes(role)) {
+    if (!userDetails.roles.includes(role) && role) {
       setUserDetails({
         ...userDetails,
         roles: [...userDetails.roles, role],
@@ -459,7 +460,7 @@ const CreateCandidateProfile = () => {
     <div className={utilityStyles.containerFlex}>
       <form className={utilityStyles.form}>
         <section className={utilityStyles.formSection}>
-          <h2>{"Let's get started"}</h2>
+          <h2> {query.data ? "Edit profile" : "Let's get started"}</h2>
           <FieldContainer
             name="name"
             required={true}
@@ -485,7 +486,7 @@ const CreateCandidateProfile = () => {
           <div className={utilityStyles.fieldContainer}>
             <div className={utilityStyles.labelContainer}>
               <label htmlFor="photo">Profile photo</label>
-              <small>A photo of your pretty face {":)"}</small>
+              <small>Upload a photo of your pretty face {":)"}</small>
             </div>
             <div className={utilityStyles.fileInputContainer}>
               <div
@@ -642,7 +643,7 @@ const CreateCandidateProfile = () => {
                 stateTracker={showSex}
                 setStateTracker={setShowSex}
                 onChangeHandler={handleChangeForSelect}
-                options={["♂️Male", "♀️Female"]}
+                options={sexes}
                 value={userDetails.sex}
               />
             }
@@ -664,7 +665,7 @@ const CreateCandidateProfile = () => {
           <div className={utilityStyles.fieldContainer}>
             <span
               className={utilityStyles.formButton}
-              style={{ marginTop: "1rem", marginLeft: ".2rem" }}
+              style={{ marginTop: "1rem", marginLeft: ".5rem" }}
               onClick={addEducation}
             >
               Add
@@ -688,7 +689,7 @@ const CreateCandidateProfile = () => {
           <div className={utilityStyles.fieldContainer}>
             <span
               className={utilityStyles.formButton}
-              style={{ marginLeft: ".2rem", marginTop: "1rem" }}
+              style={{ marginLeft: ".5rem", marginTop: "1rem" }}
               onClick={addExperience}
             >
               Add
@@ -979,7 +980,7 @@ const CreateCandidateProfile = () => {
           <div className={utilityStyles.fieldContainer}>
             <span
               className={utilityStyles.formButton}
-              style={{ marginTop: "1rem", marginLeft: ".2rem" }}
+              style={{ marginTop: "1rem", marginLeft: ".5rem" }}
               onClick={addProject}
             >
               Add
@@ -993,7 +994,7 @@ const CreateCandidateProfile = () => {
               className={utilityStyles.labelContainer}
               style={{ marginTop: "0" }}
             >
-              <label htmlFor="resume">Resume</label>
+              <label htmlFor="resume" className={utilityStyles.headerTextNSmall}>Resume</label>
               <small>PDF file of your resume</small>
             </div>
             <div className={utilityStyles.fileInputContainer}>
@@ -1031,7 +1032,7 @@ const CreateCandidateProfile = () => {
             </div>
           </div>
         </section>
-        <button style={{ marginTop: "2rem" }} onClick={createProfile}>
+        <button onClick={createProfile} className={utilityStyles.formButton}>
           {query.data ? "Save changes" : "Create profile"}
         </button>
       </form>
@@ -1162,7 +1163,7 @@ const Education = ({ index, handleChange, removeItem, userDetails }) => {
               style={{
                 height: "38px",
                 width: "180px",
-                marginLeft: ".2rem",
+                marginLeft: ".5rem",
                 marginTop: ".5rem",
               }}
               placeholder="Year"
@@ -1177,7 +1178,7 @@ const Education = ({ index, handleChange, removeItem, userDetails }) => {
           <span
             id={`${index}-rem-education`}
             className={utilityStyles.formButton}
-            style={{ marginTop: "1rem", marginLeft: ".2rem" }}
+            style={{ marginTop: "1rem", marginLeft: ".5rem" }}
             onClick={removeItem}
           >
             Remove
@@ -1196,6 +1197,9 @@ const Item = ({ skill, removeSkill }) => {
         flexDirection: "row",
         alignItems: "center",
         fontSize: "12px",
+        color: "#fff",
+        backgroundColor: "var(--color-5)",
+        letterSpacing: ".75px"
       }}
     >
       <span
@@ -1279,7 +1283,7 @@ const Project = ({ index, handleChange, removeItem, userDetails }) => {
           id={`${index}-rem-projects`}
           onClick={removeItem}
           className={utilityStyles.formButton}
-          style={{ marginLeft: ".2rem", marginTop: "1rem" }}
+          style={{ marginLeft: ".5rem", marginTop: "1rem" }}
         >
           Remove
         </span>
@@ -1303,7 +1307,7 @@ const Experience = ({ index, handleChange, removeItem, userDetails }) => {
       <div className={createProfileStyles.fieldContainer}>
         <div
           className={createProfileStyles.experienceInputContainer}
-          style={{ marginBottom: "1rem" }}
+          
         >
           <input
             className={utilityStyles.input}
@@ -1313,6 +1317,7 @@ const Experience = ({ index, handleChange, removeItem, userDetails }) => {
             placeholder="Position"
             onChange={handleChange}
             value={userDetails.experience[index]["position"]}
+            style={{ marginBottom: "1rem" }}
           />
           {/* <span style={{ margin: "0 1em" }}>@</span> */}
           <input
@@ -1323,6 +1328,7 @@ const Experience = ({ index, handleChange, removeItem, userDetails }) => {
             placeholder="Company"
             onChange={handleChange}
             value={userDetails.experience[index]["company"]}
+            style={{ marginBottom: "1rem" }}
           />
         </div>
         <div className={createProfileStyles.experienceInputContainer}>
@@ -1337,6 +1343,7 @@ const Experience = ({ index, handleChange, removeItem, userDetails }) => {
               e.target.type = "date";
             }}
             value={userDetails.experience[index]["start"]}
+            style={{ marginBottom: "1rem" }}
           />
           {/* <span style={{ margin: "0 1em" }}>to</span> */}
           <input
@@ -1350,6 +1357,7 @@ const Experience = ({ index, handleChange, removeItem, userDetails }) => {
               e.target.type = "date";
             }}
             value={userDetails.experience[index]["end"]}
+            style={{ marginBottom: "1rem" }}
           />
         </div>
       </div>
@@ -1358,7 +1366,7 @@ const Experience = ({ index, handleChange, removeItem, userDetails }) => {
         <span
           id={`${index}-rem-experience`}
           onClick={removeItem}
-          style={{ marginTop: "1rem", marginLeft: ".2rem" }}
+          style={{ marginLeft: ".5rem" }}
           className={utilityStyles.formButton}
         >
           Remove
