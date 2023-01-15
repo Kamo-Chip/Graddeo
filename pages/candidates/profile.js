@@ -7,7 +7,7 @@ import { doc, getDoc } from "firebase/firestore";
 import CandidateProfile from "../../components/CandidateProfile";
 
 const CandidateProfilePage = () => {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const [userDetails, setUserDetails] = useState({});
   const router = useRouter();
 

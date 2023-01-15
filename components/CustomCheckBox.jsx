@@ -4,7 +4,7 @@ import candidateListStyles from "../styles/candidateList.module.css";
 const CustomCheckBox = ({ name, title, method }) => {
   return (
     <div
-      className={`${utilityStyles.roundOut} ${candidateListStyles.filterOption}`}
+      className={`${utilityStyles.filterOption} ${candidateListStyles.filterOption}`}
       style={{
         display: "flex",
         flexDirection: "row",
@@ -12,7 +12,7 @@ const CustomCheckBox = ({ name, title, method }) => {
       }}
     >
       <span style={{ marginRight: ".5em" }}>{title}</span>
-      <input type="checkbox" name={name} id={name} onChange={method} style={{marginLeft: "auto"}}/>
+      <input type="checkbox" name={name} id={name} onChange={method} style={{marginLeft: "auto", marginRight: ".5rem"}}/>
     </div>
   );
 };

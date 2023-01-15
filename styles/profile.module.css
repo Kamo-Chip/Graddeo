@@ -26,13 +26,20 @@
 }
 
 .bio {
-  width: 80%;
+  width: 100%;
   margin: 1rem 0 0 0;
 }
 
 .section {
   border-bottom: solid rgba(128, 128, 128, 0.408) 1px;
   padding-bottom: 1rem;
+  padding: 0 2rem;
+}
+
+.education {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .section h2 {
@@ -71,6 +78,10 @@
 @media screen and (max-width: 425px) {
   .projectDescription {
     width: 100%;
+  }
+  
+  .section {
+    padding: 0 1rem;
   }
 
   .personalContainer {

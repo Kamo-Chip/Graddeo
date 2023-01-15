@@ -2,6 +2,7 @@ import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
 import utilityStyles from "../../styles/utilities.module.css";
+import CustomTextArea from "../../components/CustomTextArea";
 import CustomSelect from "../../components/CustomSelect";
 import { MdAddCircle, MdCancel, MdOutlineFileUpload } from "react-icons/md";
 import createProfileStyles from "../../styles/createProfile.module.css";
@@ -29,9 +30,9 @@ import {
   schoolYears,
   jobTypes,
   visaStatusses,
-  sexes
+  sexes,
 } from "../../lib/filterOptions.json";
-import { checkLink } from "../../lib/format";
+import { checkLink, capitaliseFirst } from "../../lib/format";
 
 const CreateCandidateProfile = () => {
   const [user, loading] = useAuthState(auth);
@@ -71,7 +72,7 @@ const CreateCandidateProfile = () => {
         graduationYear: "",
       },
     ],
-    jobType: "",
+    jobType: [],
     portfolio: "",
     linkedIn: "",
     gitHub: "",
@@ -82,8 +83,6 @@ const CreateCandidateProfile = () => {
     bookmarkedJobs: [],
   });
 
-  const [showSex, setShowSex] = useState(false);
-  const [showJobType, setShowJobType] = useState(false);
   const [isDone, setIsDone] = useState(false);
   const router = useRouter();
   const { query } = router;
@@ -137,7 +136,12 @@ const CreateCandidateProfile = () => {
 
     arr = userDetails[source2];
     if (source != "graduationMonth" && source != "educationLevel") {
-      arr[id][e.target.id] = e.target.value;
+      if(e.target.id == "major") {
+        arr[id][e.target.id] = capitaliseFirst(e.target.value);
+      }else {
+        arr[id][e.target.id] = e.target.value;
+      }
+      
     } else {
       arr[id][e.target.parentElement.parentElement.id] = e.target.innerText;
     }
@@ -152,9 +156,18 @@ const CreateCandidateProfile = () => {
   };
 
   const handleChangeForMultiItems = (e) => {
-    let tokens =
-      e.target.parentElement.parentElement.parentElement.id.split("-");
+    let tokens = "";
 
+    if(e.target.id == "link") {
+      tokens =
+      e.target.parentElement.parentElement.parentElement.parentElement.id.split("-");
+    }else {
+      tokens =
+      e.target.parentElement.parentElement.parentElement.id.split("-");
+    }
+    // let tokens =
+    //   e.target.parentElement.parentElement.parentElement.id.split("-");
+    console.log(tokens);
     let id = tokens[0];
     let source = tokens[1];
 
@@ -167,7 +180,8 @@ const CreateCandidateProfile = () => {
   };
 
   const addSkill = (e) => {
-    let skill = document.querySelector("#skills").value.toUpperCase();
+    let skill = capitaliseFirst(document.querySelector("#skills").value);
+
     document.querySelector("#skills").value = "";
 
     if (!userDetails.skills.includes(skill) && skill) {
@@ -179,13 +193,25 @@ const CreateCandidateProfile = () => {
   };
 
   const addRole = (e) => {
-    let role = document.querySelector("#roles").value;
+    let role = capitaliseFirst(document.querySelector("#roles").value);
+
     document.querySelector("#roles").value = "";
 
     if (!userDetails.roles.includes(role) && role) {
       setUserDetails({
         ...userDetails,
         roles: [...userDetails.roles, role],
+      });
+    }
+  };
+
+  const addJobType = (e) => {
+    const value = e.target.innerText;
+
+    if (!userDetails.jobType.includes(value) && value) {
+      setUserDetails({
+        ...userDetails,
+        jobType: [...userDetails.jobType, value],
       });
     }
   };
@@ -248,6 +274,13 @@ const CreateCandidateProfile = () => {
 
     let updatedRoles = userDetails.roles.filter((role) => role != value);
     setUserDetails({ ...userDetails, roles: updatedRoles });
+  };
+
+  const removeJobType = (e) => {
+    const value = e.currentTarget.parentElement.children[0].innerText;
+
+    let updatedJobTypes = userDetails.jobType.filter((role) => role != value);
+    setUserDetails({ ...userDetails, jobType: updatedJobTypes });
   };
 
   const removeItem = (e) => {
@@ -485,7 +518,9 @@ const CreateCandidateProfile = () => {
           />
           <div className={utilityStyles.fieldContainer}>
             <div className={utilityStyles.labelContainer}>
-              <label htmlFor="photo">Profile photo</label>
+              <label htmlFor="photo" className={utilityStyles.headerTextNSmall}>
+                Profile photo
+              </label>
               <small>Upload a photo of your pretty face {":)"}</small>
             </div>
             <div className={utilityStyles.fileInputContainer}>
@@ -495,6 +530,7 @@ const CreateCandidateProfile = () => {
                   alignItems: "center",
                   width: "120px",
                   height: "94px",
+                  marginLeft: ".5rem",
                 }}
               >
                 {userDetails.profilePhoto == "" ? (
@@ -508,6 +544,8 @@ const CreateCandidateProfile = () => {
                 ) : (
                   <Image
                     loader={() => userDetails.profilePhoto}
+                    placeholder="blur"
+                    blurDataURL="/black.jpg"
                     src={userDetails.profilePhoto}
                     alt="profile photo"
                     height={90}
@@ -549,21 +587,22 @@ const CreateCandidateProfile = () => {
             name="bio"
             required={true}
             label="Bio"
-            smallText="Tell your story. Try to keep it short"
+            smallText="Tell your story. Describe who you are as a professional"
             fieldType={
-              <textarea
-                maxLength={200}
-                className={utilityStyles.input}
+              <CustomTextArea
                 name="bio"
-                id="bio"
-                onChange={handleChangeForInput}
+                maxLength={280}
+                handler={handleChangeForInput}
                 value={userDetails.bio}
+                height="120px"
               />
             }
           />
+
           <FieldContainer
             name="location"
             required={true}
+            smallText="The location where you reside. Helps employers to find candidates in a suitable location. Ensure your formatting is correct (Include a comma & space between city & province)"
             label="Location"
             fieldType={
               <input
@@ -601,6 +640,23 @@ const CreateCandidateProfile = () => {
             }
           />
           <FieldContainer
+            name="phoneNumber"
+            label="Phone number"
+            smallText="The phone number where employers can contact you"
+            fieldType={
+              <input
+                className={utilityStyles.input}
+                type="tel"
+                name="phoneNumber"
+                id="phoneNumber"
+                onChange={handleChangeForInput}
+                defaultValue={
+                  userDetails.phoneNumber ? userDetails.phoneNumber : ""
+                }
+              />
+            }
+          />
+          <FieldContainer
             name="schoolYear"
             required={true}
             label="School year"
@@ -619,8 +675,7 @@ const CreateCandidateProfile = () => {
             name="visaStatus"
             required={true}
             label="Visa status"
-            smallText="Is beneficial in the case that companies are looking to
-            diversify their team by hiring foreigners. Also reduces friction by letting employers know your work eligibility ahead of time"
+            smallText="Reduces friction by letting employers know your work eligibility ahead of time"
             fieldType={
               <CustomSelect
                 title="Select"
@@ -640,8 +695,6 @@ const CreateCandidateProfile = () => {
               <CustomSelect
                 title="Select"
                 name="sex"
-                stateTracker={showSex}
-                setStateTracker={setShowSex}
                 onChangeHandler={handleChangeForSelect}
                 options={sexes}
                 value={userDetails.sex}
@@ -758,7 +811,7 @@ const CreateCandidateProfile = () => {
               >
                 <div>https://www.linkedin.com/in/</div>
                 <input
-                  className={utilityStyles.linkInput}
+                  className={utilityStyles.mergeInputWithDiv}
                   type="text"
                   name="linkedIn"
                   id="linkedIn"
@@ -784,7 +837,7 @@ const CreateCandidateProfile = () => {
               >
                 <div>https://github.com/</div>
                 <input
-                  className={utilityStyles.linkInput}
+                  className={utilityStyles.mergeInputWithDiv}
                   type="text"
                   name="gitHub"
                   id="gitHub"
@@ -810,7 +863,7 @@ const CreateCandidateProfile = () => {
               >
                 <div>https://www.instagram.com/</div>
                 <input
-                  className={utilityStyles.linkInput}
+                  className={utilityStyles.mergeInputWithDiv}
                   type="text"
                   name="instagram"
                   id="instagram"
@@ -836,7 +889,7 @@ const CreateCandidateProfile = () => {
               >
                 <div>https://twitter.com/</div>
                 <input
-                  className={utilityStyles.linkInput}
+                  className={utilityStyles.mergeInputWithDiv}
                   type="text"
                   name="twitter"
                   id="twitter"
@@ -862,7 +915,7 @@ const CreateCandidateProfile = () => {
               >
                 <div>https://www.youtube.com/@</div>
                 <input
-                  className={utilityStyles.linkInput}
+                  className={utilityStyles.mergeInputWithDiv}
                   type="text"
                   name="youTube"
                   id="youTube"
@@ -888,7 +941,7 @@ const CreateCandidateProfile = () => {
               >
                 <div>http://</div>
                 <input
-                  className={utilityStyles.linkInput}
+                  className={utilityStyles.mergeInputWithDiv}
                   type="text"
                   name="portfolio"
                   id="portfolio"
@@ -910,14 +963,30 @@ const CreateCandidateProfile = () => {
               <CustomSelect
                 title="💼Select"
                 name="jobType"
-                stateTracker={showJobType}
-                setStateTracker={setShowJobType}
-                onChangeHandler={handleChangeForSelect}
+                onChangeHandler={addJobType}
                 options={jobTypes}
-                value={userDetails.jobType}
+                value="💼 Select"
               />
             }
           />
+          <div
+            className={createProfileStyles.fieldContainer}
+            style={{
+              marginTop: "1rem",
+              display: "flex",
+              flexWrap: "wrap",
+            }}
+          >
+            {userDetails.jobType.map((role, idx) => {
+              return (
+                <Item
+                  key={`jobType${idx}`}
+                  skill={role}
+                  removeSkill={removeJobType}
+                />
+              );
+            })}
+          </div>
           <FieldContainer
             name="roles"
             label="Roles you're interested in"
@@ -994,7 +1063,12 @@ const CreateCandidateProfile = () => {
               className={utilityStyles.labelContainer}
               style={{ marginTop: "0" }}
             >
-              <label htmlFor="resume" className={utilityStyles.headerTextNSmall}>Resume</label>
+              <label
+                htmlFor="resume"
+                className={utilityStyles.headerTextNSmall}
+              >
+                Resume
+              </label>
               <small>PDF file of your resume</small>
             </div>
             <div className={utilityStyles.fileInputContainer}>
@@ -1199,7 +1273,8 @@ const Item = ({ skill, removeSkill }) => {
         fontSize: "12px",
         color: "#fff",
         backgroundColor: "var(--color-5)",
-        letterSpacing: ".75px"
+        letterSpacing: ".75px",
+        marginBottom: ".5rem"
       }}
     >
       <span
@@ -1236,7 +1311,7 @@ const Project = ({ index, handleChange, removeItem, userDetails }) => {
         alignItems: "center",
       }}
     >
-      <div className={createProfileStyles.fieldExtension}>
+      <div className={createProfileStyles.sizeInput}>
         <div className={createProfileStyles.projects}>
           <input
             className={utilityStyles.input}
@@ -1246,16 +1321,26 @@ const Project = ({ index, handleChange, removeItem, userDetails }) => {
             placeholder="Name of the project"
             onChange={handleChange}
             value={userDetails.projects[index]["name"]}
+            style={{ marginBottom: "1rem" }}
           />
 
-          <textarea
-            className={utilityStyles.input}
+          {/* <textarea
+            className={`${utilityStyles.input} ${utilityStyles.textarea}`}
             name="description"
             id="description"
             placeholder="Description"
             onChange={handleChange}
             value={userDetails.projects[index]["description"]}
             style={{ marginTop: "1rem" }}
+            maxLength={150}
+          /> */}
+          <CustomTextArea
+            name="description"
+            placeholder="Description"
+            handler={handleChange}
+            value={userDetails.projects[index]["description"]}
+            maxLength={200}
+            height="100px"
           />
           <div
             className={utilityStyles.input}
@@ -1268,7 +1353,7 @@ const Project = ({ index, handleChange, removeItem, userDetails }) => {
           >
             <div>http://</div>
             <input
-              className={utilityStyles.linkInput}
+              className={utilityStyles.mergeInputWithDiv}
               type="text"
               name="link"
               id="link"
@@ -1305,10 +1390,7 @@ const Experience = ({ index, handleChange, removeItem, userDetails }) => {
       }}
     >
       <div className={createProfileStyles.fieldContainer}>
-        <div
-          className={createProfileStyles.experienceInputContainer}
-          
-        >
+        <div className={createProfileStyles.experienceInputContainer}>
           <input
             className={utilityStyles.input}
             type="text"

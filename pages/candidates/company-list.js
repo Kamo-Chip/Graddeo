@@ -15,7 +15,7 @@ import {
 } from "../../lib/filterOptions.json";
 import { useRouter } from "next/router";
 import CompanyCard from "../../components/CompanyCard";
-import { useAuthState } from "react-firebase-hooks";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const CandidateCompanyPage = () => {
   const [companies, setCompanies] = useState([]);
@@ -144,8 +144,6 @@ const CandidateCompanyPage = () => {
       }
     });
 
-    
-    
     setCompaniesToDisplay(result);
   };
 
@@ -243,7 +241,7 @@ const CandidateCompanyPage = () => {
         <input
           type="text"
           id="searchBar"
-          className={`${jobStyles.search} ${utilityStyles.roundOut}`}
+          className={utilityStyles.mergeInputWithDiv}
           placeholder="Enter a company's name"
           onChange={handleChange}
         />
@@ -268,24 +266,25 @@ const CandidateCompanyPage = () => {
           title="🍰 Benefits"
           options={benefits}
         />
-        <CustomSelect
-          onChangeHandler={addFilterSelect}
-          name="employeeCount"
-          title="👥 Company size"
-          options={employeeCounts}
-        />
+
         <CustomSelect
           onChangeHandler={addFilterSelect}
           name="location"
           title="📍Location"
           options={locations}
         />
+        <CustomSelect
+          onChangeHandler={addFilterSelect}
+          name="employeeCount"
+          title="👥 Company size"
+          options={employeeCounts}
+        />
       </div>
       <div className={jobStyles.filtersList}>
         {filters
           ? filters.map((filter, idx) => {
               return (
-                <div key={`filter${idx}`} className={utilityStyles.roundOut}>
+                <div key={`filter${idx}`} className={utilityStyles.itemBar}>
                   {filter}
                   <span
                     style={{
@@ -311,7 +310,7 @@ const CandidateCompanyPage = () => {
                 href={`/candidates/companies/${company.companyId}`}
                 key={`company${idx}`}
               >
-                <CompanyCard company={company}/>
+                <CompanyCard company={company} />
               </Link>
             );
           })

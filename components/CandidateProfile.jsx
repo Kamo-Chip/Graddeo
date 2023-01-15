@@ -4,7 +4,7 @@ import profileStyles from "../styles/profile.module.css";
 import utilityStyles from "../styles/utilities.module.css";
 import createProfileStyles from "../styles/createProfile.module.css";
 import Image from "next/image";
-import { formatDate, formatText } from "../lib/format";
+import { formatDate, formatPhoneNumber, formatText } from "../lib/format";
 import Link from "next/link";
 import {
   BsLinkedin,
@@ -12,7 +12,9 @@ import {
   BsTwitter,
   BsYoutube,
   BsLink45Deg,
+  BsInstagram,
 } from "react-icons/bs";
+import { CgExternal } from "react-icons/cg";
 import {
   MdBookmark,
   MdBookmarkAdd,
@@ -20,6 +22,7 @@ import {
   MdLogout,
 } from "react-icons/md";
 import { HiUserCircle } from "react-icons/hi";
+import { isAfter } from "date-fns";
 
 const CandidateProfile = ({
   candidate,
@@ -29,18 +32,15 @@ const CandidateProfile = ({
 }) => {
   return (
     <div className={profileStyles.container}>
-      {/* {console.log(candidate)} */}
-      <div
-        className={`${utilityStyles.form}`}
-        style={{ alignItems: "unset", padding: "0 2em 2em 2em" }}
-      >
+      {console.log(candidate)}
+      <div className={`${utilityStyles.form}`} style={{ alignItems: "unset" }}>
         <div className={profileStyles.section}>
           <div className={profileStyles.contactContainer}>
             <h2
               className={utilityStyles.leftAlignedText}
               style={{ whiteSpace: "nowrap" }}
             >
-              👤Personal Details
+              {candidateIsViewing ? "Your profile" : "👤 Personal details"}
             </h2>
             {!candidateIsViewing ? (
               <span className={profileStyles.contactBtns}>
@@ -76,62 +76,114 @@ const CandidateProfile = ({
                 width={110}
                 height={110}
                 alt="profile photo"
-                style={{ borderRadius: "50%", marginRight: "2rem" }}
+                style={{ marginRight: "2rem" }}
+                className={utilityStyles.profilePhoto}
               />
             )}
 
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginBottom: "1rem",
+              }}
+            >
               <span className={utilityStyles.headerTextN}>
                 {candidate.name}
               </span>
-              <span className={utilityStyles.grayedOutText}>
+              <span
+                className={utilityStyles.grayedOutText}
+                style={{ marginTop: ".25rem" }}
+              >
+                {candidate.schoolYear}
+              </span>
+              <span
+                className={utilityStyles.grayedOutText}
+                style={{ marginTop: ".25rem" }}
+              >
                 📍{candidate.location}
               </span>
-              <a
-                href={`mailto:${candidate.email}`}
+              <span
                 className={utilityStyles.grayedOutText}
+                style={{ marginTop: ".25rem" }}
               >
                 📧{candidate.email}
-              </a>
+              </span>
+              <span
+                className={utilityStyles.grayedOutText}
+                style={{ marginTop: ".25rem" }}
+              >
+                📞{formatPhoneNumber(candidate.phoneNumber)}
+              </span>
               <span className={profileStyles.bio}>{candidate.bio}</span>
             </div>
           </div>
         </div>
-        <div className={profileStyles.section}>
+        <div
+          className={profileStyles.section}
+          style={{ paddingBottom: "1rem" }}
+        >
           <h2>🎓Education</h2>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <span className={utilityStyles.headerTextN}>Degree</span>
-            </div>
-            <span>{candidate.degree}</span>
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <span className={utilityStyles.headerTextN}>Institution</span>
-            </div>
-            <span>{candidate.institution}</span>
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <span className={utilityStyles.headerTextN}>School year</span>
-            </div>
-            <span>{candidate.schoolYear}</span>
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <span className={utilityStyles.headerTextN}>
-                {candidate.currentlyStudying
-                  ? "Graduating in "
-                  : "Graduated in "}
-              </span>
-            </div>
-            <span> {candidate.graduationYear}</span>
-          </div>
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <span className={utilityStyles.headerTextN}>High school</span>
-            </div>
-            <span>{candidate.highSchool}</span>
+          {candidate.education
+            ? candidate.education.map((element, idx) => {
+                return (
+                  <div
+                    key={`education${idx}`}
+                    className={`${utilityStyles.fieldContainer} ${profileStyles.education}`}
+                  >
+                    <span className={utilityStyles.headerTextNSmall}>
+                      {element.educationLevel}{" "}
+                      {element.major ? "in " + element.major : ""}
+                    </span>
+                    <span>{element.institution}</span>
+                    <div>
+                      <span>
+                        {isAfter(
+                          new Date(
+                            `${element.graduationMonth}, ${element.graduationYear}`
+                          ),
+                          new Date()
+                        )
+                          ? "Graduates in "
+                          : "Graduated in "}
+                      </span>
+                      <span>
+                        {element.graduationMonth},{" "}
+                        <span className={utilityStyles.headerTextNSmall}>
+                          {element.graduationYear}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                );
+              })
+            : null}
+        </div>
+        <div
+          className={profileStyles.section}
+          style={{ paddingBottom: "1rem" }}
+        >
+          <h2 style={{ marginBottom: "1.5rem" }}>🤹Skills</h2>
+          <div
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
+            {candidate.skills
+              ? candidate.skills.map((skill, index) => {
+                  return (
+                    <span
+                      key={`skill${index}`}
+                      className={utilityStyles.itemBar}
+                      style={{
+                        margin: "0 .5rem .5rem 0",
+                        backgroundColor: "var(--color-5)",
+                        color: "#fff",
+                      }}
+                    >
+                      <b>{skill}</b>
+                    </span>
+                  );
+                })
+              : null}
           </div>
         </div>
         <div className={profileStyles.section}>
@@ -147,7 +199,7 @@ const CandidateProfile = ({
                       margin: "1rem 0",
                     }}
                   >
-                    <span className={utilityStyles.headerTextN}>
+                    <span className={utilityStyles.headerTextNSmall}>
                       {experience.position}
                     </span>
                     <span className={utilityStyles.grayedOutText}>
@@ -162,32 +214,16 @@ const CandidateProfile = ({
               })
             : null}
         </div>
-        <div className={profileStyles.section}>
-          <h2 style={{ marginBottom: "1.5rem" }}>🤹Skills</h2>
-          <div
-            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
-          >
-            {candidate.skills
-              ? candidate.skills.map((skill, index) => {
-                  return (
-                    <span
-                      key={`skill${index}`}
-                      className={utilityStyles.roundOut}
-                      style={{ margin: "0 .5rem .5rem 0" }}
-                    >
-                      <b>{skill}</b>
-                    </span>
-                  );
-                })
-              : null}
-          </div>
-        </div>
-        <div className={profileStyles.section}>
+
+        <div
+          className={profileStyles.section}
+          style={{ paddingBottom: "1rem" }}
+        >
           <h2>🔗Links</h2>
           {candidate.linkedIn ? (
             <div className={utilityStyles.fieldContainer}>
               <div className={utilityStyles.labelContainer}>
-                <span className={utilityStyles.headerTextN}>
+                <span className={utilityStyles.headerTextNSmall}>
                   <BsLinkedin /> LinkedIn
                 </span>
               </div>
@@ -203,7 +239,7 @@ const CandidateProfile = ({
           {candidate.gitHub ? (
             <div className={utilityStyles.fieldContainer}>
               <div className={utilityStyles.labelContainer}>
-                <span className={utilityStyles.headerTextN}>
+                <span className={utilityStyles.headerTextNSmall}>
                   <BsGithub /> GitHub
                 </span>
               </div>
@@ -219,7 +255,7 @@ const CandidateProfile = ({
           {candidate.twitter ? (
             <div className={utilityStyles.fieldContainer}>
               <div className={utilityStyles.labelContainer}>
-                <span className={utilityStyles.headerTextN}>
+                <span className={utilityStyles.headerTextNSmall}>
                   <BsTwitter />
                   Twitter
                 </span>
@@ -233,10 +269,27 @@ const CandidateProfile = ({
               </Link>
             </div>
           ) : null}
+          {candidate.instagram ? (
+            <div className={utilityStyles.fieldContainer}>
+              <div className={utilityStyles.labelContainer}>
+                <span className={utilityStyles.headerTextNSmall}>
+                  <BsInstagram />
+                  Instagram
+                </span>
+              </div>
+              <Link
+                href={`https://www.instagram.com/${candidate.instagram}`}
+                target="_blank"
+                style={{ color: "var(--link-color)" }}
+              >
+                {candidate.instagram}
+              </Link>
+            </div>
+          ) : null}
           {candidate.youTube ? (
             <div className={utilityStyles.fieldContainer}>
               <div className={utilityStyles.labelContainer}>
-                <span className={utilityStyles.headerTextN}>
+                <span className={utilityStyles.headerTextNSmall}>
                   <BsYoutube /> YouTube
                 </span>
               </div>
@@ -245,19 +298,19 @@ const CandidateProfile = ({
                 target="_blank"
                 style={{ color: "var(--link-color)" }}
               >
-                {candidate.gitHub}
+                {candidate.youTube}
               </Link>
             </div>
           ) : null}
           {candidate.portfolio ? (
             <div className={utilityStyles.fieldContainer}>
               <div className={utilityStyles.labelContainer}>
-                <span className={utilityStyles.headerTextN}>
+                <span className={utilityStyles.headerTextNSmall}>
                   <BsLink45Deg /> Portfolio
                 </span>
               </div>
               <Link
-                href={candidate.portfolio}
+                href={`http://${candidate.portfolio}`}
                 target="_blank"
                 style={{ color: "var(--link-color)" }}
               >
@@ -266,21 +319,50 @@ const CandidateProfile = ({
             </div>
           ) : null}
         </div>
-        <div className={profileStyles.section}>
+        <div
+          className={profileStyles.section}
+          style={{ paddingBottom: "1rem" }}
+        >
           <h2>🤩Desired Roles</h2>
           <div className={utilityStyles.fieldContainer}>
             <div className={utilityStyles.labelContainer}>
-              <span className={utilityStyles.headerTextN}>Job type</span>
+              <span className={utilityStyles.headerTextNSmall}>Job type</span>
             </div>
-            <span style={{ marginBottom: "1rem" }}>{candidate.jobType}</span>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              {candidate.jobType
+                ? candidate.jobType.map((element, idx) => {
+                    return (
+                      <div
+                        key={`job${idx}`}
+                        className={utilityStyles.itemBar}
+                        style={{
+                          width: "fit-content",
+                          backgroundColor: "var(--color-5)",
+                          color: "#fff",
+                          margin: "0 .5rem 0 0",
+                        }}
+                      >
+                        <b>{element}</b>
+                      </div>
+                    );
+                  })
+                : null}
+            </div>
           </div>
-          <span className={utilityStyles.headerTextN}>Roles</span>
+          <div className={utilityStyles.labelContainer}>
+            <span className={utilityStyles.headerTextNSmall}>Roles</span>
+          </div>
+
           <div
             style={{
               display: "flex",
               flexDirection: "row",
               flexWrap: "wrap",
-              marginTop: "1rem",
             }}
           >
             {candidate.roles
@@ -288,8 +370,12 @@ const CandidateProfile = ({
                   return (
                     <span
                       key={`role${index}`}
-                      className={utilityStyles.roundOut}
-                      style={{ margin: "0 .5rem .5rem 0" }}
+                      className={utilityStyles.itemBar}
+                      style={{
+                        margin: "0 .5rem 0 0",
+                        backgroundColor: "var(--color-5)",
+                        color: "#fff",
+                      }}
                     >
                       <b>{role}</b>
                     </span>
@@ -299,7 +385,7 @@ const CandidateProfile = ({
           </div>
         </div>
 
-        <div className={profileStyles.section} style={{ padding: "0" }}>
+        <div className={profileStyles.section}>
           <h2 style={{ marginBottom: "1rem" }}>🧪Projects</h2>
           {candidate.projects
             ? candidate.projects.map((project, index) => {
@@ -308,14 +394,14 @@ const CandidateProfile = ({
                     key={`project${index}`}
                     className={profileStyles.project}
                   >
-                    <span className={utilityStyles.headerTextN}>
+                    <span className={utilityStyles.headerTextNSmall}>
                       {project.name}
                     </span>
                     <span className={profileStyles.projectDescription}>
                       {project.description}
                     </span>
                     <Link
-                      href={project.link}
+                      href={`http://${project.link}`}
                       target="_blank"
                       style={{
                         color: "var(--link-color)",
@@ -326,17 +412,21 @@ const CandidateProfile = ({
                       }}
                     >
                       {formatText(project.link)}
+                      <CgExternal />
                     </Link>
                   </div>
                 );
               })
             : null}
         </div>
-        <div className={profileStyles.section}>
+        <div
+          className={profileStyles.section}
+          style={{ paddingBottom: "1rem" }}
+        >
           <h2 style={{ marginBottom: "1rem" }}>📄Documents</h2>
           {candidate.resume ? (
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span className={utilityStyles.headerTextN}>Resume</span>
+              <span className={utilityStyles.headerTextNSmall}>Resume</span>
               <Link
                 href={candidate.resume}
                 target="_blank"
@@ -345,40 +435,49 @@ const CandidateProfile = ({
                   textOverflow: "ellipsis",
                   marginTop: ".5rem",
                   maxWidth: "fit-content",
+                  backgroundColor: "var(--color-5)",
+                  color: "#fff",
+                  fontWeight: "bold",
                 }}
-                className={`${utilityStyles.roundOut} ${profileStyles.resume}`}
+                className={`${utilityStyles.itemBar} ${profileStyles.resume}`}
               >
                 {candidate.resumeName}
+                <CgExternal />
               </Link>
             </div>
           ) : null}
         </div>
         {candidateIsViewing ? (
-          <button
-            onClick={() =>
-              Router.push(
-                {
-                  pathname: "/candidates/create-profile",
-                  query: { data: JSON.stringify(userDetails) },
-                },
-                "/candidates/edit-profile"
-              )
-            }
-          >
-            Edit profile
-          </button>
+          <>
+            <button
+              className={utilityStyles.formButton}
+              style={{ alignSelf: "center", marginTop: "2rem" }}
+              onClick={() =>
+                Router.push(
+                  {
+                    pathname: "/candidates/create-profile",
+                    query: { data: JSON.stringify(candidate) },
+                  },
+                  "/candidates/edit-profile"
+                )
+              }
+            >
+              Edit profile
+            </button>
+            <button
+              style={{
+                alignSelf: "center",
+                marginTop: "1rem",
+                backgroundColor: "var(--red)",
+                color: "#fff",
+              }}
+              onClick={signout}
+            >
+              Logout
+            </button>
+          </>
         ) : null}
       </div>
-      {candidateIsViewing ? (
-        <button
-          style={{
-            marginBottom: "1rem",
-          }}
-          onClick={signout}
-        >
-          <MdLogout /> Logout
-        </button>
-      ) : null}
     </div>
   );
 };

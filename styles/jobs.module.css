@@ -6,23 +6,13 @@
 .searchContainer {
   align-self: center;
   width: 50%;
-  min-width: 300px;
+  min-width: 280px;
   margin-bottom: 2rem;
   display: flex;
   align-items: center;
-  font-size: 2rem;
-}
-
-.searchContainer button {
-    font-family: Inter;
-    font-size: 1.25rem;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin-left: 1em;
-    padding: .5em;
+  border: solid #000 2px;
+  box-shadow: #000 5px 5px;
+  padding: .5em;
 }
 
 .search {
@@ -58,6 +48,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width:fit-content;
+  white-space: nowrap;
 }
 
 @media screen and (max-width: 768px) {
@@ -73,24 +65,27 @@
   }
 }
 
-@media screen and (max-width: 375px) {
-  .filtersContainer {
+@media screen and (max-width: 407px) {
+  .filtersContainer, .filtersList {
     flex-wrap: nowrap;
     overflow-x: scroll;
     width: 100%;
     justify-content: unset;
   }
+/* 
+  .filtersList {
 
+  } */
   
-  .filtersContainer::-webkit-scrollbar {
+  .filtersContainer::-webkit-scrollbar, .filtersList::-webkit-scrollbar {
     height: 5px;
   }
 
-  .filtersContainer::-webkit-scrollbar-track {
+  .filtersContainer::-webkit-scrollbar-track, .filtersList::-webkit-scrollbar-track{
     background-color: rgba(255, 255, 255, 0);
   }
 
-  .filtersContainer::-webkit-scrollbar-thumb {
+  .filtersContainer::-webkit-scrollbar-thumb, .filtersList::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: rgba(125, 125, 125, 0.5);
   }
