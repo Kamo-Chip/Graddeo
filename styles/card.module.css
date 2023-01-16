@@ -8,12 +8,13 @@
   font-size: 1rem;
   margin: 1em 0;
   height: 180px;
-  width: 736px;
+  width: 100%;
+  max-width: 1000px;
   min-width: unset !important;
   transition: box-shadow 500ms;
 }
 
-.card:hover {
+.card:hover, .jobCard:hover {
   box-shadow: none;
 }
 
@@ -27,7 +28,8 @@
   font-size: 1rem;
   margin: 1em 0;
   height: 160px;
-  width: 736px;
+  width: 100%;
+  max-width: 1000px;
   min-width: unset !important;
   transition: box-shadow 500ms;
 }

@@ -4,6 +4,7 @@ import jobFormStyles from "../../styles/jobForm.module.css";
 import postJobStyles from "../../styles/postJob.module.css";
 import utilityStyles from "../../styles/utilities.module.css";
 import profileStyles from "../../styles/profile.module.css";
+import createProfileStyles from "../../styles/createProfile.module.css";
 import { MdCancel } from "react-icons/md";
 import {
   collection,
@@ -18,6 +19,7 @@ import { formatLink, formatTextRemoveSpaces } from "../../lib/format";
 import { useRouter } from "next/router";
 import CustomSelect from "../../components/CustomSelect";
 import CustomSearch from "../../components/CustomSearch";
+import CustomTextArea from "../../components/CustomTextArea";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   benefits,
@@ -28,8 +30,13 @@ import {
 import FieldContainer from "../../components/FieldContainer";
 import { v1 as uuidv1 } from "uuid";
 import Image from "next/image";
-import { HiUserCircle } from "react-icons/hi";
+import { HiUser, HiUserCircle } from "react-icons/hi";
 import { checkLink } from "../../lib/format";
+import MyEditor from "../../components/RichTextEditor";
+import { EditorState, convertToRaw, ContentState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import draftToHtml from "draftjs-to-html";
+// import htmlToDraft from "html-to-draftjs";
 
 const JobForm = () => {
   const [jobDetails, setJobDetails] = useState({
@@ -64,7 +71,7 @@ const JobForm = () => {
   const router = useRouter();
   const [user, loading] = useAuthState(auth);
   const [companyDetails, setCompanyDetails] = useState({});
-
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const handleChangeInput = (e) => {
     switch (e.target.id) {
       case "deadline":
@@ -78,6 +85,10 @@ const JobForm = () => {
       default:
         setJobDetails({ ...jobDetails, [e.target.id]: e.target.value });
     }
+  };
+
+  const onEditorStateChange = (editorState) => {
+    setEditorState(editorState);
   };
 
   const handleChangeSelect = (e) => {
@@ -212,11 +223,11 @@ const JobForm = () => {
     if (jobDetails.duration.includes("Temporary")) {
       durationIsValid =
         !isNaN(jobDetails.jobStartDate.seconds) &&
-         !isNaN(jobDetails.jobEndDate.seconds);
+        !isNaN(jobDetails.jobEndDate.seconds);
     }
 
     if (jobDetails.openToTalk) {
-      openToTalkIsValid = jobDetails.hiringManager.name != ""
+      openToTalkIsValid = jobDetails.hiringManager.name != "";
     }
 
     if (!valid || !durationIsValid || !openToTalkIsValid) {
@@ -298,11 +309,8 @@ const JobForm = () => {
 
   return (
     <div className={utilityStyles.containerFlex}>
-      <div
-        className={utilityStyles.form}
-        style={{ alignItems: "unset", padding: "0 2em 2em 2em" }}
-      >
-        <section className={profileStyles.section}>
+      <div className={utilityStyles.form}>
+        <section className={utilityStyles.formSection}>
           <h2>Job</h2>
           <FieldContainer
             name="position"
@@ -310,7 +318,7 @@ const JobForm = () => {
             label="Position"
             fieldType={
               <input
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 type="text"
                 name="position"
                 id="position"
@@ -514,7 +522,7 @@ const JobForm = () => {
             label="Description"
             fieldType={
               <textarea
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 name="description"
                 id="description"
                 onChange={handleChangeInput}
@@ -522,13 +530,14 @@ const JobForm = () => {
               />
             }
           />
+
           <FieldContainer
             name="salary"
             label="Salary"
             smallText="Posts that specify a salary get a higher number of applications"
             fieldType={
               <input
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 type="number"
                 name="salary"
                 id="salary"
@@ -551,7 +560,7 @@ const JobForm = () => {
             label="Location"
             fieldType={
               <input
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 type="text"
                 name="location"
                 id="location"
@@ -585,10 +594,12 @@ const JobForm = () => {
               <span>Allow remote workers</span>
             </span>
           </div>
-
           <div className={`${utilityStyles.fieldContainer}`}>
             <div className={utilityStyles.labelContainer}>
-              <label htmlFor="authorisation" className={utilityStyles.required}>
+              <label
+                htmlFor="authorisation"
+                className={`${utilityStyles.required} ${utilityStyles.headerTextNSmall}`}
+              >
                 Authorisation
               </label>
               <small className={utilityStyles.grayedOutText}></small>
@@ -646,7 +657,7 @@ const JobForm = () => {
             label="Application deadline"
             fieldType={
               <input
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 type="date"
                 name="deadline"
                 id="deadline"
@@ -657,7 +668,10 @@ const JobForm = () => {
           />
           <div className={`${utilityStyles.fieldContainer}`}>
             <div className={utilityStyles.labelContainer}>
-              <label htmlFor="openToTalk" className={utilityStyles.required}>
+              <label
+                htmlFor="openToTalk"
+                className={`${utilityStyles.required} ${utilityStyles.headerTextNSmall}`}
+              >
                 Open to talk
               </label>
               <small className={utilityStyles.grayedOutText}>
@@ -702,9 +716,11 @@ const JobForm = () => {
             </div>
             <div
               style={{
+                marginTop: "1rem",
                 display: "flex",
-                flexDirection: "row",
                 flexWrap: "wrap",
+                width: "100%",
+                justifyContent: "center",
               }}
             >
               {jobDetails.openToTalk
@@ -712,7 +728,13 @@ const JobForm = () => {
                     return (
                       <div
                         key={`member${index}`}
-                        style={{ maxWidth: "140px" }}
+                        style={{
+                          width: "140px",
+                          cursor: "pointer",
+                          margin: ".25rem",
+                          paddingTop: "1em",
+                          borderRadius: "5px"
+                        }}
                         onClick={selectHiringManager}
                         id={`hr-${index}`}
                       >
@@ -728,17 +750,18 @@ const JobForm = () => {
                               src={member.image}
                               alt="profile photo"
                               loader={() => member.image}
-                              height={90}
-                              width={90}
+                              height={80}
+                              width={80}
                               className={utilityStyles.profilePhoto}
-                              style={{
-                                margin: ".5rem",
-                              }}
+                              
                             />
                           ) : (
-                            <HiUserCircle size="90px" color="gray" />
+                            <HiUser size="80px" color="#000" />
                           )}
-                          <span style={{ textAlign: "center" }}>
+                          <span
+                            style={{ textAlign: "center" }}
+                            className={utilityStyles.headerTextNSmall}
+                          >
                             {member.name}
                           </span>
                         </div>
@@ -748,7 +771,6 @@ const JobForm = () => {
                 : null}
             </div>
           </div>
-
           <FieldContainer
             name="applicationURL"
             required={true}
@@ -758,7 +780,8 @@ const JobForm = () => {
   website"
             fieldType={
               <div
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
+                id="applicationURLContainer"
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -767,7 +790,7 @@ const JobForm = () => {
               >
                 <div>http://</div>
                 <input
-                  className={utilityStyles.roundOut}
+                  className={utilityStyles.mergeInputWithDiv}
                   type="text"
                   name="applicationURL"
                   id="applicationURL"
@@ -776,7 +799,7 @@ const JobForm = () => {
                   readOnly={false}
                   onClick={(e) => {
                     e.target.readOnly = false;
-                    e.target.style.backgroundColor = "#fff";
+                    e.target.parentElement.style.opacity = "1";
                     document
                       .querySelector("#lbl-url")
                       .classList.add(utilityStyles.required);
@@ -785,12 +808,46 @@ const JobForm = () => {
                       .querySelector("#lbl-email")
                       .classList.remove(utilityStyles.required);
                     email.readOnly = true;
-                    email.style.backgroundColor = "#f0f0f0";
+                    email.style.opacity = ".2";
                     email.value = "";
                     setJobDetails({ ...jobDetails, applicationEmail: "" });
                   }}
                 />
               </div>
+              // <div
+              //   className={utilityStyles.roundOut}
+              //   style={{
+              //     display: "flex",
+              //     flexDirection: "row",
+              //     alignItems: "center",
+              //   }}
+              // >
+              //   <div>http://</div>
+              //   <input
+              //     className={utilityStyles.roundOut}
+              //     type="text"
+              //     name="applicationURL"
+              //     id="applicationURL"
+              //     onChange={handleChangeInput}
+              //     style={{ marginLeft: ".5rem" }}
+              //     readOnly={false}
+              //     onClick={(e) => {
+              //       e.target.readOnly = false;
+              //       e.target.style.opacity = "1";
+              //       document
+              //         .querySelector("#lbl-url")
+              //         .classList.add(utilityStyles.required);
+              //       let email = document.querySelector("#applicationEmail");
+              //       document
+              //         .querySelector("#lbl-email")
+              //         .classList.remove(utilityStyles.required);
+              //       email.readOnly = true;
+              //       email.style.opacity = ".2";
+              //       email.value = "";
+              //       setJobDetails({ ...jobDetails, applicationEmail: "" });
+              //     }}
+              //   />
+              // </div>
             }
           />
           <span style={{ marginTop: "1rem" }}>or</span>
@@ -801,30 +858,30 @@ const JobForm = () => {
             smallText="Email address where job applications can be sent"
             fieldType={
               <input
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 type="text"
                 name="applicationEmail"
                 id="applicationEmail"
                 onChange={handleChangeInput}
                 readOnly={true}
                 style={{
-                  backgroundColor: "#f0f0f0",
+                  opacity: ".2",
                   marginLeft: ".5rem",
                   marginBottom: "1rem",
                 }}
                 onClick={(e) => {
                   e.target.readOnly = false;
-                  e.target.style.backgroundColor = "#fff";
+                  e.target.style.opacity = "1";
                   document
                     .querySelector("#lbl-email")
                     .classList.add(utilityStyles.required);
-                  let url = document.querySelector("#applicationURL");
+                  let url = document.querySelector("#applicationURLContainer");
                   document
                     .querySelector("#lbl-url")
                     .classList.remove(utilityStyles.required);
-                  url.readOnly = true;
-                  url.style.backgroundColor = "#f0f0f0";
-                  url.value = "";
+                  url.children[1].readOnly = true;
+                  url.style.opacity = ".2";
+                  url.children[1].value = "";
                   setJobDetails({ ...jobDetails, applicationURL: "" });
                 }}
               />
@@ -832,13 +889,16 @@ const JobForm = () => {
           />
         </section>
         <section
-          className={profileStyles.section}
+          className={utilityStyles.formSection}
           style={{ paddingBottom: "1rem" }}
         >
           <h2>Customise Job Post</h2>
-          <div className={jobFormStyles.customisationsContainer}>
+          <div
+            className={createProfileStyles.sizeInput}
+            style={{ display: "flex", flexDirection: "column" }}
+          >
             <div className={jobFormStyles.customisations}>
-              <label>Highlight your post in yellow {"(+R200)"}</label>
+              <label>Highlight your post in yellow</label>
               <input
                 type="checkbox"
                 id="bg-1"
@@ -846,9 +906,7 @@ const JobForm = () => {
               />
             </div>
             <div className={jobFormStyles.customisations}>
-              <label>
-                Highlight with your {"company's brand colour (+R400)"}
-              </label>
+              <label>Highlight with your {"company's brand colour"}</label>
               <input
                 type="checkbox"
                 id="bg-2"
@@ -865,11 +923,16 @@ const JobForm = () => {
             ) : null}
           </div>
         </section>
-        <section>
+        <section
+          className={utilityStyles.formSection}
+          style={{ padding: "0 1em" }}
+        >
           <h2>Preview job Post</h2>
           <JobCard job={jobDetails} />
         </section>
-        <button onClick={handleSubmit}>Post</button>
+        <button onClick={handleSubmit} className={utilityStyles.formButton}>
+          Post
+        </button>
       </div>
     </div>
   );

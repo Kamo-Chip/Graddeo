@@ -29,12 +29,16 @@ const CandidateProfile = ({
   candidateIsViewing,
   signout,
   addToBookmarkedCandidates,
+  bookmarkedCandidates
 }) => {
   return (
     <div className={profileStyles.container}>
       {console.log(candidate)}
       <div className={`${utilityStyles.form}`} style={{ alignItems: "unset" }}>
-        <div className={profileStyles.section} style={{paddingBottom: "1rem"}}>
+        <div
+          className={profileStyles.section}
+          style={{ paddingBottom: "1rem" }}
+        >
           <div className={profileStyles.contactContainer}>
             <h2
               className={utilityStyles.leftAlignedText}
@@ -44,24 +48,36 @@ const CandidateProfile = ({
             </h2>
             {!candidateIsViewing ? (
               <span className={profileStyles.contactBtns}>
-                <span onClick={addToBookmarkedCandidates}>
-                  <MdBookmark />
+                <span
+                  onClick={addToBookmarkedCandidates}
+                  style={{ textAlign: "right" }}
+                >
+                  <MdBookmark size="2rem" color={bookmarkedCandidates.includes(candidate.candidateId) ? "var(--red)" : "#000"}/>
                 </span>
-                <span style={{ textAlign: "center", width: "112px" }}>
-                  <Link href={`mailto:${candidate.email}`} target="_blank">
-                    Send email
-                  </Link>
-                </span>
-                {candidate.phoneNumber ? (
+                <div style={{marginTop: "1rem"}}>
                   <span style={{ textAlign: "center", width: "112px" }}>
                     <Link
-                      href={`https://wa.me/${candidate.phoneNumber}`}
+                      href={`mailto:${candidate.email}`}
                       target="_blank"
+                      className={utilityStyles.formButton}
+                      style={{color: "#000"}}
                     >
-                      Send Message
+                      Send email
                     </Link>
                   </span>
-                ) : null}
+                  {candidate.phoneNumber ? (
+                    <span style={{ textAlign: "center", width: "112px" }}>
+                      <Link
+                        href={`https://wa.me/${candidate.phoneNumber}`}
+                        target="_blank"
+                        className={utilityStyles.formButton}
+                        style={{ marginLeft: "1rem", color: "#000" }}
+                      >
+                        Send Message
+                      </Link>
+                    </span>
+                  ) : null}
+                </div>
               </span>
             ) : null}
           </div>
@@ -115,7 +131,6 @@ const CandidateProfile = ({
               >
                 📞{formatPhoneNumber(candidate.phoneNumber)}
               </span>
-              
             </div>
           </div>
           <span className={profileStyles.bio}>{candidate.bio}</span>
@@ -257,8 +272,7 @@ const CandidateProfile = ({
             <div className={utilityStyles.fieldContainer}>
               <div className={utilityStyles.labelContainer}>
                 <span className={utilityStyles.headerTextNSmall}>
-                  <BsTwitter />
-                  {" "}Twitter
+                  <BsTwitter /> Twitter
                 </span>
               </div>
               <Link
@@ -274,8 +288,7 @@ const CandidateProfile = ({
             <div className={utilityStyles.fieldContainer}>
               <div className={utilityStyles.labelContainer}>
                 <span className={utilityStyles.headerTextNSmall}>
-                  <BsInstagram />
-                  {" "}Instagram
+                  <BsInstagram /> Instagram
                 </span>
               </div>
               <Link

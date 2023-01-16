@@ -3,7 +3,8 @@
 }
 
 .selected {
-    background-color: #f0f0f0;
+    background-color: gray;
+    border-radius: 5px;
 }
 @media screen and (max-width: 425px) {
     .fieldExtension {

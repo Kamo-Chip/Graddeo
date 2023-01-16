@@ -41,7 +41,7 @@ const CompanyProfilePage = () => {
     await deleteDoc(doc(db, "jobs", jobToDelete));
 
     let newJobs = companyDetails.jobs.filter(job => job != jobToDelete);
-    await updateDoc(doc(db, "companies", companyDetails.companyId.split("-")[1]), {
+    await updateDoc(doc(db, "companies", companyDetails.companyId), {
       jobs: newJobs,
     });
 

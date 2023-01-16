@@ -11,15 +11,22 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^35.4.0",
     "@ckeditor/ckeditor5-react": "^5.0.6",
+    "alloyeditor": "^2.14.9",
+    "alloyeditor-react-component": "^1.1.0",
     "date-fns": "^2.29.3",
+    "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
     "firebase": "^9.15.0",
     "next": "13.0.6",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-draft-wysiwyg": "^1.15.0",
     "react-firebase-hooks": "^5.1.1",
     "react-icons": "^4.7.1",
+    "suneditor": "^2.44.3",
+    "suneditor-react": "^3.4.1",
     "uuid": "^9.0.0"
   }
 }

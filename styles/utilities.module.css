@@ -270,6 +270,6 @@
 
 @media screen and (max-width: 390px) {
   .headerText {
-    max-width: 180px !important;
+    max-width: 160px !important;
   }
 }

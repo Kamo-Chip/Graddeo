@@ -4,7 +4,7 @@ import Link from "next/link";
 import utilityStyles from "../styles/utilities.module.css";
 import { timeSincePosted, formatSalary } from "../lib/format";
 
-const JobCard = ({ job }) => {
+const JobCard = ({ job, companyProfileIsOpen }) => {
   return (
     <div
       className={cardStyles.jobCard}
@@ -107,19 +107,21 @@ const JobCard = ({ job }) => {
           <span>{job.benefits.length > 5 ? "..." : null}</span>
         </ul>
       </div>
-      {job.datePosted ? (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            justifySelf: "flex-end",
-            marginLeft: "auto",
-          }}
-          className={cardStyles.date}
-        >
-          {timeSincePosted(job.datePosted)}
-        </div>
+      {!companyProfileIsOpen ? (
+        job.datePosted ? (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              justifySelf: "flex-end",
+              marginLeft: "auto",
+            }}
+            className={cardStyles.date}
+          >
+            {timeSincePosted(job.datePosted)}
+          </div>
+        ) : null
       ) : null}
     </div>
   );

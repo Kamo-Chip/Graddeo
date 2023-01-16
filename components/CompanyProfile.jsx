@@ -100,7 +100,7 @@ const CompanyProfile = ({
           {jobsList.length
             ? jobsList.map((job, idx) => {
                 return (
-                  <div key={`jobList${idx}`}>
+                  <div key={`jobList${idx}`} style={{display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
                     <Link
                       href={
                         candidateIsViewing
@@ -108,12 +108,13 @@ const CompanyProfile = ({
                           : `/companies/jobs/${job.jobId}`
                       }
                       className={cardStyles.link}
+                      style={{maxWidth: "unset", width: "105%"}}
                     >
-                      <JobCard job={job} />
+                      <JobCard job={job} companyProfileIsOpen={true}/>
                     </Link>
                     {!candidateIsViewing ? (
-                      <span onClick={deleteJob} id={`rem-${job.jobId}`}>
-                        <MdDelete />
+                      <span onClick={deleteJob} id={`rem-${job.jobId}`} style={{marginRight: "-1em", cursor: "pointer"}}>
+                        <MdDelete size="2rem"/>
                       </span>
                     ) : null}
                   </div>
@@ -234,31 +235,36 @@ const CompanyProfile = ({
           </div>
         ) : null}
         {!candidateIsViewing ? (
-          <button
-            onClick={() =>
-              Router.push(
-                {
-                  pathname: "/companies/create-profile",
-                  query: { data: JSON.stringify(companyDetails) },
-                },
-                "/companies/edit-profile"
-              )
-            }
-          >
-            Edit profile
-          </button>
+          <>
+            <button
+              className={utilityStyles.formButton}
+              style={{ alignSelf: "center", marginTop: "2rem" }}
+              onClick={() =>
+                Router.push(
+                  {
+                    pathname: "/companies/create-profile",
+                    query: { data: JSON.stringify(companyDetails) },
+                  },
+                  "/companies/edit-profile"
+                )
+              }
+            >
+              Edit profile
+            </button>
+            <button
+              style={{
+                alignSelf: "center",
+                marginTop: "1rem",
+                backgroundColor: "var(--red)",
+                color: "#fff",
+              }}
+              onClick={signout}
+            >
+              Logout
+            </button>
+          </>
         ) : null}
       </div>
-      {!candidateIsViewing ? (
-        <button
-          style={{
-            marginBottom: "1rem",
-          }}
-          onClick={signout}
-        >
-          <MdLogout /> Logout
-        </button>
-      ) : null}
     </div>
   );
 };

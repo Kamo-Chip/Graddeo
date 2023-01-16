@@ -398,7 +398,7 @@ const CompanyCandidateList = () => {
           type="text"
           id="searchBar"
           className={utilityStyles.mergeInputWithDiv}
-          placeholder="Enter a company's name"
+          placeholder="Enter a candidate's name"
           onChange={handleChange}
         />
       </div>

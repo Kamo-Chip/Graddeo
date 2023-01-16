@@ -93,6 +93,7 @@ const CandidateDetails = ({ candidate }) => {
     <CandidateProfile
       candidate={candidate}
       candidateIsViewing={false}
+      bookmarkedCandidates={bookmarkedCandidates}
       addToBookmarkedCandidates={addToBookmarkedCandidates}
     />
   );
