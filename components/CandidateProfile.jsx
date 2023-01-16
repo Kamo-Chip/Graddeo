@@ -34,7 +34,7 @@ const CandidateProfile = ({
     <div className={profileStyles.container}>
       {console.log(candidate)}
       <div className={`${utilityStyles.form}`} style={{ alignItems: "unset" }}>
-        <div className={profileStyles.section}>
+        <div className={profileStyles.section} style={{paddingBottom: "1rem"}}>
           <div className={profileStyles.contactContainer}>
             <h2
               className={utilityStyles.leftAlignedText}
@@ -115,9 +115,10 @@ const CandidateProfile = ({
               >
                 📞{formatPhoneNumber(candidate.phoneNumber)}
               </span>
-              <span className={profileStyles.bio}>{candidate.bio}</span>
+              
             </div>
           </div>
+          <span className={profileStyles.bio}>{candidate.bio}</span>
         </div>
         <div
           className={profileStyles.section}
@@ -257,7 +258,7 @@ const CandidateProfile = ({
               <div className={utilityStyles.labelContainer}>
                 <span className={utilityStyles.headerTextNSmall}>
                   <BsTwitter />
-                  Twitter
+                  {" "}Twitter
                 </span>
               </div>
               <Link
@@ -274,7 +275,7 @@ const CandidateProfile = ({
               <div className={utilityStyles.labelContainer}>
                 <span className={utilityStyles.headerTextNSmall}>
                   <BsInstagram />
-                  Instagram
+                  {" "}Instagram
                 </span>
               </div>
               <Link

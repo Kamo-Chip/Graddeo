@@ -2,7 +2,7 @@ import { collection, getDocs, getDoc, doc } from "firebase/firestore";
 import { db, auth } from "../../../firebase";
 import { useState } from "react";
 import CompanyProfile from "../../../components/CompanyProfile";
-import { useAuthState } from "react-firebase-hooks";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 
 export const getStaticProps = async (context) => {

@@ -5,6 +5,7 @@ import {
   convertToDate,
   formatDateDayMonthYear,
   formatDateDayMonth,
+  formatSalary,
 } from "../../../lib/format";
 import JobDetails from "../../../components/JobDetails";
 import { useState, useEffect } from "react";
@@ -23,6 +24,7 @@ export const getStaticProps = async (context) => {
     job = doc.data();
   });
 
+  job.salary = formatSalary(job.salary);
   job.datePosted = timeSincePosted(job.datePosted);
   job.deadline = convertToDate(job.deadline).toString();
   if (job.jobStartDate) {
@@ -96,6 +98,6 @@ const CandidateJobDetails = ({ job }) => {
     }
   }, [loading, user]);
 
-  return <JobDetails job={job} candidateIsViewing={true} addToBookmarkedJobs={addToBookmarkedJobs}/>;
+  return <JobDetails job={job} candidateIsViewing={true} addToBookmarkedJobs={addToBookmarkedJobs} bookmarkedJobs={bookmarkedJobs}/>;
 };
 export default CandidateJobDetails;

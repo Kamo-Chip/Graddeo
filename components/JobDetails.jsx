@@ -25,7 +25,12 @@ import { useRouter } from "next/router";
 import { HiUserCircle } from "react-icons/hi";
 import { MdBookmark } from "react-icons/md";
 
-const JobDetails = ({ job, candidateIsViewing, addToBookmarkedJobs }) => {
+const JobDetails = ({
+  job,
+  candidateIsViewing,
+  addToBookmarkedJobs,
+  bookmarkedJobs,
+}) => {
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
 
@@ -40,14 +45,26 @@ const JobDetails = ({ job, candidateIsViewing, addToBookmarkedJobs }) => {
 
   return (
     <div className={utilityStyles.containerFlex}>
+      {console.log(bookmarkedJobs)}
       <div className={utilityStyles.form}>
         <div className={jobDetailStyles.header}>
-          <h1>{job.position}</h1>
-          {candidateIsViewing ? (
-            <span onClick={addToBookmarkedJobs}>
-              <MdBookmark />
-            </span>
-          ) : null}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <h1>{job.position}</h1>
+            {candidateIsViewing ? (
+              <span onClick={addToBookmarkedJobs}>
+                <MdBookmark
+                  size="2rem"
+                  color={bookmarkedJobs.includes(job.jobId) ? "red" : "#000"}
+                />
+              </span>
+            ) : null}
+          </div>
 
           <div
             style={{ display: "flex", flexDirection: "row", marginTop: "1rem" }}
@@ -92,7 +109,7 @@ const JobDetails = ({ job, candidateIsViewing, addToBookmarkedJobs }) => {
           <h2 style={{ alignSelf: "flex-start" }}>About the role</h2>
           <div className={jobDetailStyles.roleDetailsContainer}>
             <JobDetail
-              title="Job type"
+              title="💼 Job type"
               value={
                 job.jobType.includes("Full")
                   ? "Full-time"
@@ -104,7 +121,7 @@ const JobDetails = ({ job, candidateIsViewing, addToBookmarkedJobs }) => {
               }
             />
             <JobDetail
-              title="Duration"
+              title="⏳ Duration"
               value={
                 job.duration.includes("Temporary") ? (
                   <div style={{ display: "flex", flexDirection: "column" }}>
@@ -119,8 +136,8 @@ const JobDetails = ({ job, candidateIsViewing, addToBookmarkedJobs }) => {
               }
             />
             <JobDetail
-              title="Salary"
-              value={`R${formatSalary(job.salary).concat(
+              title="💵 Salary"
+              value={`R${(job.salary).concat(
                 job.salaryType.includes("hour")
                   ? "/hr"
                   : job.salaryType.includes("month")
@@ -130,8 +147,9 @@ const JobDetails = ({ job, candidateIsViewing, addToBookmarkedJobs }) => {
                   : null
               )}`}
             />
+
             <JobDetail
-              title="S.A work authorisation"
+              title="🌐 Work authorisation"
               value={
                 job.authorisation && job.canSponsor
                   ? "Required. We will sponsor candidates in need"
@@ -143,11 +161,11 @@ const JobDetails = ({ job, candidateIsViewing, addToBookmarkedJobs }) => {
               }
             />
             <JobDetail
-              title="Application deadline"
+              title="⏰ Application deadline"
               value={formatDateDayMonthYear(job.deadline)}
             />
             <JobDetail
-              title="Remote"
+              title="📡 Remote"
               value={
                 job.remoteOk
                   ? "Remote workers allowed"
@@ -163,7 +181,11 @@ const JobDetails = ({ job, candidateIsViewing, addToBookmarkedJobs }) => {
             }}
           >
             {candidateIsViewing ? (
-              <button style={{ marginBottom: "1rem" }} onClick={applyToJob}>
+              <button
+                className={utilityStyles.formButton}
+                style={{ marginBottom: "1rem" }}
+                onClick={applyToJob}
+              >
                 Apply
               </button>
             ) : null}
@@ -217,28 +239,43 @@ const JobDetails = ({ job, candidateIsViewing, addToBookmarkedJobs }) => {
             <span>{job.description}</span>
           </div>
           <div className={jobDetailStyles.roleItem}>
-            <span
-              className={utilityStyles.headerTextN}
-              style={{ marginBottom: "1rem" }}
-            >
-              Skills
-            </span>
-            {job.skills.map((benefit, idx) => {
-              return <div key={`benefit${idx}`}>{benefit}</div>;
-            })}
+            <span className={utilityStyles.headerTextN}>Skills</span>
+            <div style={{ marginTop: "1rem" }}>
+              {job.skills.map((benefit, idx) => {
+                return (
+                  <div
+                    key={`benefit${idx}`}
+                    className={utilityStyles.itemBar}
+                    style={{ backgroundColor: "var(--color-5)", color: "#fff" }}
+                  >
+                    {benefit}
+                  </div>
+                );
+              })}
+            </div>
           </div>
           <div className={jobDetailStyles.roleItem}>
-            <span
-              className={utilityStyles.headerTextN}
-              style={{ marginBottom: "1rem" }}
+            <span className={utilityStyles.headerTextN}>Perks & Benefits</span>
+            <div
+              style={{ display: "flex", flexWrap: "wrap", marginTop: "1rem" }}
             >
-              Perks & Benefits
-            </span>
-            {job.benefits.map((benefit, idx) => {
-              return <div key={`benefit${idx}`}>{benefit}</div>;
-            })}
+              {job.benefits.map((benefit, idx) => {
+                return (
+                  <div
+                    key={`benefit${idx}`}
+                    className={utilityStyles.itemBar}
+                    style={{ backgroundColor: "#fff", marginBottom: ".5rem" }}
+                  >
+                    {benefit}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
+        <button className={utilityStyles.formButton} onClick={applyToJob}>
+          Apply
+        </button>
       </div>
     </div>
   );
@@ -254,7 +291,12 @@ const JobDetail = ({ title, value }) => {
         minHeight: "80px",
       }}
     >
-      <span style={{ fontWeight: "bold", marginBottom: ".5rem" }}>{title}</span>
+      <span
+        className={utilityStyles.headerTextNSmall}
+        style={{ marginBottom: ".5rem" }}
+      >
+        {title}
+      </span>
       <span>{value}</span>
     </div>
   );

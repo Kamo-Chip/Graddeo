@@ -45,7 +45,7 @@ const JobForm = () => {
     applicationEmail: "",
     companyLogo: "",
     hasCustomBackground: false,
-    background: "#fff",
+    background: "var(--color-4)",
     datePosted: null,
     jobId: "",
     duration: "",

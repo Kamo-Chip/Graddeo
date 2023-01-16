@@ -1,8 +1,8 @@
 import Router, { useRouter } from "next/router";
 import profileStyles from "../styles/profile.module.css";
 import utilityStyles from "../styles/utilities.module.css";
-import jobCardStyles from "../styles/jobCardStyles.module.css";
-import { HiUserCircle, HiUsers } from "react-icons/hi";
+import cardStyles from "../styles/card.module.css";
+import { HiUser, HiUsers } from "react-icons/hi";
 import { MdDelete, MdLogout } from "react-icons/md";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,21 +14,24 @@ const CompanyProfile = ({
   jobsList,
   signout,
   candidateIsViewing,
-  deleteJob
+  deleteJob,
 }) => {
   return (
     <div className={profileStyles.container}>
-      <div
-        className={`${utilityStyles.form}`}
-        style={{ alignItems: "unset", padding: "0 2em 2em 2em" }}
-      >
-        <div className={profileStyles.section}>
+      <div className={`${utilityStyles.form}`} style={{ alignItems: "unset" }}>
+        <div
+          className={profileStyles.section}
+          style={{ paddingBottom: "2rem" }}
+        >
           <h2 className={utilityStyles.leftAlignedText}>
             About {companyDetails.name}
           </h2>
-          <div className={profileStyles.personalContainer}>
+          <div
+            className={profileStyles.personalContainer}
+            style={{ marginBottom: "2rem" }}
+          >
             {!companyDetails.logo ? (
-              <HiUserCircle size="90px" color="gray" />
+              <HiUser size="90px" color="#000" />
             ) : (
               <Image
                 loader={() => companyDetails.logo}
@@ -41,7 +44,13 @@ const CompanyProfile = ({
               />
             )}
 
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+              }}
+            >
               <a
                 href={companyDetails.site}
                 className={utilityStyles.grayedOutText}
@@ -74,11 +83,14 @@ const CompanyProfile = ({
                   {companyDetails.employeeCount}
                 </span>
               </span>
-              <span className={profileStyles.bio}>{companyDetails.bio}</span>
             </div>
           </div>
+          <span className={profileStyles.bio}>{companyDetails.bio}</span>
         </div>
-        <div className={profileStyles.section}>
+        <div
+          className={profileStyles.section}
+          style={{ paddingBottom: "1rem" }}
+        >
           <h2
             className={utilityStyles.leftAlignedText}
             style={{ marginBottom: "1rem" }}
@@ -95,19 +107,24 @@ const CompanyProfile = ({
                           ? `/candidates/jobs/${job.jobId}`
                           : `/companies/jobs/${job.jobId}`
                       }
-                      className={jobCardStyles.link}
+                      className={cardStyles.link}
                     >
-                      <JobCard
-                        job={job}
-                      />
+                      <JobCard job={job} />
                     </Link>
-                    {!candidateIsViewing ? <span onClick={deleteJob} id={`rem-${job.jobId}`}><MdDelete/></span> : null}
+                    {!candidateIsViewing ? (
+                      <span onClick={deleteJob} id={`rem-${job.jobId}`}>
+                        <MdDelete />
+                      </span>
+                    ) : null}
                   </div>
                 );
               })
             : "Company does not currently have active job posts"}
         </div>
-        <div className={profileStyles.section}>
+        <div
+          className={profileStyles.section}
+          style={{ paddingBottom: "1rem" }}
+        >
           <h2>Values</h2>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div
@@ -117,7 +134,9 @@ const CompanyProfile = ({
                 marginTop: "1rem",
               }}
             >
-              <span className={utilityStyles.headerTextN}>Why work for us</span>
+              <span className={utilityStyles.headerTextNSmall}>
+                Why work for us
+              </span>
               <span>{companyDetails.whyUs}</span>
             </div>
             <div
@@ -127,12 +146,15 @@ const CompanyProfile = ({
                 marginTop: "1rem",
               }}
             >
-              <span className={utilityStyles.headerTextN}>Culture</span>
+              <span className={utilityStyles.headerTextNSmall}>Culture</span>
               <span>{companyDetails.culture}</span>
             </div>
           </div>
         </div>
-        <div className={profileStyles.section}>
+        <div
+          className={profileStyles.section}
+          style={{ paddingBottom: "1rem" }}
+        >
           <h2>Benefits</h2>
           <div
             style={{
@@ -147,8 +169,11 @@ const CompanyProfile = ({
                   return (
                     <span
                       key={`benefit${index}`}
-                      className={utilityStyles.roundOut}
-                      style={{ margin: "0 .5rem .5rem 0" }}
+                      className={utilityStyles.itemBar}
+                      style={{
+                        margin: "0 .5rem .5rem 0",
+                        backgroundColor: "#fff",
+                      }}
                     >
                       <b>{benefit}</b>
                     </span>
@@ -157,50 +182,51 @@ const CompanyProfile = ({
               : null}
           </div>
         </div>
-        <div className={profileStyles.section}>
+        <div
+          className={profileStyles.section}
+          style={{ paddingBottom: "1rem" }}
+        >
           <h2 style={{ marginBottom: "1rem" }}>Interview Process</h2>
           <span>{companyDetails.interviewProcess}</span>
         </div>
 
         {companyDetails.team && companyDetails.team.length ? (
-          <div>
+          <div className={profileStyles.section}>
             <h2>Our HR team</h2>
             <div
               style={{
                 marginTop: "1rem",
                 display: "flex",
                 flexWrap: "wrap",
-                paddingBottom: "1rem",
-                width: "90%",
+                width: "100%",
+                justifyContent: "center"
               }}
             >
               {companyDetails.team.map((member, index) => {
                 return (
-                  <div key={`member${index}`}>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                      }}
-                    >
-                      {member.image ? (
-                        <Image
-                          src={member.image}
-                          alt="profile photo"
-                          loader={() => member.image}
-                          height={90}
-                          width={90}
-                          className={utilityStyles.profilePhoto}
-                          style={{
-                            margin: ".5rem",
-                          }}
-                        />
-                      ) : (
-                        <HiUserCircle size="90px" color="gray" />
-                      )}
-                      {member.name}
-                    </div>
+                  <div
+                    key={`member${index}`}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      margin: ".5rem"
+                    }}
+                  >
+                    {member.image ? (
+                      <Image
+                        src={member.image}
+                        alt="profile photo"
+                        loader={() => member.image}
+                        height={80}
+                        width={80}
+                        className={utilityStyles.profilePhoto}
+                      />
+                    ) : (
+                      <HiUser size="80px" color="#000" />
+                    )}
+                    <span className={utilityStyles.headerTextNSmall}>{member.name}</span>
+            
                   </div>
                 );
               })}

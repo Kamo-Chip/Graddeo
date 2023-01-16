@@ -253,8 +253,8 @@ const Jobs = ({ isPreview }) => {
         <input
           type="text"
           id="searchBar"
-          className={`${jobStyles.search} ${utilityStyles.roundOut}`}
-          placeholder="Enter job title"
+          className={utilityStyles.mergeInputWithDiv}
+          placeholder="Enter a company's name"
           onChange={handleChange}
         />
       </div>

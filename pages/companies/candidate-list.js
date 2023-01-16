@@ -16,7 +16,7 @@ import {
   salaryTypes,
   schoolYears,
   sexes,
-  visaStatusses
+  visaStatusses,
 } from "../../lib/filterOptions.json";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -140,14 +140,16 @@ const CompanyCandidateList = () => {
 
       if (degreeList.length) {
         degreeIsValid = filters.some(
-          (filter) => filter.toLowerCase() == candidate.education[0].major.toLowerCase()
+          (filter) =>
+            filter.toLowerCase() == candidate.education[0].major.toLowerCase()
         );
       }
 
       if (institutionList.length) {
         institutionIsValid = filters.some(
           (filter) =>
-            filter.toLowerCase() == candidate.education[0].institution.toLowerCase()
+            filter.toLowerCase() ==
+            candidate.education[0].institution.toLowerCase()
         );
       }
 
@@ -161,7 +163,7 @@ const CompanyCandidateList = () => {
         sexIsValid = candidate.sex === sexList[0];
       }
 
-      if(visaList.length) {
+      if (visaList.length) {
         visaIsValid = candidate.visaStatus === visaList[0];
       }
 
@@ -315,7 +317,9 @@ const CompanyCandidateList = () => {
           break;
         case "visaStatus":
           let newVisaFilters = filters.filter(
-            (filter) => filter !== "Eligible to work in S.A" && filter !== "Will require a sponshorship"
+            (filter) =>
+              filter !== "Eligible to work in S.A" &&
+              filter !== "Will require a sponshorship"
           );
           newVisaFilters.push(filterToAdd);
           setFilters(newVisaFilters);
@@ -393,8 +397,8 @@ const CompanyCandidateList = () => {
         <input
           type="text"
           id="searchBar"
-          className={`${jobStyles.search} ${utilityStyles.roundOut}`}
-          placeholder="Enter a candidate's name"
+          className={utilityStyles.mergeInputWithDiv}
+          placeholder="Enter a company's name"
           onChange={handleChange}
         />
       </div>
@@ -451,7 +455,8 @@ const CompanyCandidateList = () => {
           onChangeHandler={addFilterSelect}
           name="visaStatus"
           title="🌐 Visa status"
-          options={visaStatusses}/>
+          options={visaStatusses}
+        />
         <CustomSelect
           onChangeHandler={addFilterSelect}
           name="sex"
@@ -507,7 +512,9 @@ const CompanyCandidateList = () => {
             })
           : null}
       </div>
-      <div onClick={() => router.push("/companies/bookmarked-candidates")}>Bookmarked candidates</div>
+      <button onClick={() => router.push("/companies/bookmarked-candidates")} style={{backgroundColor: "var(--color-1)"}}>
+        View bookmarked candidates
+      </button>
       <div className={jobStyles.jobListContainer}>
         {candidatesToDisplay.length && !isLoading ? (
           candidatesToDisplay.map((candidate, idx) => {
@@ -516,9 +523,7 @@ const CompanyCandidateList = () => {
                 href={`/companies/candidates/${candidate.candidateId}`}
                 key={`candidate${idx}`}
               >
-                <CandidateCard
-                  candidate={candidate}
-                />
+                <CandidateCard candidate={candidate} />
               </Link>
             );
           })

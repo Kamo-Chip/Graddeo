@@ -81,6 +81,11 @@ button {
   padding: .35em 1em;
   box-shadow: #000 3px 3px;
   font-size: 1rem;
+  transition: box-shadow 500ms;
+}
+
+button:hover {
+  box-shadow: none;
 }
 
 input:focus,

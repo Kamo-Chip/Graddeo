@@ -5,7 +5,7 @@ import candidateListStyles from "../styles/candidateList.module.css";
 const CustomSearch = ({name, title, method, emoji, }) => {
   return (
     <div
-      className={`${utilityStyles.roundOut} ${candidateListStyles.filterOption}`}
+      className={`${utilityStyles.filterOption} ${candidateListStyles.filterOption}`}
       style={{
         display: "flex",
         flexDirection: "row",

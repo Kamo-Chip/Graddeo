@@ -82,7 +82,6 @@
 
 .filterResults {
   position: absolute;
-
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -96,10 +95,12 @@
 }
 
 .itemBar {
-  padding: 0.5em;
+  padding: 0.25em 0.5em ;
   border: solid #000 2px;
-  border-radius: 20px;
-  box-shadow: #000 3px 3px;
+  border-radius: 10px;
+  font-weight: bold;
+  height: fit-content;
+  width: fit-content;
   margin-left: 0.5rem;
   letter-spacing: 0.75px;
 }
@@ -137,9 +138,6 @@
   margin: 3rem 0;
   margin-bottom: 1rem;
   padding-bottom: 2em;
-  /* border-radius: 10px; */
-  /* border: 1px solid rgb(204, 204, 204); */
-  /* box-shadow: rgba(128, 128, 128, 0.219) 1px 1px 10px; */
   border: solid #000 2px;
   box-shadow: #000 5px 5px;
 }
@@ -172,7 +170,7 @@
 .fieldContainer input,
 .fieldContainer textarea .sizeInput input,
 .sizeInput textarea {
-  font-family: Inter;
+  font-family: satoshi;
   width: 100%;
   font-size: 1rem;
 }

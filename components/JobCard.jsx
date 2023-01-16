@@ -1,15 +1,16 @@
-import jobCardStyles from "../styles/jobCardStyles.module.css";
+import cardStyles from "../styles/card.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import utilityStyles from "../styles/utilities.module.css";
 import { timeSincePosted, formatSalary } from "../lib/format";
 
-const JobCard = ({
-job
-}) => {
+const JobCard = ({ job }) => {
   return (
-    <div className={jobCardStyles.card} style={{ backgroundColor: job.background }}>
-      <div className={jobCardStyles.start}>
+    <div
+      className={cardStyles.jobCard}
+      style={{ backgroundColor: job.background }}
+    >
+      <div className={cardStyles.jobStart}>
         <div
           style={{
             display: "flex",
@@ -18,7 +19,7 @@ job
             marginRight: "auto",
           }}
         >
-          <div className={jobCardStyles.logoContainer}>
+          <div className={cardStyles.logoContainer}>
             <Image
               loader={() => job.companyLogo}
               src={job.companyLogo}
@@ -45,17 +46,25 @@ job
           </div>
         </div>
 
-        <div className={jobCardStyles.detailsContainer}>
-          <div className={jobCardStyles.details}>
+        <div className={cardStyles.detailsContainer}>
+          <div className={cardStyles.details}>
             <span
-              className={utilityStyles.roundOut}
-              style={{ marginRight: ".5em" }}
+              className={utilityStyles.itemBar}
+              style={{
+                marginLeft: "0",
+                marginRight: ".5em",
+                backgroundColor: "#fff",
+              }}
             >
               📍{job.location ? job.location : "Location"}
             </span>
             <span
-              className={utilityStyles.roundOut}
-              style={{ marginRight: ".5em" }}
+              className={utilityStyles.itemBar}
+              style={{
+                marginLeft: "0",
+                marginRight: ".5em",
+                backgroundColor: "#fff",
+              }}
             >
               💵{job.salary ? "R" + formatSalary(job.salary) : "Salary"}
               {job.salaryType.includes("year")
@@ -66,27 +75,36 @@ job
                 ? "/hr"
                 : null}
             </span>
-            <span className={utilityStyles.roundOut}>
+            <span
+              className={utilityStyles.itemBar}
+              style={{
+                marginLeft: "0",
+                marginRight: ".5em",
+                backgroundColor: "#fff",
+              }}
+            >
               {job.jobType ? job.jobType : "Job type"}
             </span>
           </div>
         </div>
       </div>
 
-      <div className={jobCardStyles.benefitsContainer}>
-        <ul className={jobCardStyles.benefitsList}>
+      <div className={cardStyles.benefitsContainer}>
+        <ul className={cardStyles.benefitsList}>
           {job.benefits.map((attribute, idx) => {
-            if (idx < 6) {
+            if (idx < 5) {
               return (
                 <li
                   key={`jobAttribute${idx}`}
-                  className={utilityStyles.roundOut}
+                  className={utilityStyles.itemBar}
+                  style={{ marginLeft: "0", backgroundColor: "#fff" }}
                 >
                   {attribute}
                 </li>
               );
             }
           })}
+          <span>{job.benefits.length > 5 ? "..." : null}</span>
         </ul>
       </div>
       {job.datePosted ? (
@@ -98,7 +116,7 @@ job
             justifySelf: "flex-end",
             marginLeft: "auto",
           }}
-          className={jobCardStyles.date}
+          className={cardStyles.date}
         >
           {timeSincePosted(job.datePosted)}
         </div>

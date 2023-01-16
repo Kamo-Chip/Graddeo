@@ -1,5 +1,4 @@
-import jobCardStyles from "../styles/jobCardStyles.module.css";
-import companyCardStyles from "../styles/companyCard.module.css";
+import cardStyles from "../styles/card.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import utilityStyles from "../styles/utilities.module.css";
@@ -8,8 +7,8 @@ import { HiUserCircle } from "react-icons/hi";
 
 const CandidateCard = ({ candidate }) => {
   return (
-    <div className={jobCardStyles.card}>
-      <div className={companyCardStyles.start}>
+    <div className={cardStyles.card}>
+      <div className={cardStyles.start}>
         <div
           style={{
             display: "flex",
@@ -17,7 +16,7 @@ const CandidateCard = ({ candidate }) => {
             alignItems: "flex-start",
           }}
         >
-          <div className={jobCardStyles.logoContainer}>
+          <div className={cardStyles.logoContainer}>
             <Image
               loader={() => candidate.profilePhoto}
               src={candidate.profilePhoto}
@@ -42,14 +41,14 @@ const CandidateCard = ({ candidate }) => {
             </span>
             <span>{candidate.education[0].major}</span>
           </div>
-          <div className={companyCardStyles.skills}>
+          <div className={cardStyles.skills}>
             {candidate.skills.map((skill, idx) => {
               if (idx < 5) {
                 return (
                   <div
                     key={`skill${idx}`}
-                    className={utilityStyles.roundOut}
-                    style={{ margin: "0 .25rem" }}
+                    className={utilityStyles.itemBar}
+                    style={{ backgroundColor: "var(--color-5)", color: "#fff" }}
                   >
                     {skill}
                   </div>
@@ -61,24 +60,25 @@ const CandidateCard = ({ candidate }) => {
             </span>
           </div>
         </div>
-        <div className={`${companyCardStyles.bioContainer}`}>
-          {candidate.bio}
-        </div>
-        <div className={jobCardStyles.detailsContainer}>
-          <div className={jobCardStyles.details}>
+        <div className={`${cardStyles.bioContainer}`}>{candidate.bio}</div>
+        <div className={cardStyles.detailsContainer}>
+          <div className={cardStyles.details}>
             <span
-              className={utilityStyles.roundOut}
-              style={{ marginRight: ".5em" }}
+              className={utilityStyles.itemBar}
+              style={{ marginRight: ".5em", backgroundColor: "#fff" }}
             >
               📍{candidate.location}
             </span>
             <span
-              className={utilityStyles.roundOut}
-              style={{ marginRight: ".5em" }}
+              className={utilityStyles.itemBar}
+              style={{ marginRight: ".5em", backgroundColor: "#fff" }}
             >
               {candidate.schoolYear}
             </span>
-            <span className={utilityStyles.roundOut}>
+            <span
+              className={utilityStyles.itemBar}
+              style={{ backgroundColor: "#fff" }}
+            >
               🏫{candidate.education[0].institution}
             </span>
           </div>

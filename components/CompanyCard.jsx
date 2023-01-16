@@ -1,5 +1,4 @@
-import jobCardStyles from "../styles/jobCardStyles.module.css";
-import companyCardStyles from "../styles/companyCard.module.css";
+import cardStyles from "../styles/card.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import utilityStyles from "../styles/utilities.module.css";
@@ -7,27 +6,27 @@ import { timeSincePosted, formatSalary } from "../lib/format";
 
 const CompanyCard = ({ company }) => {
   return (
-    <div className={jobCardStyles.card}>
-      <div className={companyCardStyles.start}>
+    <div className={cardStyles.card}>
+      <div className={cardStyles.start}>
         <div
           style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "flex-start",
-            marginRight: "auto",
+            width: "100%",
           }}
         >
-          <div className={jobCardStyles.logoContainer}>
-            <Image
-              loader={() => company.logo}
-              src={company.logo}
-              alt="company logo"
-              height={56}
-              width={56}
-              className={utilityStyles.profilePhoto}
-            />
-          </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <Image
+            loader={() => company.logo}
+            src={company.logo}
+            alt="company logo"
+            height={60}
+            width={60}
+            className={utilityStyles.profilePhoto}
+            style={{marginRight: "1rem"}}
+          />
+
+          <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
             <span
               className={utilityStyles.headerText}
               style={{
@@ -40,18 +39,23 @@ const CompanyCard = ({ company }) => {
             >
               {company.name}
             </span>
-            <span>
+            <span
+              className={utilityStyles.itemBar}
+              style={{
+                fontSize: "12px",
+                marginLeft: "auto",
+                backgroundColor: "var(--color-1)",
+              }}
+            >
               {company.jobs.length > 1
                 ? company.jobs.length + " open jobs"
                 : company.jobs.length + " open job"}
             </span>
           </div>
         </div>
-        <div className={`${companyCardStyles.bioContainer}`}>
-            {company.bio}
-        </div>
-        <div className={jobCardStyles.detailsContainer}>
-          <div className={jobCardStyles.details}>
+        <div className={`${cardStyles.bioContainer}`}>{company.bio}</div>
+        <div className={cardStyles.detailsContainer}>
+          <div className={cardStyles.details}>
             <span
               className={utilityStyles.itemBar}
               style={{ marginRight: ".5em" }}
