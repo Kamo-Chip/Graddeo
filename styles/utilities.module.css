@@ -1,3 +1,5 @@
+/*Formatting*/
+
 .headerText {
   font-size: 1.2rem;
   font-weight: bold;
@@ -32,46 +34,10 @@
   text-align: left;
 }
 
-.formSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  padding: 0;
-  padding-bottom: 1.25rem;
-  border-bottom: solid rgba(128, 128, 128, 0.408) 1px;
-}
-
-.formSection:last-of-type{
-  border: none;
-}
-
 .containerFlex {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 800px;
-  width: 100%;
-  background-color: var(--color-4);
-  margin: 3rem 0;
-  margin-bottom: 1rem;
-  padding-bottom: 2em;
-  /* border-radius: 10px; */
-  /* border: 1px solid rgb(204, 204, 204); */
-  /* box-shadow: rgba(128, 128, 128, 0.219) 1px 1px 10px; */
-  border: solid #000 2px;
-  box-shadow: #000 5px 5px;
-}
-
-.form h2 {
-  font-size: 1.5rem;
-  text-align: left;
 }
 
 .filterOption {
@@ -96,47 +62,6 @@
   width: 100%;
 }
 
-.input {
-  font-size: 1rem;
-  padding: 0.5em;
-  border: solid #000 2px;
-  border-radius: 3px;
-  box-shadow: #000 3px 3px;
-  background-color: #fff;
-  margin-left: 0.5rem;
-}
-
-.textarea {
-  resize: none;
-}
-
-/* .textarea::-webkit-scrollbar-thumb {
-
-} */
-
-.itemBar {
-  padding: 0.5em;
-  border: solid #000 2px;
-  border-radius: 20px;
-  box-shadow: #000 3px 3px;
-  margin-left: 0.5rem;
-  letter-spacing: .75px;
-}
-
-.filterResults {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 220px;
-  background-color: #fff;
-  padding: 0.5em;
-  border: solid rgba(128, 128, 128, 0.408) 1px;
-  border-radius: 10px;
-  box-shadow: rgba(128, 128, 128, 0.408) 1px 1px 10px;
-  z-index: 1;
-}
-
 .grayedOutText {
   color: rgb(71, 71, 71);
 }
@@ -155,14 +80,98 @@
   background-color: rgb(77, 150, 252);
 }
 
-.fieldContainer, .sizeInput {
+.filterResults {
+  position: absolute;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 220px;
+  background-color: #fff;
+  padding: 0.5em;
+  border: solid rgba(128, 128, 128, 0.408) 1px;
+  border-radius: 10px;
+  box-shadow: rgba(128, 128, 128, 0.408) 1px 1px 10px;
+  z-index: 1;
+}
+
+.itemBar {
+  padding: 0.5em;
+  border: solid #000 2px;
+  border-radius: 20px;
+  box-shadow: #000 3px 3px;
+  margin-left: 0.5rem;
+  letter-spacing: 0.75px;
+}
+
+.profilePhoto {
+  object-fit: cover;
+  object-position: center;
+  border: none;
+  border-radius: 5px;
+}
+
+/*Form*/
+
+.formSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 0;
+  padding-bottom: 1.25rem;
+  border-bottom: solid rgba(128, 128, 128, 0.408) 1px;
+}
+
+.formSection:last-of-type {
+  border: none;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+  width: 100%;
+  background-color: var(--color-4);
+  margin: 3rem 0;
+  margin-bottom: 1rem;
+  padding-bottom: 2em;
+  /* border-radius: 10px; */
+  /* border: 1px solid rgb(204, 204, 204); */
+  /* box-shadow: rgba(128, 128, 128, 0.219) 1px 1px 10px; */
+  border: solid #000 2px;
+  box-shadow: #000 5px 5px;
+}
+
+.form h2 {
+  font-size: 1.5rem;
+  text-align: left;
+}
+
+.input {
+  font-size: 1rem;
+  padding: 0.5em;
+  border: solid #000 2px;
+  border-radius: 3px;
+  box-shadow: #000 3px 3px;
+  background-color: #fff;
+  margin-left: 0.5rem;
+}
+
+.textarea {
+  resize: none;
+}
+
+.fieldContainer,
+.sizeInput {
   display: flex;
   flex-direction: column;
   width: 70%;
 }
 .fieldContainer input,
-.fieldContainer textarea
-.sizeInput input, .sizeInput textarea {
+.fieldContainer textarea .sizeInput input,
+.sizeInput textarea {
   font-family: Inter;
   width: 100%;
   font-size: 1rem;
@@ -205,7 +214,7 @@
   transition: background-color 500ms, color 500ms, box-shadow 500ms;
   font-family: clashDisplayRegular;
   font-weight: 600;
-  padding: .35em 1em;
+  padding: 0.35em 1em;
   box-shadow: #000 3px 3px;
 }
 
@@ -236,13 +245,6 @@
   margin-right: 1rem;
 }
 
-.profilePhoto {
-  object-fit: cover;
-  object-position: center;
-  border-radius: 50%;
-  border: solid #000 2px
-}
-
 @media screen and (max-width: 500px) {
   .headerText {
     max-width: 260px !important;
@@ -250,12 +252,16 @@
 }
 
 @media screen and (max-width: 425px) {
+  .filterResults {
+    width: 200px;
+  }
   .formSection {
     width: 100%;
     padding-left: 1em;
     padding-right: 1em;
   }
-  .fieldContainer, .sizeInput {
+  .fieldContainer,
+  .sizeInput {
     width: 100%;
   }
 

@@ -276,9 +276,15 @@ const CandidateCompanyPage = () => {
         <CustomSelect
           onChangeHandler={addFilterSelect}
           name="employeeCount"
-          title="👥 Company size"
+          title="👥 Size"
           options={employeeCounts}
         />
+         {/* <CustomSelect
+          onChangeHandler={addFilterSelect}
+          name="sort"
+          title="🔬 Sort"
+          options={["Most open jobs", "Company size (desc)", "Most benefits"]}
+        /> */}
       </div>
       <div className={jobStyles.filtersList}>
         {filters

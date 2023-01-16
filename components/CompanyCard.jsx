@@ -22,8 +22,8 @@ const CompanyCard = ({ company }) => {
               loader={() => company.logo}
               src={company.logo}
               alt="company logo"
-              height={60}
-              width={60}
+              height={56}
+              width={56}
               className={utilityStyles.profilePhoto}
             />
           </div>
@@ -53,18 +53,18 @@ const CompanyCard = ({ company }) => {
         <div className={jobCardStyles.detailsContainer}>
           <div className={jobCardStyles.details}>
             <span
-              className={utilityStyles.roundOut}
+              className={utilityStyles.itemBar}
               style={{ marginRight: ".5em" }}
             >
               📍{company.location ? company.location : "Location"}
             </span>
             <span
-              className={utilityStyles.roundOut}
+              className={utilityStyles.itemBar}
               style={{ marginRight: ".5em" }}
             >
               👥 {company.employeeCount}
             </span>
-            <span className={utilityStyles.roundOut}>{company.industry}</span>
+            <span className={utilityStyles.itemBar}>{company.industry}</span>
           </div>
         </div>
       </div>

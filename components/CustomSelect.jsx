@@ -6,8 +6,6 @@ import { useState } from "react";
 const CustomSelect = ({
   name,
   title,
-  stateTracker,
-  setStateTracker,
   onChangeHandler,
   options,
   value,
