@@ -4,6 +4,12 @@ import utilityStyles from "../styles/utilities.module.css";
 import cardStyles from "../styles/card.module.css";
 import { HiUser, HiUsers } from "react-icons/hi";
 import { MdDelete, MdLogout } from "react-icons/md";
+import {
+  BsInstagram,
+  BsLinkedin,
+  BsLink45Deg,
+  BsTwitter,
+} from "react-icons/bs";
 import Image from "next/image";
 import Link from "next/link";
 import { formatText } from "../lib/format";
@@ -85,7 +91,12 @@ const CompanyProfile = ({
               </span>
             </div>
           </div>
-          <span className={profileStyles.bio}>{companyDetails.bio}</span>
+          <span
+            className={profileStyles.bio}
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            {companyDetails.bio}
+          </span>
         </div>
         <div
           className={profileStyles.section}
@@ -100,7 +111,15 @@ const CompanyProfile = ({
           {jobsList.length
             ? jobsList.map((job, idx) => {
                 return (
-                  <div key={`jobList${idx}`} style={{display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                  <div
+                    key={`jobList${idx}`}
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
                     <Link
                       href={
                         candidateIsViewing
@@ -108,13 +127,17 @@ const CompanyProfile = ({
                           : `/companies/jobs/${job.jobId}`
                       }
                       className={cardStyles.link}
-                      style={{maxWidth: "unset", width: "105%"}}
+                      style={{ maxWidth: "unset", width: "105%" }}
                     >
-                      <JobCard job={job} companyProfileIsOpen={true}/>
+                      <JobCard job={job} companyProfileIsOpen={true} />
                     </Link>
                     {!candidateIsViewing ? (
-                      <span onClick={deleteJob} id={`rem-${job.jobId}`} style={{marginRight: "-1em", cursor: "pointer"}}>
-                        <MdDelete size="2rem"/>
+                      <span
+                        onClick={deleteJob}
+                        id={`rem-${job.jobId}`}
+                        style={{ marginRight: "-1em", cursor: "pointer" }}
+                      >
+                        <MdDelete size="2rem" />
                       </span>
                     ) : null}
                   </div>
@@ -135,10 +158,15 @@ const CompanyProfile = ({
                 marginTop: "1rem",
               }}
             >
-              <span className={utilityStyles.headerTextNSmall}>
+              <span
+                className={utilityStyles.headerTextNSmall}
+                style={{ marginBottom: ".5rem" }}
+              >
                 Why work for us
               </span>
-              <span>{companyDetails.whyUs}</span>
+              <span style={{ whiteSpace: "pre-wrap" }}>
+                {companyDetails.whyUs}
+              </span>
             </div>
             <div
               style={{
@@ -147,8 +175,15 @@ const CompanyProfile = ({
                 marginTop: "1rem",
               }}
             >
-              <span className={utilityStyles.headerTextNSmall}>Culture</span>
-              <span>{companyDetails.culture}</span>
+              <span
+                className={utilityStyles.headerTextNSmall}
+                style={{ marginBottom: ".5rem" }}
+              >
+                Culture
+              </span>
+              <span style={{ whiteSpace: "pre-wrap" }}>
+                {companyDetails.culture}
+              </span>
             </div>
           </div>
         </div>
@@ -165,6 +200,7 @@ const CompanyProfile = ({
               marginTop: "1rem",
             }}
           >
+            {console.log(companyDetails)}
             {companyDetails.benefits
               ? companyDetails.benefits.map((benefit, index) => {
                   return (
@@ -188,7 +224,80 @@ const CompanyProfile = ({
           style={{ paddingBottom: "1rem" }}
         >
           <h2 style={{ marginBottom: "1rem" }}>Interview Process</h2>
-          <span>{companyDetails.interviewProcess}</span>
+          <span style={{ whiteSpace: "pre-wrap" }}>
+            {companyDetails.interviewProcess}
+          </span>
+        </div>
+
+        <div
+          className={profileStyles.section}
+          style={{ paddingBottom: "1rem" }}
+        >
+          <h2>🔗Links</h2>
+          {companyDetails.linkedIn ? (
+            <div className={utilityStyles.fieldContainer}>
+              <div className={utilityStyles.labelContainer}>
+                <span className={utilityStyles.headerTextNSmall}>
+                  <BsLinkedin /> LinkedIn
+                </span>
+              </div>
+              <Link
+                href={`https://www.linkedin.com/in/${companyDetails.linkedIn}`}
+                target="_blank"
+                style={{ color: "var(--link-color)" }}
+              >
+                {companyDetails.linkedIn}
+              </Link>
+            </div>
+          ) : null}
+          {companyDetails.twitter ? (
+            <div className={utilityStyles.fieldContainer}>
+              <div className={utilityStyles.labelContainer}>
+                <span className={utilityStyles.headerTextNSmall}>
+                  <BsTwitter /> Twitter
+                </span>
+              </div>
+              <Link
+                href={`https://twitter.com/${companyDetails.twitter}`}
+                target="_blank"
+                style={{ color: "var(--link-color)" }}
+              >
+                {companyDetails.twitter}
+              </Link>
+            </div>
+          ) : null}
+          {companyDetails.instagram ? (
+            <div className={utilityStyles.fieldContainer}>
+              <div className={utilityStyles.labelContainer}>
+                <span className={utilityStyles.headerTextNSmall}>
+                  <BsInstagram /> Instagram
+                </span>
+              </div>
+              <Link
+                href={`https://www.instagram.com/${companyDetails.instagram}`}
+                target="_blank"
+                style={{ color: "var(--link-color)" }}
+              >
+                {companyDetails.instagram}
+              </Link>
+            </div>
+          ) : null}
+          {companyDetails.site ? (
+            <div className={utilityStyles.fieldContainer}>
+              <div className={utilityStyles.labelContainer}>
+                <span className={utilityStyles.headerTextNSmall}>
+                  <BsLink45Deg /> Website
+                </span>
+              </div>
+              <Link
+                href={`http://${companyDetails.site}`}
+                target="_blank"
+                style={{ color: "var(--link-color)" }}
+              >
+                {formatText(companyDetails.site)}
+              </Link>
+            </div>
+          ) : null}
         </div>
 
         {companyDetails.team && companyDetails.team.length ? (
@@ -200,7 +309,7 @@ const CompanyProfile = ({
                 display: "flex",
                 flexWrap: "wrap",
                 width: "100%",
-                justifyContent: "center"
+                justifyContent: "center",
               }}
             >
               {companyDetails.team.map((member, index) => {
@@ -211,7 +320,7 @@ const CompanyProfile = ({
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
-                      margin: ".5rem"
+                      margin: ".5rem",
                     }}
                   >
                     {member.image ? (
@@ -226,8 +335,9 @@ const CompanyProfile = ({
                     ) : (
                       <HiUser size="80px" color="#000" />
                     )}
-                    <span className={utilityStyles.headerTextNSmall}>{member.name}</span>
-            
+                    <span className={utilityStyles.headerTextNSmall}>
+                      {member.name}
+                    </span>
                   </div>
                 );
               })}

@@ -6,8 +6,11 @@ What I do:
 - Facilitate communication between companies and universities
 
 Tasks
-- Fix input formatting. Capitalise first letter and lower everuthing. 
-- Make mini text editor for descriptions
+ 
+- Add page to view applied jobs
+- Add page to view candidates that have applied
+- Fix filtering problem for custom search
+- Delete job once deadline passes
 - Add authentication checks (user already exists, email link login, etc.)
 - Populate with content
 - Design app

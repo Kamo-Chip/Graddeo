@@ -1,8 +1,9 @@
 import utilityStyles from "../../styles/utilities.module.css";
 import profileStyles from "../../styles/profile.module.css";
 import CustomSelect from "../../components/CustomSelect";
+import CustomTextArea from "../../components/CustomTextArea";
 import { useEffect, useState } from "react";
-import { HiUserCircle } from "react-icons/hi";
+import { HiUserCircle, HiUser } from "react-icons/hi";
 import { MdCancel } from "react-icons/md";
 import Image from "next/image";
 import {
@@ -16,7 +17,12 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { addItemToCollection } from "../../lib/db";
 import { useRouter } from "next/router";
 import FieldContainer from "../../components/FieldContainer";
-import { benefits } from "../../lib/filterOptions.json";
+import {
+  benefits,
+  jobTypes,
+  employeeCounts,
+  industries,
+} from "../../lib/filterOptions.json";
 import {
   BsLinkedin,
   BsTwitter,
@@ -218,6 +224,7 @@ const CompanyCreateProfile = () => {
 
   const createProfile = (e) => {
     e.preventDefault();
+    console.log(companyDetails);
 
     if (!inputIsValid()) {
       window.alert("Fill in all required (*) fields");
@@ -226,9 +233,7 @@ const CompanyCreateProfile = () => {
     } else {
       setCompanyDetails((prevState) => ({
         ...prevState,
-        companyId: formatTextRemoveSpaces(companyDetails.name)
-          .concat("-")
-          .concat(user.uid),
+        companyId: user.uid,
       }));
 
       setIsDone(true);
@@ -244,12 +249,6 @@ const CompanyCreateProfile = () => {
   }, [isDone]);
 
   useEffect(() => {
-    if (query.data) {
-      setCompanyDetails(JSON.parse(query.data));
-    }
-  }, []);
-
-  useEffect(() => {
     if (!loading && !user) {
       router.push("/companies");
     }
@@ -261,17 +260,20 @@ const CompanyCreateProfile = () => {
     }
   }, [loading, user]);
 
+  useEffect(() => {
+    if (query.data) {
+      setCompanyDetails(JSON.parse(query.data));
+    }
+  }, []);
+
   return (
     <div className={utilityStyles.containerFlex}>
-      <div
-        className={utilityStyles.form}
-        style={{ alignItems: "unset", padding: "0 2em 2em 2em" }}
-      >
+      <div className={utilityStyles.form}>
         <section
-          className={profileStyles.section}
+          className={utilityStyles.formSection}
           style={{ paddingBottom: "1.5rem" }}
         >
-          <h2>{"Let's get started"}</h2>
+          <h2>{query.data ? "Edit profile" : "Let's get started"}</h2>
 
           <FieldContainer
             name="name"
@@ -279,7 +281,7 @@ const CompanyCreateProfile = () => {
             label="Company name"
             fieldType={
               <input
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 type="text"
                 name="name"
                 id="name"
@@ -289,19 +291,91 @@ const CompanyCreateProfile = () => {
             }
           />
 
+          <div className={utilityStyles.fieldContainer}>
+            <div className={utilityStyles.labelContainer}>
+              <label
+                htmlFor="company logo"
+                className={utilityStyles.headerTextNSmall}
+              >
+                Logo
+              </label>
+              <small>Upload photo of your {"company's logo"}</small>
+            </div>
+            <div className={utilityStyles.fileInputContainer}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "120px",
+                  height: "94px",
+                  marginLeft: ".5rem",
+                }}
+              >
+                {companyDetails.logo == "" ? (
+                  <span
+                    style={{
+                      marginRight: "1rem",
+                    }}
+                  >
+                    <HiUser size="90px" color="#000" />
+                  </span>
+                ) : (
+                  <Image
+                    loader={() => companyDetails.logo}
+                    src={companyDetails.logo}
+                    alt="logo"
+                    height={90}
+                    width={90}
+                    style={{
+                      marginRight: "1rem",
+                    }}
+                    className={utilityStyles.profilePhoto}
+                  />
+                )}
+              </div>
+              {companyDetails.logo !== "" ? (
+                <span onClick={deleteLogo} className={utilityStyles.formButton}>
+                  Delete logo
+                </span>
+              ) : (
+                <label
+                  for="logo"
+                  style={{ width: "fit-content" }}
+                  className={utilityStyles.formButton}
+                >
+                  Upload logo
+                </label>
+              )}
+              <input
+                type="file"
+                name="logo"
+                id="logo"
+                className={utilityStyles.fileInput}
+                onChange={handleLogoUpload}
+              />
+            </div>
+          </div>
+
           <FieldContainer
             name="bio"
             required={true}
             label="Bio"
             smallText="Tell your company's story. What do you do?"
             fieldType={
-              <textarea
-                maxLength={200}
-                className={utilityStyles.roundOut}
+              // <textarea
+              //   maxLength={200}
+              //   className={utilityStyles.roundOut}
+              //   name="bio"
+              //   id="bio"
+              //   onChange={handleChangeInput}
+              //   value={companyDetails.bio}
+              // />
+              <CustomTextArea
+                maxLength={800}
                 name="bio"
-                id="bio"
-                onChange={handleChangeInput}
+                handler={handleChangeInput}
                 value={companyDetails.bio}
+                height="260px"
               />
             }
           />
@@ -319,7 +393,7 @@ const CompanyCreateProfile = () => {
                 }
                 name="employeeCount"
                 onChangeHandler={handleChangeSelect}
-                options={["11-50", "51-200", "201-1 000", "> 1 000"]}
+                options={employeeCounts}
               />
             }
           />
@@ -328,9 +402,10 @@ const CompanyCreateProfile = () => {
             name="location"
             required={true}
             label="Location"
+            smallText="The location where your company resides. Helps employees to find employers in a suitable location. Ensure your formatting is correct (Include a comma & space between city & province)"
             fieldType={
               <input
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 type="text"
                 name="location"
                 id="location"
@@ -345,10 +420,11 @@ const CompanyCreateProfile = () => {
             name="email"
             required={true}
             label="Email"
+            smallText="This email address will not be displayed publicly."
             fieldType={
               <input
-                className={utilityStyles.roundOut}
-                type="text"
+                className={utilityStyles.input}
+                type="email"
                 name="email"
                 id="email"
                 onChange={handleChangeInput}
@@ -362,66 +438,26 @@ const CompanyCreateProfile = () => {
               />
             }
           />
-          <div className={utilityStyles.fieldContainer}>
-            <div className={utilityStyles.labelContainer}>
-              <label htmlFor="logo">Profile photo</label>
-              <small>A photo of your pretty face {":)"}</small>
-            </div>
-            <div className={utilityStyles.fileInputContainer}>
-              <input
-                type="file"
-                name="logo"
-                id="logo"
-                className={utilityStyles.fileInput}
-                onChange={handleLogoUpload}
-              />
-            </div>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              {!companyDetails.logo ? (
-                <HiUserCircle size="90px" color="gray" />
-              ) : (
-                <Image
-                  loader={() => companyDetails.logo}
-                  src={companyDetails.logo}
-                  alt="logo"
-                  height={90}
-                  width={90}
-                  style={{
-                    marginTop: "1rem",
-                    marginRight: "1rem",
-                    borderRadius: "50%",
-                  }}
-                />
-              )}
-
-              {companyDetails.logo ? (
-                <span onClick={deleteLogo}>
-                  <MdCancel />
-                </span>
-              ) : null}
-            </div>
-          </div>
 
           <FieldContainer
             name="industry"
             required={true}
             label="Industry"
-            smallText="The industry that your company operates within. E.g) Finance, Gaming, etc."
+            smallText="The industry that your company operates within"
             fieldType={
-              <input
-                className={utilityStyles.roundOut}
-                type="text"
+              <CustomSelect
                 name="industry"
-                id="industry"
-                onChange={handleChangeInput}
+                title="🏭 Industry"
                 value={companyDetails.industry}
+                onChangeHandler={handleChangeSelect}
+                options={industries}
               />
             }
           />
         </section>
 
         <section
-          className={profileStyles.section}
+          className={utilityStyles.formSection}
           style={{ paddingBottom: "1.5rem" }}
         >
           <h2>Values</h2>
@@ -432,13 +468,20 @@ const CompanyCreateProfile = () => {
             label="Culture"
             smallText="Describe the collection of attitudes, beliefs and behaviors that make up the regular atmosphere in a work environment. Mention stance on remote work, diversity, values, mission, etc."
             fieldType={
-              <textarea
-                className={utilityStyles.roundOut}
-                type="text"
+              // <textarea
+              //   className={utilityStyles.roundOut}
+              //   type="text"
+              //   name="culture"
+              //   id="culture"
+              //   onChange={handleChangeInput}
+              //   value={companyDetails.culture}
+              // />
+              <CustomTextArea
+                maxLength={500}
                 name="culture"
-                id="culture"
-                onChange={handleChangeInput}
+                handler={handleChangeInput}
                 value={companyDetails.culture}
+                height="240px"
               />
             }
           />
@@ -449,13 +492,12 @@ const CompanyCreateProfile = () => {
             label="Why work for us"
             smallText="Describe why a candidate should want to be a part of your company. What makes your great? What makes you stand-out?"
             fieldType={
-              <textarea
-                className={utilityStyles.roundOut}
-                type="text"
+              <CustomTextArea
+                maxLength={500}
                 name="whyUs"
-                id="whyUs"
-                onChange={handleChangeInput}
+                handler={handleChangeInput}
                 value={companyDetails.whyUs}
+                height="240px"
               />
             }
           />
@@ -466,17 +508,17 @@ const CompanyCreateProfile = () => {
             label="Interview process"
             smallText="The process a candidate will undergo from the moment they apply to being hired"
             fieldType={
-              <textarea
-                className={utilityStyles.roundOut}
+              <CustomTextArea
+                maxLength={500}
                 name="interviewProcess"
-                id="interviewProcess"
-                onChange={handleChangeInput}
+                handler={handleChangeInput}
                 value={companyDetails.interviewProcess}
+                height="240px"
               />
             }
           />
         </section>
-        <section className={profileStyles.section}>
+        <section className={utilityStyles.formSection}>
           <h2>Benefits</h2>
           <CustomSelect
             title="🍰Benefits"
@@ -497,7 +539,7 @@ const CompanyCreateProfile = () => {
               return (
                 <div
                   key={`benefit${index}`}
-                  className={utilityStyles.roundOut}
+                  className={utilityStyles.itemBar}
                   style={{
                     display: "flex",
                     flexDirection: "row",
@@ -506,6 +548,7 @@ const CompanyCreateProfile = () => {
                     maxWidth: "fit-content",
                     margin: ".5em",
                     marginLeft: "0",
+                    backgroundColor: "#fff",
                   }}
                 >
                   <span
@@ -541,7 +584,7 @@ const CompanyCreateProfile = () => {
             smallText="Your company's official website"
             fieldType={
               <div
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -550,7 +593,7 @@ const CompanyCreateProfile = () => {
               >
                 <div>http://</div>
                 <input
-                  className={utilityStyles.roundOut}
+                  className={utilityStyles.mergeInputWithDiv}
                   type="text"
                   name="site"
                   id="site"
@@ -567,7 +610,7 @@ const CompanyCreateProfile = () => {
             smallText="Your LinkedIn profile username"
             fieldType={
               <div
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -576,7 +619,7 @@ const CompanyCreateProfile = () => {
               >
                 <div>https://www.linkedin.com/in/</div>
                 <input
-                  className={utilityStyles.roundOut}
+                  className={utilityStyles.mergeInputWithDiv}
                   type="text"
                   name="linkedIn"
                   id="linkedIn"
@@ -593,7 +636,7 @@ const CompanyCreateProfile = () => {
             smallText="Your Instagram profile username"
             fieldType={
               <div
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -602,6 +645,7 @@ const CompanyCreateProfile = () => {
               >
                 <div>https://www.instagram.com/</div>
                 <input
+                  className={utilityStyles.mergeInputWithDiv}
                   type="text"
                   name="instagram"
                   id="instagram"
@@ -618,15 +662,16 @@ const CompanyCreateProfile = () => {
             smallText="Your Twitter profile username"
             fieldType={
               <div
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 style={{
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
                 }}
               >
-                <div>https://twitter.com//</div>
+                <div>https://twitter.com/</div>
                 <input
+                  className={utilityStyles.mergeInputWithDiv}
                   type="text"
                   name="twitter"
                   id="twitter"
@@ -638,7 +683,7 @@ const CompanyCreateProfile = () => {
           />
         </section>
         <section
-          className={profileStyles.section}
+          className={utilityStyles.formSection}
           style={{ paddingBottom: "1rem" }}
         >
           <h2>Our team</h2>
@@ -651,7 +696,7 @@ const CompanyCreateProfile = () => {
             label="Name"
             fieldType={
               <input
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 type="text"
                 name="memberName"
                 id="memberName"
@@ -664,7 +709,7 @@ const CompanyCreateProfile = () => {
             smallText="The team member's company email address. This email will not be publicly displayed unless explicitly specified when posting a job"
             fieldType={
               <input
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 type="email"
                 name="memberEmail"
                 id="memberEmail"
@@ -674,33 +719,55 @@ const CompanyCreateProfile = () => {
           <FieldContainer
             name="memberImg"
             label="Image"
-            fieldType={<input type="file" name="memberImg" id="memberImg" />}
+            fieldType={
+              <>
+                <label htmlFor="memberImg" className={utilityStyles.formButton}>
+                  Upload photo
+                </label>
+                <input
+                  type="file"
+                  name="memberImg"
+                  className={utilityStyles.fileInput}
+                  id="memberImg"
+                />
+              </>
+            }
           />
 
-          <button style={{ marginTop: "1rem" }} onClick={addTeamMember}>
+          <button
+            style={{ marginTop: "1rem" }}
+            onClick={addTeamMember}
+            className={utilityStyles.formButton}
+          >
             Add
           </button>
 
           <div
             style={{
-              marginTop: "1rem",
+              marginTop: "2rem",
               display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
               flexWrap: "wrap",
-              paddingBottom: "1rem",
-              width: "90%",
+              width: "100%",
             }}
           >
             {companyDetails.team.map((member, index) => {
               return (
                 <div
                   key={`member${index}`}
-                  style={{ display: "flex", flexDirection: "row" }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    margin: ".5rem",
+                  }}
                 >
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
+                      width: "120px",
                     }}
                   >
                     {member.image ? (
@@ -710,18 +777,23 @@ const CompanyCreateProfile = () => {
                         loader={() => member.image}
                         height={90}
                         width={90}
-                        style={{
-                          objectFit: "cover",
-                          objectPosition: "center",
-                          borderRadius: "50%",
-                        }}
+                        className={utilityStyles.profilePhoto}
                       />
                     ) : (
                       <HiUserCircle size="90px" color="gray" />
                     )}
-                    {member.name}
+                    <span
+                      className={utilityStyles.headerTextNSmall}
+                      style={{ textAlign: "center" }}
+                    >
+                      {member.name}
+                    </span>
                   </div>
-                  <span onClick={removeTeamMember} id={`remMember-${index}`}>
+                  <span
+                    onClick={removeTeamMember}
+                    id={`remMember-${index}`}
+                    style={{ cursor: "pointer" }}
+                  >
                     <MdCancel />
                   </span>
                 </div>
@@ -729,7 +801,11 @@ const CompanyCreateProfile = () => {
             })}
           </div>
         </section>
-        <button style={{ marginTop: "1rem" }} onClick={createProfile}>
+        <button
+          style={{ marginTop: "1rem" }}
+          onClick={createProfile}
+          className={utilityStyles.formButton}
+        >
           {query.data ? "Edit Profile" : "Create profile"}
         </button>
       </div>

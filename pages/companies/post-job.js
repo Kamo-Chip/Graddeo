@@ -15,7 +15,11 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db, auth } from "../../firebase";
-import { formatLink, formatTextRemoveSpaces } from "../../lib/format";
+import {
+  capitaliseFirst,
+  formatLink,
+  formatTextRemoveSpaces,
+} from "../../lib/format";
 import { useRouter } from "next/router";
 import CustomSelect from "../../components/CustomSelect";
 import CustomSearch from "../../components/CustomSearch";
@@ -32,11 +36,6 @@ import { v1 as uuidv1 } from "uuid";
 import Image from "next/image";
 import { HiUser, HiUserCircle } from "react-icons/hi";
 import { checkLink } from "../../lib/format";
-import MyEditor from "../../components/RichTextEditor";
-import { EditorState, convertToRaw, ContentState } from "draft-js";
-import { Editor } from "react-draft-wysiwyg";
-import draftToHtml from "draftjs-to-html";
-// import htmlToDraft from "html-to-draftjs";
 
 const JobForm = () => {
   const [jobDetails, setJobDetails] = useState({
@@ -71,7 +70,7 @@ const JobForm = () => {
   const router = useRouter();
   const [user, loading] = useAuthState(auth);
   const [companyDetails, setCompanyDetails] = useState({});
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
   const handleChangeInput = (e) => {
     switch (e.target.id) {
       case "deadline":
@@ -85,10 +84,6 @@ const JobForm = () => {
       default:
         setJobDetails({ ...jobDetails, [e.target.id]: e.target.value });
     }
-  };
-
-  const onEditorStateChange = (editorState) => {
-    setEditorState(editorState);
   };
 
   const handleChangeSelect = (e) => {
@@ -112,7 +107,9 @@ const JobForm = () => {
 
   const handleChangeSearch = (e) => {
     const source = e.currentTarget.id.split("-")[1];
-    const value = e.currentTarget.parentElement.children[0].value.toUpperCase();
+    const value = capitaliseFirst(
+      e.currentTarget.parentElement.children[0].value
+    );
 
     if (value) {
       e.currentTarget.parentElement.children[0].value = "";
@@ -216,6 +213,7 @@ const JobForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(jobDetails);
     let valid = inputIsValid();
     let durationIsValid = true;
     let openToTalkIsValid = true;
@@ -309,9 +307,9 @@ const JobForm = () => {
 
   return (
     <div className={utilityStyles.containerFlex}>
-      <div className={utilityStyles.form}>
+      <div className={utilityStyles.form} style={{ paddingTop: "2rem" }}>
         <section className={utilityStyles.formSection}>
-          <h2>Job</h2>
+          {/* <h2>Job</h2> */}
           <FieldContainer
             name="position"
             required={true}
@@ -366,7 +364,7 @@ const JobForm = () => {
                 type="text"
                 name="jobStartDate"
                 id="jobStartDate"
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 style={{ margin: ".5em", width: "180px" }}
                 placeholder="Start date"
                 onChange={handleChangeInput}
@@ -378,7 +376,7 @@ const JobForm = () => {
                 type="text"
                 name="jobEndDate"
                 id="jobEndDate"
-                className={utilityStyles.roundOut}
+                className={utilityStyles.input}
                 style={{ margin: ".5rem", width: "180px" }}
                 placeholder="End date"
                 onChange={handleChangeInput}
@@ -402,7 +400,7 @@ const JobForm = () => {
             }
           />
           <div
-            className={postJobStyles.fieldExtension}
+            className={`${postJobStyles.fieldExtension}`}
             style={{
               marginTop: "1em",
               marginLeft: ".5rem",
@@ -416,7 +414,7 @@ const JobForm = () => {
                   return (
                     <div
                       key={`benefit${idx}`}
-                      className={utilityStyles.roundOut}
+                      className={utilityStyles.itemBar}
                       style={{
                         display: "flex",
                         flexDirection: "row",
@@ -425,6 +423,7 @@ const JobForm = () => {
                         maxWidth: "fit-content",
                         margin: ".5em",
                         marginLeft: "0",
+                        backgroundColor: "#fff",
                       }}
                     >
                       <span
@@ -454,8 +453,8 @@ const JobForm = () => {
           <FieldContainer
             name="skills"
             required={true}
-            label="Skills/Experience"
-            smallText="The skills/experiences required for the job. Mention both soft
+            label="Skills"
+            smallText="The skills required for the job. Mention both soft
             and technical skills"
             fieldType={
               <CustomSearch
@@ -480,7 +479,7 @@ const JobForm = () => {
                   return (
                     <div
                       key={`skills${idx}`}
-                      className={utilityStyles.roundOut}
+                      className={utilityStyles.itemBar}
                       style={{
                         display: "flex",
                         flexDirection: "row",
@@ -489,6 +488,8 @@ const JobForm = () => {
                         maxWidth: "fit-content",
                         margin: ".5em",
                         marginLeft: "0",
+                        backgroundColor: "var(--color-5)",
+                        color: "#fff",
                       }}
                     >
                       <span
@@ -497,7 +498,7 @@ const JobForm = () => {
                           marginRight: ".5em",
                         }}
                       >
-                        <b>{skills}</b>
+                        {skills}
                       </span>
                       <span
                         id="rem-skills"
@@ -521,12 +522,12 @@ const JobForm = () => {
             required={true}
             label="Description"
             fieldType={
-              <textarea
-                className={utilityStyles.input}
+              <CustomTextArea
+                maxLength={800}
                 name="description"
-                id="description"
-                onChange={handleChangeInput}
-                style={{ marginLeft: ".5rem" }}
+                handler={handleChangeInput}
+                value={jobDetails.description}
+                height="250px"
               />
             }
           />
@@ -733,7 +734,6 @@ const JobForm = () => {
                           cursor: "pointer",
                           margin: ".25rem",
                           paddingTop: "1em",
-                          borderRadius: "5px"
                         }}
                         onClick={selectHiringManager}
                         id={`hr-${index}`}
@@ -753,7 +753,6 @@ const JobForm = () => {
                               height={80}
                               width={80}
                               className={utilityStyles.profilePhoto}
-                              
                             />
                           ) : (
                             <HiUser size="80px" color="#000" />
@@ -914,12 +913,16 @@ const JobForm = () => {
               />
             </div>
             {jobDetails.hasCustomBackground ? (
-              <input
-                type="color"
-                id="background-color"
-                onChange={changeBackground}
-                className={utilityStyles.roundOut}
-              />
+              <>
+                <label htmlFor="background-color" className={utilityStyles.formButton} style={{marginTop: ".5rem"}}>Select colour</label>
+                <input
+                  type="color"
+                  name="background-color"
+                  id="background-color"
+                  onChange={changeBackground}
+                  className={utilityStyles.fileInput}
+                />
+              </>
             ) : null}
           </div>
         </section>

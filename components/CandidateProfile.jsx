@@ -29,7 +29,7 @@ const CandidateProfile = ({
   candidateIsViewing,
   signout,
   addToBookmarkedCandidates,
-  bookmarkedCandidates
+  bookmarkedCandidates,
 }) => {
   return (
     <div className={profileStyles.container}>
@@ -52,15 +52,22 @@ const CandidateProfile = ({
                   onClick={addToBookmarkedCandidates}
                   style={{ textAlign: "right" }}
                 >
-                  <MdBookmark size="2rem" color={bookmarkedCandidates.includes(candidate.candidateId) ? "var(--red)" : "#000"}/>
+                  <MdBookmark
+                    size="2rem"
+                    color={
+                      bookmarkedCandidates.includes(candidate.candidateId)
+                        ? "var(--red)"
+                        : "#000"
+                    }
+                  />
                 </span>
-                <div style={{marginTop: "1rem"}}>
+                <div style={{ marginTop: "1rem" }}>
                   <span style={{ textAlign: "center", width: "112px" }}>
                     <Link
                       href={`mailto:${candidate.email}`}
                       target="_blank"
                       className={utilityStyles.formButton}
-                      style={{color: "#000"}}
+                      style={{ color: "#000" }}
                     >
                       Send email
                     </Link>
@@ -101,7 +108,7 @@ const CandidateProfile = ({
               style={{
                 display: "flex",
                 flexDirection: "column",
-                marginBottom: "1rem",
+                marginBottom: "2rem",
               }}
             >
               <span className={utilityStyles.headerTextN}>
@@ -125,15 +132,22 @@ const CandidateProfile = ({
               >
                 📧{candidate.email}
               </span>
-              <span
-                className={utilityStyles.grayedOutText}
-                style={{ marginTop: ".25rem" }}
-              >
-                📞{formatPhoneNumber(candidate.phoneNumber)}
-              </span>
+              {candidate.phoneNumber ? (
+                <span
+                  className={utilityStyles.grayedOutText}
+                  style={{ marginTop: ".25rem" }}
+                >
+                  📞{formatPhoneNumber(candidate.phoneNumber)}
+                </span>
+              ) : null}
             </div>
           </div>
-          <span className={profileStyles.bio}>{candidate.bio}</span>
+          <span
+            className={profileStyles.bio}
+            style={{ whiteSpace: "pre-wrap"}}
+          >
+            {candidate.bio}
+          </span>
         </div>
         <div
           className={profileStyles.section}
@@ -164,7 +178,9 @@ const CandidateProfile = ({
                           : "Graduated in "}
                       </span>
                       <span>
-                        {element.graduationMonth},{" "}
+                        {element.educationLevel != "High School"
+                          ? element.graduationMonth.concat(", ")
+                          : null}
                         <span className={utilityStyles.headerTextNSmall}>
                           {element.graduationYear}
                         </span>

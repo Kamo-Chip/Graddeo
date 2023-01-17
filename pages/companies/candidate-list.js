@@ -512,9 +512,21 @@ const CompanyCandidateList = () => {
             })
           : null}
       </div>
-      <button onClick={() => router.push("/companies/bookmarked-candidates")} style={{backgroundColor: "var(--color-1)"}}>
-        View bookmarked candidates
-      </button>
+      <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+        <button
+          onClick={() => router.push("/companies/bookmarked-candidates")}
+          style={{ backgroundColor: "var(--color-1)" }}
+        >
+          View bookmarked candidates
+        </button>
+        <button
+          onClick={() => router.push("/companies/prospective-candidates")}
+          style={{ backgroundColor: "var(--color-1)" }}
+        >
+          View prospective candidates
+        </button>
+      </div>
+
       <div className={jobStyles.jobListContainer}>
         {candidatesToDisplay.length && !isLoading ? (
           candidatesToDisplay.map((candidate, idx) => {

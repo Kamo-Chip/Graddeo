@@ -159,6 +159,8 @@
 
 .textarea {
   resize: none;
+  white-space: pre-wrap;
+  max-width: 100%;
 }
 
 .fieldContainer,
@@ -204,6 +206,7 @@
   border-radius: 5px;
   font-size: 1rem;
   width: fit-content;
+  height: fit-content;
   border: solid #000 2px;
   padding: 0.5em;
   background-color: var(--color-1);

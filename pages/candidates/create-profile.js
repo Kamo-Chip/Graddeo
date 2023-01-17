@@ -518,7 +518,7 @@ const CreateCandidateProfile = () => {
           />
           <div className={utilityStyles.fieldContainer}>
             <div className={utilityStyles.labelContainer}>
-              <label htmlFor="photo" className={utilityStyles.headerTextNSmall}>
+              <label htmlFor="profilephoto" className={utilityStyles.headerTextNSmall}>
                 Profile photo
               </label>
               <small>Upload a photo of your pretty face {":)"}</small>
@@ -591,10 +591,10 @@ const CreateCandidateProfile = () => {
             fieldType={
               <CustomTextArea
                 name="bio"
-                maxLength={280}
+                maxLength={320}
                 handler={handleChangeForInput}
                 value={userDetails.bio}
-                height="120px"
+                height="140px"
               />
             }
           />

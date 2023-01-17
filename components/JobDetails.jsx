@@ -36,7 +36,8 @@ const JobDetails = ({
 
   const applyToJob = async () => {
     if (user) {
-      console.log(user);
+      //Add candidate id to job details in prospectiveCandidates: Array
+      // 
       console.log("applying");
     } else {
       router.push("/login");
@@ -46,6 +47,7 @@ const JobDetails = ({
   return (
     <div className={utilityStyles.containerFlex}>
       {console.log(bookmarkedJobs)}
+      {console.log(job)}
       <div className={utilityStyles.form}>
         <div className={jobDetailStyles.header}>
           <div
@@ -137,7 +139,7 @@ const JobDetails = ({
             />
             <JobDetail
               title="💵 Salary"
-              value={`R${(job.salary).concat(
+              value={`R${job.salary.concat(
                 job.salaryType.includes("hour")
                   ? "/hr"
                   : job.salaryType.includes("month")
@@ -195,10 +197,11 @@ const JobDetails = ({
                 style={{
                   display: "flex",
                   flexDirection: "column",
+                  marginTop: "1rem"
                 }}
               >
-                <span>Hiring manager</span>
-                <div style={{ display: "flex" }}>
+                <span className={utilityStyles.headerTextN} style={{marginBottom: "1rem"}}>Hiring manager</span>
+                <div style={{ display: "flex", alignItems: "center" }}>
                   {job.hiringManager.image ? (
                     <Image
                       loader={() => job.hiringManager.image}
@@ -212,12 +215,13 @@ const JobDetails = ({
                     <HiUserCircle size="70px" color="gray" />
                   )}
                   <div style={{ display: "flex", flexDirection: "column" }}>
-                    <span style={{ marginTop: "1rem", marginLeft: ".5rem" }}>
+                    <span style={{ marginLeft: ".5rem" }} className={utilityStyles.headerTextNSmall}>
                       {job.hiringManager.name}
                     </span>
                     <a
                       href={`mailto:${job.hiringManager.email}`}
-                      style={{ marginLeft: ".5rem" }}
+                      style={{ marginLeft: ".5rem", marginTop: ".5rem"}}
+                      className={utilityStyles.formButton}
                     >
                       Message
                     </a>
@@ -236,17 +240,23 @@ const JobDetails = ({
             >
               Role description
             </span>
-            <span>{job.description}</span>
+            <span style={{ whiteSpace: "pre-wrap" }}>{job.description}</span>
           </div>
           <div className={jobDetailStyles.roleItem}>
             <span className={utilityStyles.headerTextN}>Skills</span>
-            <div style={{ marginTop: "1rem" }}>
+            <div
+              style={{ display: "flex", flexWrap: "wrap", marginTop: "1rem" }}
+            >
               {job.skills.map((benefit, idx) => {
                 return (
                   <div
                     key={`benefit${idx}`}
                     className={utilityStyles.itemBar}
-                    style={{ backgroundColor: "var(--color-5)", color: "#fff" }}
+                    style={{
+                      backgroundColor: "var(--color-5)",
+                      color: "#fff",
+                      marginBottom: ".5rem",
+                    }}
                   >
                     {benefit}
                   </div>
