@@ -7,7 +7,6 @@ What I do:
 
 Tasks
  
-- Add page to view applied jobs
 - Add page to view candidates that have applied
 - Fix filtering problem for custom search
 - Delete job once deadline passes

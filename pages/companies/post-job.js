@@ -241,9 +241,7 @@ const JobForm = () => {
         ...prevDetails,
         datePosted: Timestamp.now(),
         industry: companyDetails.industry,
-        companyId: formatTextRemoveSpaces(jobDetails.companyName)
-          .concat("-")
-          .concat(user.uid),
+        companyId: user.uid,
         jobId:
           formatLink(jobDetails.companyName + jobDetails.position) +
           uuidv1(options),

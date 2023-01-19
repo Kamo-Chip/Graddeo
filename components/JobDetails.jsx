@@ -5,6 +5,8 @@ import {
   doc,
   query,
   where,
+  updateDoc,
+  arrayUnion
 } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,14 +32,20 @@ const JobDetails = ({
   candidateIsViewing,
   addToBookmarkedJobs,
   bookmarkedJobs,
+  candidateId,
 }) => {
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
 
   const applyToJob = async () => {
     if (user) {
-      //Add candidate id to job details in prospectiveCandidates: Array
-      // 
+      await updateDoc(doc(db, "companies", job.companyId), {
+        prospectiveCandidates: arrayUnion({
+          candidateId: candidateId,
+          jobName: job.position,
+          jobId: job.jobId,
+        }),
+      });
       console.log("applying");
     } else {
       router.push("/login");
@@ -197,10 +205,15 @@ const JobDetails = ({
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  marginTop: "1rem"
+                  marginTop: "1rem",
                 }}
               >
-                <span className={utilityStyles.headerTextN} style={{marginBottom: "1rem"}}>Hiring manager</span>
+                <span
+                  className={utilityStyles.headerTextN}
+                  style={{ marginBottom: "1rem" }}
+                >
+                  Hiring manager
+                </span>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   {job.hiringManager.image ? (
                     <Image
@@ -215,12 +228,15 @@ const JobDetails = ({
                     <HiUserCircle size="70px" color="gray" />
                   )}
                   <div style={{ display: "flex", flexDirection: "column" }}>
-                    <span style={{ marginLeft: ".5rem" }} className={utilityStyles.headerTextNSmall}>
+                    <span
+                      style={{ marginLeft: ".5rem" }}
+                      className={utilityStyles.headerTextNSmall}
+                    >
                       {job.hiringManager.name}
                     </span>
                     <a
                       href={`mailto:${job.hiringManager.email}`}
-                      style={{ marginLeft: ".5rem", marginTop: ".5rem"}}
+                      style={{ marginLeft: ".5rem", marginTop: ".5rem" }}
                       className={utilityStyles.formButton}
                     >
                       Message

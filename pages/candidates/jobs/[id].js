@@ -62,11 +62,13 @@ export const getStaticPaths = async () => {
 
 const CandidateJobDetails = ({ job }) => {
   const [bookmarkedJobs, setBookmarkedJobs] = useState([]);
+  const [candidateId, setCandidateId] = useState("");
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
 
   const getBookmarkedJobs = async () => {
     const res = await getDoc(doc(db, "candidates", user.uid));
+    setCandidateId(res.data().candidateId)
     setBookmarkedJobs(res.data().bookmarkedJobs);
   };
 
@@ -98,6 +100,6 @@ const CandidateJobDetails = ({ job }) => {
     }
   }, [loading, user]);
 
-  return <JobDetails job={job} candidateIsViewing={true} addToBookmarkedJobs={addToBookmarkedJobs} bookmarkedJobs={bookmarkedJobs}/>;
+  return <JobDetails job={job} candidateIsViewing={true} addToBookmarkedJobs={addToBookmarkedJobs} bookmarkedJobs={bookmarkedJobs} candidateId={candidateId}/>;
 };
 export default CandidateJobDetails;

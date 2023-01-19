@@ -48,6 +48,7 @@ const CompanyCreateProfile = () => {
     jobs: [],
     logoName: "",
     bookmarkedCandidates: [],
+    prospectiveCandidates: [],
   });
 
   const [user, loading] = useAuthState(auth);
