@@ -58,17 +58,17 @@ const CompanyCard = ({ company }) => {
           <div className={cardStyles.details}>
             <span
               className={utilityStyles.itemBar}
-              style={{ marginRight: ".5em" }}
+              style={{ marginRight: ".5em", backgroundColor: "#fff"  }}
             >
               📍{company.location ? company.location : "Location"}
             </span>
             <span
               className={utilityStyles.itemBar}
-              style={{ marginRight: ".5em" }}
+              style={{ marginRight: ".5em", backgroundColor: "#fff" }}
             >
               👥 {company.employeeCount}
             </span>
-            <span className={utilityStyles.itemBar}>{company.industry}</span>
+            <span className={utilityStyles.itemBar} style={{backgroundColor: "#fff" }}>{company.industry}</span>
           </div>
         </div>
       </div>

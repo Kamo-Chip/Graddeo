@@ -20,8 +20,9 @@ import {
 } from "../../lib/filterOptions.json";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { capitaliseFirst } from "../../lib/format";
 
-const CompanyCandidateList = () => {
+const CompanyCandidateList = ({ isPreview }) => {
   const [candidates, setCandidates] = useState([]);
   const [candidatesToDisplay, setCandidatesToDisplay] = useState([]);
   const [filters, setFilters] = useState([]);
@@ -261,9 +262,9 @@ const CompanyCandidateList = () => {
 
   const addFilterInput = (e) => {
     const source = e.currentTarget.id.split("-")[1];
-    const filterToAdd = document
-      .querySelector(`#${source}`)
-      .value.toUpperCase();
+    const filterToAdd = capitaliseFirst(
+      document.querySelector(`#${source}`).value
+    );
     if (checkFilterIsValid(filterToAdd)) {
       setFilters([...filters, filterToAdd]);
       document.querySelector(`#${source}`).value = "";
@@ -512,31 +513,43 @@ const CompanyCandidateList = () => {
             })
           : null}
       </div>
-      <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-        <button
-          onClick={() => router.push("/companies/bookmarked-candidates")}
-          style={{ backgroundColor: "var(--color-1)" }}
+      {!isPreview ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
         >
-          View bookmarked candidates
-        </button>
-        <button
-          onClick={() => router.push("/companies/prospective-candidates")}
-          style={{ backgroundColor: "var(--color-1)" }}
-        >
-          View prospective candidates
-        </button>
-      </div>
+          <button
+            onClick={() => router.push("/companies/bookmarked-candidates")}
+            style={{ backgroundColor: "var(--color-1)" }}
+          >
+            View bookmarked candidates
+          </button>
+          <button
+            onClick={() => router.push("/companies/prospective-candidates")}
+            style={{ backgroundColor: "var(--color-1)" }}
+          >
+            View prospective candidates
+          </button>
+        </div>
+      ) : null}
 
       <div className={jobStyles.jobListContainer}>
         {candidatesToDisplay.length && !isLoading ? (
           candidatesToDisplay.map((candidate, idx) => {
-            return (
+            return !isPreview ? (
               <Link
                 href={`/companies/candidates/${candidate.candidateId}`}
                 key={`candidate${idx}`}
               >
                 <CandidateCard candidate={candidate} />
               </Link>
+            ) : (
+              <span key={`candidate${idx}`} onClick={() => window.alert("Sign up")}>
+                <CandidateCard candidate={candidate} />
+              </span>
             );
           })
         ) : isLoading ? (

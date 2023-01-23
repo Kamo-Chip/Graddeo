@@ -12,6 +12,7 @@
   max-width: 1000px;
   min-width: unset !important;
   transition: box-shadow 500ms;
+  cursor: pointer;
 }
 
 .card:hover, .jobCard:hover {
@@ -32,6 +33,7 @@
   max-width: 1000px;
   min-width: unset !important;
   transition: box-shadow 500ms;
+  cursor: pointer;
 }
 
 .logoContainer {

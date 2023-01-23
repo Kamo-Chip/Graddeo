@@ -2,10 +2,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  padding: 0.5em 1em;
-  font-family: "Inter", sans-serif;
+  width: 95%;
+  padding: 1rem 1rem;
   color: #000;
+  box-shadow: #000 5px 5px;
+  border-radius: 20px;
+  border: solid #000 2px;
+  margin-top: 1rem;
+  position:fixed;
+  background-color: #fff;
 }
 
 .logo {
@@ -35,7 +40,7 @@
   flex-direction: row;
   padding: 5px 0;
   margin: 0;
-  font-family: "Inter", sans-serif;
+  font-family: clashDisplayRegular;
   font-size: 1.5rem;
 }
 
@@ -174,7 +179,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    padding: 0.5em 1em 0 0;
+    padding: 1em 1em 0 0;
     z-index: 15;
   }
   .nav-socials {
@@ -189,7 +194,8 @@
     bottom: 0;
   }
   .nav-socials span {
-    font-family: mabry, sans-serif;
+    font-family: satoshi;
+    font-weight: bold;
     text-align: center;
     padding: 0 0.3em;
     margin-bottom: 0.5em;

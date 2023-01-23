@@ -1,18 +1,16 @@
 Graddeo
-- Online recruting platform for higher education students and alumni in the STEM fields
+- Online recruting platform for higher education students and alumni in the STEM fields looking for a tech job
 
 What I do:
 - Offer interview prep material to candidates
 - Facilitate communication between companies and universities
 
 Tasks
- 
-- Add page to view candidates that have applied
-- Fix filtering problem for custom search
-- Delete job once deadline passes
-- Add authentication checks (user already exists, email link login, etc.)
+- Add more content for candidate and company index routes. Providing argument points. Be convincing
 - Populate with content
 - Design app
+- Delete job once deadline passes
+- Add authentication checks (user already exists, email link login, etc.)
 - Add delete profile for both candidates and companies 
 
 Ideas

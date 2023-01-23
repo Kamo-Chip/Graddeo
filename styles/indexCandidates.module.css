@@ -1,0 +1,52 @@
+.container {
+  padding-top: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container2 {
+  
+}
+
+.featuresContainer {
+  display: flex;
+  flex-direction: row;
+  margin-top: 3rem;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-family: clashDisplayRegular;
+  font-weight: bold;
+}
+
+.featureEmoji {
+    font-size: 3rem;
+}
+
+@media screen and (max-width: 850px) {
+    /* .featuresContainer {
+        flex-direction: column;
+    } */
+
+    .feature {
+        font-size: 1.25rem;
+        width: 200px;
+    }
+
+    .featureEmoji {
+        font-size: 3rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .featuresContainer {
+        flex-direction: column;
+    }
+}

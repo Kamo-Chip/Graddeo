@@ -317,10 +317,14 @@ const Jobs = ({ isPreview }) => {
       <div className={jobStyles.jobListContainer}>
         {jobsToDisplay.length && !isLoading ? (
           jobsToDisplay.map((job, idx) => {
-            return (
+            return !isPreview ? (
               <Link href={`/candidates/jobs/${job.jobId}`} key={`job${idx}`}>
                 <JobCard job={job} />
               </Link>
+            ) : (
+              <span key={`job${idx}`} onClick={() => window.alert("sign up")}>
+                <JobCard job={job} />
+              </span>
             );
           })
         ) : isLoading ? (

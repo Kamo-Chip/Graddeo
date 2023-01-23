@@ -1,0 +1,56 @@
+.container {
+  display: flex;
+  justify-content: center;
+  padding-top: 10rem;
+  height: calc(100vh - 5rem);
+}
+
+.container2 {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.heroImage {
+  font-size: 20rem;
+}
+
+.heroText {
+  font-family: clashDisplayMedium;
+  font-size: 6rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.tagLine {
+  font-size: 1.6rem;
+}
+
+.buttonContainer {
+  margin-top: 2rem;
+}
+
+.buttonContainer button {
+  padding: 1em 2.5em;
+}
+
+@media screen and (max-width: 768px) {
+  .container2 {
+    flex-direction: column;
+  }
+
+  .heroText {
+    text-align: center;
+  }
+
+  .heroImage {
+    text-align: center;
+  }
+
+  .buttonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -1,33 +1,23 @@
 import { useEffect, useState } from "react";
-import { GoogleAuthProvider, signInWithPopup, signOut, sendSignInLinkToEmail } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { getDoc, doc, collection } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
+import candidateIndexStyles from "../../styles/indexCandidates.module.css";
+import utilityStyles from "../../styles/utilities.module.css";
+import Jobs from "../../sections/Jobs";
+import CandidateCompanyPage from "../../sections/CandidateCompanyPage";
+import CompanyCandidateList from "./candidate-list";
 
 const CompanyLandingPage = () => {
   const provider = new GoogleAuthProvider();
   const router = useRouter();
   const [user, loading] = useAuthState(auth);
-  const [ email, setEmail] = useState();
-  const actionCodeSettings = {
-    url: "http://localhost:3000",
-    handleCodeInApp: true,
-  }
 
-  const handleChange = (e) => {
-    setEmail(e.target.value);
-  }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // sendSignInLinkToEmail(auth, email, actionCodeSettings)
-    // .then(() => {
-    //   console.log("successfully signed in");
-    //   window.localStorage.setItem("emailForSignIn", email);
-    // }).catch((err) => {
-    //   console.error(err.message);
-    // })
+
     try {
       const result = await signInWithPopup(auth, provider);
       if (result.user) {
@@ -36,13 +26,13 @@ const CompanyLandingPage = () => {
           router.push("/companies/candidate-list");
         } else {
           try {
-            const candidate = await getDoc(doc(db, "candidates", user.uid));
-            if (candidate.data()) {
+            const company = await getDoc(doc(db, "candidates", user.uid));
+            if (company.data()) {
               window.alert("User already exists");
+              await signOut(auth);
               return;
-            }else {
+            } else {
               router.push("/companies/create-profile");
-              signOut(auth);
             }
           } catch (err) {
             console.error(err);
@@ -54,16 +44,62 @@ const CompanyLandingPage = () => {
     }
   };
 
-  useEffect(() => {
+  useState(() => {
     if (!loading && !user) {
       router.push("/companies");
     }
   }, [loading, user]);
 
   return (
-    <div>
-      {/* <input type="email" name="email" id="email" onChange={handleChange}/> */}
-      <button onClick={handleSubmit}>Sign up</button>
+    <div className={candidateIndexStyles.container}>
+      <h1>
+        Launch your career
+        <br />
+        on Graddeo
+      </h1>
+      <button
+        onClick={handleSubmit}
+        style={{ backgroundColor: "var(--color-1)", padding: "1em 2.5em" }}
+      >
+        Sign up
+      </button>
+      <div className={candidateIndexStyles.featuresContainer}>
+        <div className={candidateIndexStyles.feature}>
+          <span className={candidateIndexStyles.featureEmoji}>🔍</span>
+          <span>The right candidates for you</span>
+        </div>
+        <div className={candidateIndexStyles.feature}>
+          <span className={candidateIndexStyles.featureEmoji}>🤝🏾</span>
+          <span>Connect with candidates</span>
+        </div>
+        <div className={candidateIndexStyles.feature}>
+          <span className={candidateIndexStyles.featureEmoji}>🕺🏾</span>
+          <span>Only pay when you hire</span>
+        </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          width: "100%",
+          marginTop: "2rem",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            marginBottom: "2rem",
+          }}
+        >
+          <span style={{ marginRight: "2rem"}}>
+            Preview of candidates
+          </span>
+        </div>
+        <CompanyCandidateList isPreview={true}/>
+      </div>
     </div>
   );
 };
