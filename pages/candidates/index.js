@@ -86,42 +86,137 @@ const CandidateLandingPage = () => {
           marginTop: "3rem",
         }}
       >
-        <h2>Job hunting just got much easier</h2>
-        <p className={candidateIndexStyles.explanation}>
-          {
-            'Graddeo is a job marketplace that emphasizes you - a junior looking to break into tech. A quick search through all the established job search sites, such as LinkedIn, will show you that you are missing one key requirement - experience. It is extremely demotivating when you can\'t find jobs that suit you, so ditch all those old platforms and find your dream job with us. Gone are the days of seeing "junior positions" that require 5 years of experience.'
-          }
-        </p>
+        <section
+          style={{
+            background: "var(--color-5)",
+            color: "#fff",
+            padding: "1em 2em",
+            border: "solid #000 2px",
+          }}
+        >
+          <h2>Job hunting just got much easier</h2>
+          <p className={candidateIndexStyles.explanation}>
+            {
+              'Graddeo is a job marketplace that emphasizes you - a junior looking to break into tech. A quick search through all the established job search sites, such as LinkedIn, will show you that you are missing one key requirement - experience. It is extremely demotivating when you can\'t find jobs that suit you, so ditch all those old platforms and find your dream job with us. Gone are the days of seeing "junior positions" that require 5 years of experience.'
+            }
+          </p>
+        </section>
+
         <h2>How it works</h2>
         <div className={candidateIndexStyles.explanation2}>
           <Image src="/profile-creation.jpg" alt="" width={403} height={494} />
-          <p>
+          <p
+            style={{
+              background: "var(--color-3)",
+              color: "#000",
+              padding: "1em",
+              border: "solid #000 2px",
+            }}
+          >
             <b>Create your profile</b> and gain access to great job
             <br />
             opportunities
           </p>
         </div>
         <div className={candidateIndexStyles.explanation2}>
-          <p>
+          <p
+            style={{
+              background: "var(--color-6)",
+              color: "#000",
+              padding: "1em",
+              border: "solid #000 2px",
+            }}
+          >
+            <b>Search</b> curated job posts
+          </p>
+          <Image src="/jobsearch.png" alt="" width={409.5} height={490.75} />
+        </div>
+        <div className={candidateIndexStyles.explanation2}>
+          <Image src="/message-hr.jpg" alt="" width={402.5} height={499.1} />
+          <p
+            style={{
+              background: "var(--color-7)",
+              color: "#000",
+              padding: "1em",
+              border: "solid #000 2px",
+            }}
+          >
             <b>Meet with employers</b> to learn more about company culture and
             open roles
           </p>
-          <Image src="/message-hr.jpg" alt="" width={402.5} height={499.1} />
         </div>
         <div className={candidateIndexStyles.explanation2}>
-          <Image src="/apply.jpg" alt="" width={400.62} height={496.32} />
-          <p>
+          <p
+            style={{
+              background: "var(--color-1)",
+              color: "#000",
+              padding: "1em",
+              border: "solid #000 2px",
+            }}
+          >
             Apply in as few as
             <br />
             two clicks. <b>Get hired</b>
           </p>
+          <Image src="/apply.jpg" alt="" width={400.62} height={496.32} />
         </div>
         <h2>Why use Graddeo for your tech job search?</h2>
-        <div style={{display: "flex", flexDirection: "column"}}>
-          <span>Upfront role and salary information</span>
-          <span>Discover opportunities that tick all your boxes</span>
-          <span>Gain access to communicate with a variety of awesome companies</span>
-          <span></span>
+        <div className={candidateIndexStyles.details}>
+          <Image src="/candidateindex.png" alt="" width={729} height={272} />
+          <div
+            style={{
+              background: "var(--color-3)",
+              color: "#000",
+              padding: "1em",
+              border: "solid #000 2px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginBottom: "1rem",
+              }}
+            >
+              <span className={utilityStyles.headerTextN}>
+                Upfront role and salary information
+              </span>
+              <span style={{ fontSize: "1.2rem" }}>
+                All job posts have a detailed description of the role, including
+                everything from remote friendliness to benefits
+              </span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginBottom: "1rem",
+              }}
+            >
+              <span className={utilityStyles.headerTextN}>
+                Discover job opportunities that tick all your boxes
+              </span>
+              <span style={{ fontSize: "1.2rem" }}>
+                With our advanced filtering feature you can curate searches to
+                find your perfect job
+              </span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginBottom: "1rem",
+              }}
+            >
+              <span className={utilityStyles.headerTextN}>
+                {"Gain access to curated jobs that are junior oriented"}
+              </span>
+              <span style={{ fontSize: "1.2rem" }}>
+                All roles are directed towards to juniors, so it{" "}
+                {"won't take you too long to find a position you like"}
+              </span>
+            </div>
+          </div>
         </div>
         <button
           onClick={handleSubmit}
@@ -140,7 +235,7 @@ const CandidateLandingPage = () => {
           flexDirection: "column",
           justifyContent: "center",
           width: "100%",
-          marginTop: "2rem",
+          marginTop: "3rem",
         }}
       >
         <div
@@ -152,13 +247,21 @@ const CandidateLandingPage = () => {
           }}
         >
           <span
-            style={{ marginRight: "2rem", cursor: "pointer", fontSize: "1.2rem"}}
+            style={{
+              marginRight: "2rem",
+              cursor: "pointer",
+              fontSize: "1.2rem",
+            }}
             onClick={() => setPreviewJobs(true)}
           >
             {previewJobs ? <u>Preview jobs</u> : "Preview jobs"}
           </span>
           <span
-            style={{ marginLeft: "2rem", cursor: "pointer", fontSize: "1.2rem" }}
+            style={{
+              marginLeft: "2rem",
+              cursor: "pointer",
+              fontSize: "1.2rem",
+            }}
             onClick={() => setPreviewJobs(false)}
           >
             {!previewJobs ? <u>Preview companies</u> : "Preview companies"}

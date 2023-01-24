@@ -1,14 +1,14 @@
 /*Formatting*/
 
 .headerText {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: bold;
   font-family: clashDisplayRegular;
   text-transform: capitalize;
 }
 
 .headerTextN {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: bold;
   font-family: satoshi;
   text-transform: capitalize;

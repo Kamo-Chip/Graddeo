@@ -6,8 +6,7 @@ What I do:
 - Facilitate communication between companies and universities
 
 Tasks
-- Add searching job posts
-- Add more content for candidate and company index routes. Providing argument points. Be convincing
+- Add about page
 - Populate with content
 - Design app
 - Delete job once deadline passes

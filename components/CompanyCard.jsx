@@ -31,7 +31,7 @@ const CompanyCard = ({ company }) => {
               className={utilityStyles.headerText}
               style={{
                 maxWidth: "280px",
-                height: "20px",
+                height: "25px",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",

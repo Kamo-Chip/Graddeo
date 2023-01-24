@@ -16,7 +16,6 @@ const CandidateJobsPage = () => {
 
   return (
     <div style={{paddingTop: "6rem"}}>
-      <h1>Find your dream job✨</h1>
       <Jobs />
     </div>
   );
