@@ -59,10 +59,10 @@
         padding: 0 1em;
     }
 
-    .roleDetailsContainer {
+    /* .roleDetailsContainer {
         grid-template-columns: 1fr;
         grid-template-rows: 1fr;
-    }
+    } */
 
     .roleDetailsContainer div {
         min-height: unset !important;

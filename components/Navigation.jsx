@@ -113,7 +113,7 @@ const Navigation = () => {
             <>
               <li>
                 <Link href="/candidates/" onClick={closeNav}>
-                  Students
+                  Juniors
                 </Link>
               </li>
               <li>

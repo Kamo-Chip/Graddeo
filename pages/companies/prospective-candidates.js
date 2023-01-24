@@ -427,7 +427,7 @@ const CompanyCandidateList = () => {
   }, [loading, user]);
 
   return (
-    <section className={jobStyles.container} id="candidates">
+    <section className={jobStyles.container} id="candidates" style={{paddingTop: "7rem"}}>
       <div
         style={{ display: "flex" }}
         className={`${jobStyles.searchContainer}`}

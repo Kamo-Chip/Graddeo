@@ -119,7 +119,7 @@ const JobDetails = ({
           <h2 style={{ alignSelf: "flex-start" }}>About the role</h2>
           <div className={jobDetailStyles.roleDetailsContainer}>
             <JobDetail
-              title="💼 Job type"
+              title="Job type"
               value={
                 job.jobType.includes("Full")
                   ? "Full-time"
@@ -131,7 +131,7 @@ const JobDetails = ({
               }
             />
             <JobDetail
-              title="⏳ Duration"
+              title="Duration"
               value={
                 job.duration.includes("Temporary") ? (
                   <div style={{ display: "flex", flexDirection: "column" }}>
@@ -146,7 +146,7 @@ const JobDetails = ({
               }
             />
             <JobDetail
-              title="💵 Salary"
+              title="Salary"
               value={`R${job.salary.concat(
                 job.salaryType.includes("hour")
                   ? "/hr"
@@ -159,7 +159,7 @@ const JobDetails = ({
             />
 
             <JobDetail
-              title="🌐 Work authorisation"
+              title="Work authorisation"
               value={
                 job.authorisation && job.canSponsor
                   ? "Required. We will sponsor candidates in need"
@@ -171,11 +171,11 @@ const JobDetails = ({
               }
             />
             <JobDetail
-              title="⏰ Application deadline"
+              title="Application deadline"
               value={formatDateDayMonthYear(job.deadline)}
             />
             <JobDetail
-              title="📡 Remote"
+              title="Remote"
               value={
                 job.remoteOk
                   ? "Remote workers allowed"

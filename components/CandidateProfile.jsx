@@ -69,7 +69,7 @@ const CandidateProfile = ({
                       className={utilityStyles.formButton}
                       style={{ color: "#000" }}
                     >
-                      Send email
+                      Message
                     </Link>
                   </span>
                   {candidate.phoneNumber ? (
