@@ -54,14 +54,15 @@ const CompanyLandingPage = () => {
   return (
     <div className={candidateIndexStyles.container}>
       <section
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          alignItems: "center",
-          backgroundColor: "var(--color-4)",
-          paddingBottom: "2em ",
-        }}
+        // style={{
+        //   display: "flex",
+        //   flexDirection: "column",
+        //   width: "100%",
+        //   alignItems: "center",
+        //   backgroundColor: "var(--color-4)",
+        //   paddingBottom: "2em ",
+        // }}
+        className={candidateIndexStyles.section1}
       >
         <h1>
           Invest in your future.
@@ -95,18 +96,16 @@ const CompanyLandingPage = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          marginTop: "2rem",
+          marginTop: "3rem",
         }}
       >
         <section
           style={{
             background: "var(--color-3)",
             color: "#000",
-            padding: "1em 2em",
-            // border: "solid #000 2px",
+            border: "solid #000 2px",
           }}
+          className={candidateIndexStyles.sectionPad}
         >
           <h2>Build for the future</h2>
           <p className={candidateIndexStyles.explanation}>
@@ -128,8 +127,6 @@ const CompanyLandingPage = () => {
             style={{
               background: "var(--color-1)",
               color: "#000",
-              padding: "1em",
-              // border: "solid #000 2px",
             }}
           >
             <b>Create your profile</b> and gain access to the best
@@ -142,8 +139,6 @@ const CompanyLandingPage = () => {
             style={{
               background: "var(--color-6)",
               color: "#000",
-              padding: "1em",
-              // border: "solid #000 2px",
             }}
           >
             <b>Post open roles</b>, for free, to a curated set of candidates.
@@ -161,8 +156,6 @@ const CompanyLandingPage = () => {
             style={{
               background: "var(--color-5)",
               color: "#fff",
-              padding: "1em",
-              // border: "solid #000 2px",
             }}
           >
             <b>Meet with your top applicants</b> for interviews.
@@ -173,8 +166,6 @@ const CompanyLandingPage = () => {
             style={{
               background: "var(--color-7)",
               color: "#000",
-              padding: "1em",
-              // border: "solid #000 2px",
             }}
           >
             Further curate applicants with your own custom filters.
@@ -187,16 +178,17 @@ const CompanyLandingPage = () => {
           <Image
             src="/companyindex.png"
             alt=""
-            width={708.75}
-            height={207.75}
+            width={708.24}
+            height={225.42}
           />
           <div
             style={{
               background: "var(--color-1)",
               color: "#000",
-              padding: "1em",
-              // border: "solid #000 2px",
+              paddingTop: "1em",
+              border: "solid #000 2px",
             }}
+            className={candidateIndexStyles.sectionPad}
           >
             <div
               style={{
@@ -246,18 +238,29 @@ const CompanyLandingPage = () => {
             </div>
           </div>
         </div>
-        <div
+        <button
+          onClick={handleSubmit}
           style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            marginBottom: "2rem",
+            backgroundColor: "var(--color-1)",
+            padding: "1em 2.5em",
+            marginTop: "2rem",
           }}
         >
-          <span style={{ fontSize: "1.2rem", marginTop: "3rem" }}>
-            Preview of candidates
-          </span>
-        </div>
+          Sign up
+        </button>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginBottom: "2rem",
+          width: "100%",
+        }}
+      >
+        <span style={{ fontSize: "1.2rem", marginTop: "3rem" }}>
+          Preview of candidates
+        </span>
         <CompanyCandidateList isPreview={true} />
       </div>
     </div>

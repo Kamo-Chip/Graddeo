@@ -11,11 +11,10 @@ const Hero = () => {
         <div className={heroStyles.textContainer}>
           <h1 className={heroStyles.heroText}>
             Tech jobs <br />
-            for <span style={{color: "var(--color-2)"}}>juniors</span>.
+            for <span style={{ color: "var(--color-5)" }}>juniors</span>.
           </h1>
-          <br />
           <span className={heroStyles.tagLine}>
-            Job marketplace for juniors looking for a job in tech.
+            Job marketplace for students and graduates looking for a job in tech.
           </span>
           <div className={heroStyles.buttonContainer}>
             <button
@@ -42,10 +41,10 @@ const Hero = () => {
         </div>
         {/* <div className={heroStyles.heroImage}>🧑🏾‍💻</div> */}
         <Image
-          src="/heroimg.png"
+          src="/rocket3.png"
           alt=""
-          height={1377}
-          width={679}
+          height={512}
+          width={512}
           className={heroStyles.heroImage}
         />
       </div>

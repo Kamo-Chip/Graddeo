@@ -14,6 +14,7 @@ const CandidateCard = ({ candidate }) => {
             display: "flex",
             flexDirection: "row",
             alignItems: "flex-start",
+            width: "100%",
           }}
         >
           <div className={cardStyles.logoContainer}>

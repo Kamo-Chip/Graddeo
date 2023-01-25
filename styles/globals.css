@@ -85,7 +85,7 @@ button {
   font-weight: 600;
   padding: .35em 1em;
   box-shadow: #000 3px 3px;
-  font-size: 1rem;
+  font-size: 1.125rem;
   transition: box-shadow 500ms;
 }
 
@@ -106,6 +106,7 @@ h3 {
   font-family: clashDisplayRegular;
   text-align: center;
   text-transform: capitalize;
+  letter-spacing: .75px;
 }
 
 h1 {

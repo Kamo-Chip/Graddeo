@@ -6,7 +6,9 @@ What I do:
 - Facilitate communication between companies and universities
 
 Tasks
-- Delete job once deadline passes
+- Make about more personal
+- Add sign up pop-up when preview is clicked
+- Delete job once deadline passes/Cap the total number of job posts that a company can have and alert them to delete job posts that are close to deadline
 - Add authentication checks (user already exists, email link login, etc.)
 - Fix minor bugs (check every route, component, etc)
 - Add delete profile for both candidates and companies 

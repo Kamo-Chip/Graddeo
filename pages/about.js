@@ -5,11 +5,6 @@ const About = () => {
   return (
     <div
       className={utilitStyles.containerFlex}
-      style={{
-        backgroundColor: "var(--color-4)",
-        marginTop: "10rem",
-        padding: "0 2em 0 2em",
-      }}
     >
       <h1>
         Connecting Early Talent To <br />

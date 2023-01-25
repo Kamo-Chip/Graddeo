@@ -3,6 +3,7 @@
     width: fit-content;
     max-width: 900px;
     margin-bottom: 3rem;
+    border: solid #000 2px;
 }
 
 .detail p {

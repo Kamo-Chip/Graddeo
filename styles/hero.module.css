@@ -1,7 +1,6 @@
 .container {
   display: flex;
   justify-content: center;
-  padding-top: 10rem;
   height: 100vh;
 }
 
@@ -10,12 +9,13 @@
   width: 100%;
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
 }
-.heroImage {
+/* .heroImage {
   width: 619.65px;
   height: 305.55px;
-}
+} */
 
 .heroText {
   font-family: clashDisplayMedium;
@@ -23,6 +23,12 @@
   font-weight: 500;
   margin: 0;
   text-align: left;
+  text-transform: none;
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
 }
 
 .tagLine {
@@ -34,12 +40,18 @@
 }
 
 .buttonContainer button {
-  padding: 1em 2.5em;
+  padding: 1em 2.75em;
+  font-weight: 500;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
+  .container {
+    padding-top: 10rem;
+  }
+
   .container2 {
     flex-direction: column;
+    justify-content: unset;
   }
 
   .heroText {
@@ -48,11 +60,54 @@
 
   .heroImage {
     text-align: center;
+    margin-top: 2rem;
   }
 
   .buttonContainer {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    padding-top: 8rem;
+  }
+  
+  .heroText {
+    font-size: 4rem;
+  }
+
+  .tagLine {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+  .heroImage {
+    width: 90%;
+    height: auto;
+  }
+
+  .textContainer {
+    align-items: center;
+  }
+
+  .buttonContainer button {
+    padding: .5em 1.375em;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .heroText {
+    font-size: 3rem;
+  }
+  .buttonContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .buttonContainer button {
+    margin-right: 0 !important;
+    margin-bottom: 1em;
   }
 }

@@ -54,14 +54,16 @@ const CandidateLandingPage = () => {
   return (
     <div className={candidateIndexStyles.container}>
       <section
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          alignItems: "center",
-          backgroundColor: "var(--color-4)",
-          paddingBottom: "2em "
-        }}
+        // style={{
+        //   display: "flex",
+        //   flexDirection: "column",
+        //   width: "100%",
+        //   alignItems: "center",
+        //   backgroundColor: "var(--color-4)",
+        //   paddingBottom: "2em ",
+        //   border: "solid #000 2px",
+        // }}
+        className={candidateIndexStyles.section1}
       >
         <h1>
           Launch your career
@@ -102,9 +104,9 @@ const CandidateLandingPage = () => {
           style={{
             background: "var(--color-5)",
             color: "#fff",
-            padding: "1em 2em",
-            // border: "solid #000 2px",
+            border: "solid #000 2px",
           }}
+          className={candidateIndexStyles.sectionPad}
         >
           <h2>Job hunting just got much easier</h2>
           <p className={candidateIndexStyles.explanation}>
@@ -121,12 +123,9 @@ const CandidateLandingPage = () => {
             style={{
               background: "var(--color-3)",
               color: "#000",
-              padding: "1em",
-              // border: "solid #000 2px",
             }}
           >
             <b>Create your profile</b> and gain access to great job
-            <br />
             opportunities
           </p>
         </div>
@@ -135,8 +134,6 @@ const CandidateLandingPage = () => {
             style={{
               background: "var(--color-6)",
               color: "#000",
-              padding: "1em",
-              // border: "solid #000 2px",
             }}
           >
             <b>Search</b> curated job posts
@@ -149,8 +146,6 @@ const CandidateLandingPage = () => {
             style={{
               background: "var(--color-7)",
               color: "#000",
-              padding: "1em",
-              // border: "solid #000 2px",
             }}
           >
             <b>Meet with employers</b> to learn more about company culture and
@@ -162,8 +157,6 @@ const CandidateLandingPage = () => {
             style={{
               background: "var(--color-1)",
               color: "#000",
-              padding: "1em",
-              // border: "solid #000 2px",
             }}
           >
             Apply in as few as
@@ -172,16 +165,17 @@ const CandidateLandingPage = () => {
           </p>
           <Image src="/apply.jpg" alt="" width={400.62} height={496.32} />
         </div>
-        <h2>Why use Graddeo for your tech job search?</h2>
+        <h2>Why use Graddeo for your job search?</h2>
         <div className={candidateIndexStyles.details}>
           <Image src="/candidateindex.png" alt="" width={729} height={272} />
           <div
             style={{
               background: "var(--color-3)",
               color: "#000",
-              padding: "1em",
-              // border: "solid #000 2px",
+              border: "solid #000 2px",
+              paddingTop: "1em"
             }}
+            className={candidateIndexStyles.sectionPad}
           >
             <div
               style={{
