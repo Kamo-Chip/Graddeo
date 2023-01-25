@@ -53,31 +53,43 @@ const CandidateLandingPage = () => {
 
   return (
     <div className={candidateIndexStyles.container}>
-      <h1>
-        Launch your career
-        <br />
-        on Graddeo
-      </h1>
-      <button
-        onClick={handleSubmit}
-        style={{ backgroundColor: "var(--color-1)", padding: "1em 2.5em" }}
+      <section
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          alignItems: "center",
+          backgroundColor: "var(--color-4)",
+          paddingBottom: "2em "
+        }}
       >
-        Sign up
-      </button>
-      <div className={candidateIndexStyles.featuresContainer}>
-        <div className={candidateIndexStyles.feature}>
-          <span className={candidateIndexStyles.featureEmoji}>🤩</span>
-          <span>The right jobs for you</span>
+        <h1>
+          Launch your career
+          <br />
+          on Graddeo
+        </h1>
+        <button
+          onClick={handleSubmit}
+          style={{ backgroundColor: "var(--color-1)", padding: "1em 2.5em" }}
+        >
+          Sign up
+        </button>
+        <div className={candidateIndexStyles.featuresContainer}>
+          <div className={candidateIndexStyles.feature}>
+            <span className={candidateIndexStyles.featureEmoji}>🤩</span>
+            <span>The right jobs for you</span>
+          </div>
+          <div className={candidateIndexStyles.feature}>
+            <span className={candidateIndexStyles.featureEmoji}>🔌</span>
+            <span>Connect with employers</span>
+          </div>
+          <div className={candidateIndexStyles.feature}>
+            <span className={candidateIndexStyles.featureEmoji}>💼</span>
+            <span>No work experience required</span>
+          </div>
         </div>
-        <div className={candidateIndexStyles.feature}>
-          <span className={candidateIndexStyles.featureEmoji}>🔌</span>
-          <span>Connect with employers</span>
-        </div>
-        <div className={candidateIndexStyles.feature}>
-          <span className={candidateIndexStyles.featureEmoji}>💼</span>
-          <span>No work experience required</span>
-        </div>
-      </div>
+      </section>
+
       <div
         style={{
           display: "flex",
@@ -91,7 +103,7 @@ const CandidateLandingPage = () => {
             background: "var(--color-5)",
             color: "#fff",
             padding: "1em 2em",
-            border: "solid #000 2px",
+            // border: "solid #000 2px",
           }}
         >
           <h2>Job hunting just got much easier</h2>
@@ -110,7 +122,7 @@ const CandidateLandingPage = () => {
               background: "var(--color-3)",
               color: "#000",
               padding: "1em",
-              border: "solid #000 2px",
+              // border: "solid #000 2px",
             }}
           >
             <b>Create your profile</b> and gain access to great job
@@ -124,7 +136,7 @@ const CandidateLandingPage = () => {
               background: "var(--color-6)",
               color: "#000",
               padding: "1em",
-              border: "solid #000 2px",
+              // border: "solid #000 2px",
             }}
           >
             <b>Search</b> curated job posts
@@ -138,7 +150,7 @@ const CandidateLandingPage = () => {
               background: "var(--color-7)",
               color: "#000",
               padding: "1em",
-              border: "solid #000 2px",
+              // border: "solid #000 2px",
             }}
           >
             <b>Meet with employers</b> to learn more about company culture and
@@ -151,7 +163,7 @@ const CandidateLandingPage = () => {
               background: "var(--color-1)",
               color: "#000",
               padding: "1em",
-              border: "solid #000 2px",
+              // border: "solid #000 2px",
             }}
           >
             Apply in as few as
@@ -168,7 +180,7 @@ const CandidateLandingPage = () => {
               background: "var(--color-3)",
               color: "#000",
               padding: "1em",
-              border: "solid #000 2px",
+              // border: "solid #000 2px",
             }}
           >
             <div

@@ -2,18 +2,19 @@
   display: flex;
   justify-content: center;
   padding-top: 10rem;
-  height: calc(100vh - 5rem);
+  height: 100vh;
 }
 
 .container2 {
-  max-width: 1200px;
+  max-width: 1300px;
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 .heroImage {
-  font-size: 20rem;
+  width: 619.65px;
+  height: 305.55px;
 }
 
 .heroText {

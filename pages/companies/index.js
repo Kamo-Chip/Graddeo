@@ -53,31 +53,43 @@ const CompanyLandingPage = () => {
 
   return (
     <div className={candidateIndexStyles.container}>
-      <h1>
-        Invest in your future.
-        <br />
-        Hire juniors.
-      </h1>
-      <button
-        onClick={handleSubmit}
-        style={{ backgroundColor: "var(--color-1)", padding: "1em 2.5em" }}
+      <section
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          alignItems: "center",
+          backgroundColor: "var(--color-4)",
+          paddingBottom: "2em ",
+        }}
       >
-        Sign up
-      </button>
-      <div className={candidateIndexStyles.featuresContainer}>
-        <div className={candidateIndexStyles.feature}>
-          <span className={candidateIndexStyles.featureEmoji}>🔍</span>
-          <span>The right candidates for you</span>
+        <h1>
+          Invest in your future.
+          <br />
+          Hire juniors.
+        </h1>
+        <button
+          onClick={handleSubmit}
+          style={{ backgroundColor: "var(--color-1)", padding: "1em 2.5em" }}
+        >
+          Sign up
+        </button>
+        <div className={candidateIndexStyles.featuresContainer}>
+          <div className={candidateIndexStyles.feature}>
+            <span className={candidateIndexStyles.featureEmoji}>🔍</span>
+            <span>The right candidates for you</span>
+          </div>
+          <div className={candidateIndexStyles.feature}>
+            <span className={candidateIndexStyles.featureEmoji}>🤝🏾</span>
+            <span>Connect with candidates</span>
+          </div>
+          <div className={candidateIndexStyles.feature}>
+            <span className={candidateIndexStyles.featureEmoji}>🕺🏾</span>
+            <span>Only pay when you hire</span>
+          </div>
         </div>
-        <div className={candidateIndexStyles.feature}>
-          <span className={candidateIndexStyles.featureEmoji}>🤝🏾</span>
-          <span>Connect with candidates</span>
-        </div>
-        <div className={candidateIndexStyles.feature}>
-          <span className={candidateIndexStyles.featureEmoji}>🕺🏾</span>
-          <span>Only pay when you hire</span>
-        </div>
-      </div>
+      </section>
+
       <div
         style={{
           display: "flex",
@@ -93,7 +105,7 @@ const CompanyLandingPage = () => {
             background: "var(--color-3)",
             color: "#000",
             padding: "1em 2em",
-            border: "solid #000 2px",
+            // border: "solid #000 2px",
           }}
         >
           <h2>Build for the future</h2>
@@ -117,7 +129,7 @@ const CompanyLandingPage = () => {
               background: "var(--color-1)",
               color: "#000",
               padding: "1em",
-              border: "solid #000 2px",
+              // border: "solid #000 2px",
             }}
           >
             <b>Create your profile</b> and gain access to the best
@@ -131,7 +143,7 @@ const CompanyLandingPage = () => {
               background: "var(--color-6)",
               color: "#000",
               padding: "1em",
-              border: "solid #000 2px",
+              // border: "solid #000 2px",
             }}
           >
             <b>Post open roles</b>, for free, to a curated set of candidates.
@@ -150,7 +162,7 @@ const CompanyLandingPage = () => {
               background: "var(--color-5)",
               color: "#fff",
               padding: "1em",
-              border: "solid #000 2px",
+              // border: "solid #000 2px",
             }}
           >
             <b>Meet with your top applicants</b> for interviews.
@@ -162,7 +174,7 @@ const CompanyLandingPage = () => {
               background: "var(--color-7)",
               color: "#000",
               padding: "1em",
-              border: "solid #000 2px",
+              // border: "solid #000 2px",
             }}
           >
             Further curate applicants with your own custom filters.
@@ -183,7 +195,7 @@ const CompanyLandingPage = () => {
               background: "var(--color-1)",
               color: "#000",
               padding: "1em",
-              border: "solid #000 2px",
+              // border: "solid #000 2px",
             }}
           >
             <div

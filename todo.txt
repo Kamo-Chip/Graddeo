@@ -6,11 +6,9 @@ What I do:
 - Facilitate communication between companies and universities
 
 Tasks
-- Add about page
-- Populate with content
-- Design app
 - Delete job once deadline passes
 - Add authentication checks (user already exists, email link login, etc.)
+- Fix minor bugs (check every route, component, etc)
 - Add delete profile for both candidates and companies 
 
 Ideas

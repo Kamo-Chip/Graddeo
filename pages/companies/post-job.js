@@ -160,7 +160,7 @@ const JobForm = () => {
           document.querySelector("#bg-2").checked = false;
           setJobDetails({ ...jobDetails, background: "#fff38f" });
         } else {
-          setJobDetails({ ...jobDetails, background: "#fff" });
+          setJobDetails({ ...jobDetails, background: "#f2f5f2" });
         }
         break;
       case "bg-2":
@@ -169,12 +169,12 @@ const JobForm = () => {
           setJobDetails({
             ...jobDetails,
             hasCustomBackground: true,
-            background: "#fff",
+            background: "#f2f5f2",
           });
         } else {
           setJobDetails({
             ...jobDetails,
-            background: "#fff",
+            background: "#f2f5f2",
             hasCustomBackground: false,
           });
         }

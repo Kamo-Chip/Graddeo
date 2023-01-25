@@ -48,6 +48,7 @@
 
 .explanation2 p {
   font-size: 2rem;
+  /* transform: skewX(10deg); */
 }
 
 .details {

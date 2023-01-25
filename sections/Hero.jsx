@@ -11,7 +11,7 @@ const Hero = () => {
         <div className={heroStyles.textContainer}>
           <h1 className={heroStyles.heroText}>
             Tech jobs <br />
-            for juniors.
+            for <span style={{color: "var(--color-2)"}}>juniors</span>.
           </h1>
           <br />
           <span className={heroStyles.tagLine}>
@@ -40,7 +40,14 @@ const Hero = () => {
             </button>
           </div>
         </div>
-        <div className={heroStyles.heroImage}>🧑🏾‍💻</div>
+        {/* <div className={heroStyles.heroImage}>🧑🏾‍💻</div> */}
+        <Image
+          src="/heroimg.png"
+          alt=""
+          height={1377}
+          width={679}
+          className={heroStyles.heroImage}
+        />
       </div>
     </div>
   );
