@@ -55,6 +55,8 @@ const CompanyCreateProfile = () => {
   const [isDone, setIsDone] = useState(false);
   const router = useRouter();
   const { query } = router;
+  const [ currentMemberImage, setCurrentMemberImage ] = useState("");
+  const [ currentMemberImageLink, setCurrentMemberImageLink] = useState("");
 
   const handleChangeSelect = (e) => {
     const value = e.target.innerText;
@@ -88,6 +90,8 @@ const CompanyCreateProfile = () => {
 
     let file = document.querySelector("#memberImg").files[0];
     document.querySelector("#memberImg").value = "";
+    setCurrentMemberImage("");
+    setCurrentMemberImageLink("");
 
     if (memberEmail && memberName) {
       if (file) {
@@ -182,6 +186,42 @@ const CompanyCreateProfile = () => {
             }));
             // setLogoName(file.name);
             document.querySelector("#logo").value = "";
+          })
+          .catch((err) => console.error(err));
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const deleteMemberImage = async () => {
+    const storageRef = ref(
+      storage,
+      `${user.uid}/team/${currentMemberImage}`
+    );
+
+    deleteObject(storageRef)
+      .then(() => {
+        setCurrentMemberImage("");
+        setCurrentMemberImageLink("");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleMemberImageUpload = async () => {
+    await deleteMemberImage();
+
+    const file = document.querySelector("#memberImg").files[0];
+    if (!file) return;
+
+    const storageRef = ref(storage, `${user.uid}/team/${file.name}`);
+    uploadBytes(storageRef, file)
+      .then(() => {
+        getDownloadURL(storageRef)
+          .then((url) => {
+            setCurrentMemberImage(file.name);
+            setCurrentMemberImageLink(url);
+            // document.querySelector("#memberImg").value = "";
           })
           .catch((err) => console.error(err));
       })
@@ -300,7 +340,9 @@ const CompanyCreateProfile = () => {
               >
                 Logo
               </label>
-              <small>Upload photo of your {"company's logo"}</small>
+              <small style={{ marginLeft: ".5rem" }}>
+                Upload photo of your {"company's logo"}
+              </small>
             </div>
             <div className={utilityStyles.fileInputContainer}>
               <div
@@ -448,7 +490,7 @@ const CompanyCreateProfile = () => {
             fieldType={
               <CustomSelect
                 name="industry"
-                title="🏭 Industry"
+                title="🏭 Select"
                 value={companyDetails.industry}
                 onChangeHandler={handleChangeSelect}
                 options={industries}
@@ -717,7 +759,7 @@ const CompanyCreateProfile = () => {
               />
             }
           />
-          <FieldContainer
+          {/* <FieldContainer
             name="memberImg"
             label="Image"
             fieldType={
@@ -733,7 +775,73 @@ const CompanyCreateProfile = () => {
                 />
               </>
             }
-          />
+          /> */}
+
+          <div className={utilityStyles.fieldContainer}>
+            <div className={utilityStyles.labelContainer}>
+              <label
+                className={utilityStyles.headerTextNSmall}
+              >
+                Image
+              </label>
+              <small style={{ marginLeft: ".5rem" }}>
+                Upload photo of your {"member's pretty face :)"}
+              </small>
+            </div>
+            <div className={utilityStyles.fileInputContainer}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "120px",
+                  height: "94px",
+                  marginLeft: ".5rem",
+                }}
+              >
+                {currentMemberImage == "" ? (
+                  <span
+                    style={{
+                      marginRight: "1rem",
+                    }}
+                  >
+                    <HiUser size="90px" color="#000" />
+                  </span>
+                ) : (
+                  <Image
+                    loader={() => currentMemberImageLink}
+                    src={currentMemberImageLink}
+                    alt="logo"
+                    height={90}
+                    width={90}
+                    style={{
+                      marginRight: "1rem",
+                    }}
+                    className={utilityStyles.profilePhoto}
+                  />
+                )}
+              </div>
+              {currentMemberImage !== "" ? (
+                <span onClick={deleteMemberImage} className={utilityStyles.formButton}>
+                  Delete photo
+                </span>
+              ) : (
+                <label
+                  for="memberImg"
+                  style={{ width: "fit-content" }}
+                  className={utilityStyles.formButton}
+                >
+                  Upload photo
+                </label>
+              )}
+              <input
+                type="file"
+                name="memberImg"
+                id="memberImg"
+                className={utilityStyles.fileInput}
+                onChange={handleMemberImageUpload}
+              />
+            </div>
+          </div>
 
           <button
             style={{ marginTop: "1rem" }}

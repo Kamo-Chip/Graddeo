@@ -52,6 +52,7 @@ const CreateCandidateProfile = () => {
         company: "",
         start: "",
         end: "",
+        stillThere: false,
       },
     ],
     skills: [],
@@ -136,12 +137,11 @@ const CreateCandidateProfile = () => {
 
     arr = userDetails[source2];
     if (source != "graduationMonth" && source != "educationLevel") {
-      if(e.target.id == "major") {
+      if (e.target.id == "major") {
         arr[id][e.target.id] = capitaliseFirst(e.target.value);
-      }else {
+      } else {
         arr[id][e.target.id] = e.target.value;
       }
-      
     } else {
       arr[id][e.target.parentElement.parentElement.id] = e.target.innerText;
     }
@@ -157,13 +157,14 @@ const CreateCandidateProfile = () => {
 
   const handleChangeForMultiItems = (e) => {
     let tokens = "";
-
-    if(e.target.id == "link") {
+    console.log("helllo");
+    if (e.target.id == "link") {
       tokens =
-      e.target.parentElement.parentElement.parentElement.parentElement.id.split("-");
-    }else {
-      tokens =
-      e.target.parentElement.parentElement.parentElement.id.split("-");
+        e.target.parentElement.parentElement.parentElement.parentElement.id.split(
+          "-"
+        );
+    } else {
+      tokens = e.target.parentElement.parentElement.parentElement.id.split("-");
     }
     // let tokens =
     //   e.target.parentElement.parentElement.parentElement.id.split("-");
@@ -240,6 +241,7 @@ const CreateCandidateProfile = () => {
           company: "",
           start: "",
           end: "",
+          stillThere: false,
         },
       ],
     });
@@ -518,7 +520,10 @@ const CreateCandidateProfile = () => {
           />
           <div className={utilityStyles.fieldContainer}>
             <div className={utilityStyles.labelContainer}>
-              <label htmlFor="profilephoto" className={utilityStyles.headerTextNSmall}>
+              <label
+                htmlFor="profilephoto"
+                className={utilityStyles.headerTextNSmall}
+              >
                 Profile photo
               </label>
               <small>Upload a photo of your pretty face {":)"}</small>
@@ -736,6 +741,7 @@ const CreateCandidateProfile = () => {
                 handleChange={handleChangeForMultiItems}
                 removeItem={removeItem}
                 userDetails={userDetails}
+                setUserDetails={setUserDetails}
               />
             );
           })}
@@ -1049,7 +1055,7 @@ const CreateCandidateProfile = () => {
           <div className={utilityStyles.fieldContainer}>
             <span
               className={utilityStyles.formButton}
-              style={{ marginTop: "1rem", marginLeft: ".5rem" }}
+              style={{ marginLeft: ".5rem" }}
               onClick={addProject}
             >
               Add
@@ -1271,10 +1277,10 @@ const Item = ({ skill, removeSkill }) => {
         flexDirection: "row",
         alignItems: "center",
         fontSize: "12px",
-        color: "#fff",
-        backgroundColor: "var(--color-5)",
+        color: "#000",
+        backgroundColor: "#fff",
         letterSpacing: ".75px",
-        marginBottom: ".5rem"
+        marginBottom: ".5rem",
       }}
     >
       <span
@@ -1368,7 +1374,7 @@ const Project = ({ index, handleChange, removeItem, userDetails }) => {
           id={`${index}-rem-projects`}
           onClick={removeItem}
           className={utilityStyles.formButton}
-          style={{ marginLeft: ".5rem", marginTop: "1rem" }}
+          style={{ marginLeft: ".5rem", marginTop: "1rem", marginBottom: "1rem" }}
         >
           Remove
         </span>
@@ -1377,7 +1383,24 @@ const Project = ({ index, handleChange, removeItem, userDetails }) => {
   );
 };
 
-const Experience = ({ index, handleChange, removeItem, userDetails }) => {
+const Experience = ({
+  index,
+  handleChange,
+  removeItem,
+  userDetails,
+  setUserDetails,
+}) => {
+  const toggleStillThere = (e) => {
+    let updatedExperience = userDetails.experience;
+    updatedExperience[index]["stillThere"] = e.target.checked;
+    if (e.target.checked) {
+      updatedExperience[index]["end"] = "Present";
+    } else {
+      updatedExperience[index]["end"] = "";
+    }
+    setUserDetails({ ...userDetails, experience: updatedExperience });
+  };
+
   return (
     <div
       id={`${index}-experience`}
@@ -1428,22 +1451,49 @@ const Experience = ({ index, handleChange, removeItem, userDetails }) => {
             style={{ marginBottom: "1rem" }}
           />
           {/* <span style={{ margin: "0 1em" }}>to</span> */}
-          <input
-            className={utilityStyles.input}
-            type="text"
-            name={`end`}
-            id={`end`}
-            placeholder="End date"
-            onChange={handleChange}
-            onFocus={(e) => {
-              e.target.type = "date";
-            }}
-            value={userDetails.experience[index]["end"]}
-            style={{ marginBottom: "1rem" }}
-          />
+          {userDetails.experience[index]["stillThere"] ? (
+            <>
+          
+              <input
+                type="text"
+                className={utilityStyles.input}
+                value="Present"
+                readOnly={true}
+              />
+            </>
+          ) : (
+            <input
+              className={utilityStyles.input}
+              type="text"
+              name={`end`}
+              id={`end`}
+              placeholder="End date"
+              onChange={handleChange}
+              onFocus={(e) => {
+                e.target.type = "date";
+              }}
+              value={userDetails.experience[index]["end"]}
+              style={{ marginBottom: "1rem" }}
+            />
+          )}
         </div>
       </div>
-
+      <div
+        className={utilityStyles.fieldContainer}
+        style={{ marginBottom: "1rem" }}
+      >
+        <div
+          style={{ marginLeft: ".5rem", display: "flex", alignItems: "center" }}
+        >
+          <input
+            type="checkbox"
+            style={{ width: "fit-content" }}
+            checked={userDetails.experience[index]["stillThere"]}
+            onClick={toggleStillThere}
+          />
+          <span>Still work there</span>
+        </div>
+      </div>
       <div className={utilityStyles.fieldContainer}>
         <span
           id={`${index}-rem-experience`}

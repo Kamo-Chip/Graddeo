@@ -144,7 +144,7 @@ const CandidateProfile = ({
           </div>
           <span
             className={profileStyles.bio}
-            style={{ whiteSpace: "pre-wrap"}}
+            style={{ whiteSpace: "pre-wrap" }}
           >
             {candidate.bio}
           </span>
@@ -207,8 +207,8 @@ const CandidateProfile = ({
                       className={utilityStyles.itemBar}
                       style={{
                         margin: "0 .5rem .5rem 0",
-                        backgroundColor: "var(--color-5)",
-                        color: "#fff",
+                        backgroundColor: "#fff",
+                        color: "#000",
                       }}
                     >
                       <b>{skill}</b>
@@ -239,7 +239,9 @@ const CandidateProfile = ({
                     </span>
                     <span>
                       {formatDate(experience.start)} -{" "}
-                      {formatDate(experience.end)}
+                      {experience.end == "Present"
+                        ? experience.end
+                        : formatDate(experience.end)}
                     </span>
                   </div>
                 );
@@ -372,8 +374,8 @@ const CandidateProfile = ({
                         className={utilityStyles.itemBar}
                         style={{
                           width: "fit-content",
-                          backgroundColor: "var(--color-5)",
-                          color: "#fff",
+                          backgroundColor: "#fff",
+                          color: "#000",
                           margin: "0 .5rem 0 0",
                         }}
                       >
@@ -403,8 +405,8 @@ const CandidateProfile = ({
                       className={utilityStyles.itemBar}
                       style={{
                         margin: "0 .5rem 0 0",
-                        backgroundColor: "var(--color-5)",
-                        color: "#fff",
+                        backgroundColor: "#fff",
+                        color: "#000",
                       }}
                     >
                       <b>{role}</b>
@@ -417,7 +419,7 @@ const CandidateProfile = ({
 
         <div className={profileStyles.section}>
           <h2 style={{ marginBottom: "1rem" }}>🧪Projects</h2>
-          {candidate.projects
+          {candidate.projects && candidate.projects[0].name
             ? candidate.projects.map((project, index) => {
                 return (
                   <div
@@ -465,8 +467,8 @@ const CandidateProfile = ({
                   textOverflow: "ellipsis",
                   marginTop: ".5rem",
                   maxWidth: "fit-content",
-                  backgroundColor: "var(--color-5)",
-                  color: "#fff",
+                  backgroundColor: "#fff",
+                  color: "#000",
                   fontWeight: "bold",
                 }}
                 className={`${utilityStyles.itemBar} ${profileStyles.resume}`}
