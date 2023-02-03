@@ -515,11 +515,12 @@ const CompanyCandidateList = ({ isPreview }) => {
       </div>
       {!isPreview ? (
         <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+          // style={{
+          //   display: "flex",
+          //   flexDirection: "row",
+          //   justifyContent: "space-between",
+          // }}
+          className={jobStyles.buttonContainer}
         >
           <button
             onClick={() => router.push("/companies/bookmarked-candidates")}

@@ -19,9 +19,14 @@ const BookmarkedJobs = () => {
 
     for (let i = 0; i < listOfIds.length; i++) {
       let data = await getDoc(doc(db, "jobs", listOfIds[i]));
-      newBookmarkedJobs.push(data.data());
+      if (data.data()) {
+        newBookmarkedJobs.push(data.data());
+      }
     }
     setBookmarkedJobs(newBookmarkedJobs);
+    await updateDoc(doc(db, "candidates", user.uid), {
+      bookmarkedJobs: newBookmarkedJobs,
+    });
   };
 
   const removeBookmarkedJob = async (e) => {
@@ -50,33 +55,31 @@ const BookmarkedJobs = () => {
 
   return (
     <div className={utilityStyles.containerFlex}>
-      <div>
+      <div style={{ width: "100%" }}>
         {bookmarkedJobs.length
           ? bookmarkedJobs.map((element, idx) => {
               return (
                 <div
                   key={`candidate${idx}`}
-                  style={{ display: "flex", flexDirection: "row" }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    position: "relative",
+                  }}
                 >
-                  <div>
-                    <JobCard
-                      companyName={element.companyName}
-                      position={element.position}
-                      jobType={element.jobType}
-                      benefits={element.benefits}
-                      location={element.location}
-                      salary={element.salary}
-                      companyLogo={element.companyLogo}
-                      background={element.background}
-                      datePosted={element.datePosted}
-                      salaryType={element.salaryType}
-                    />
-                  </div>
+                  <JobCard job={element} />
                   <span
                     id={`rem-${element.jobId}`}
                     onClick={removeBookmarkedJob}
+                    style={{
+                      position: "absolute",
+                      top: "1rem",
+                      right: "0",
+                      margin: ".5rem .5rem 0 0",
+                      cursor: "pointer",
+                    }}
                   >
-                    <MdBookmarkRemove />
+                    <MdBookmarkRemove size="2rem" />
                   </span>
                 </div>
               );

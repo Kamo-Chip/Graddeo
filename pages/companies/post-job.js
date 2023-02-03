@@ -486,8 +486,8 @@ const JobForm = () => {
                         maxWidth: "fit-content",
                         margin: ".5em",
                         marginLeft: "0",
-                        backgroundColor: "var(--color-5)",
-                        color: "#fff",
+                        backgroundColor: "#fff",
+                        color: "#000",
                       }}
                     >
                       <span

@@ -16,7 +16,7 @@ const CandidateJobsPage = () => {
 
   return (
     <div style={{paddingTop: "6rem"}}>
-      <Jobs />
+      <Jobs isPreview={false}/>
     </div>
   );
 };

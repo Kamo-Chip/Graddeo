@@ -12,7 +12,7 @@ import {
 } from "react-icons/bs";
 import Image from "next/image";
 import Link from "next/link";
-import { formatText } from "../lib/format";
+import { formatText, convertToDate } from "../lib/format";
 import JobCard from "../components/JobCard";
 
 const CompanyProfile = ({
@@ -22,6 +22,8 @@ const CompanyProfile = ({
   candidateIsViewing,
   deleteJob,
 }) => {
+  const today = new Date().toDateString();
+
   return (
     <div className={profileStyles.container}>
       <div className={`${utilityStyles.form}`} style={{ alignItems: "unset" }}>
@@ -30,7 +32,9 @@ const CompanyProfile = ({
           style={{ paddingBottom: "2rem" }}
         >
           <h2 className={utilityStyles.leftAlignedText}>
-            About {companyDetails.name}
+            {candidateIsViewing
+              ? `About ${companyDetails.name}`
+              : "Your Profile"}
           </h2>
           <div
             className={profileStyles.personalContainer}
@@ -120,17 +124,27 @@ const CompanyProfile = ({
                       justifyContent: "center",
                     }}
                   >
-                    <Link
-                      href={
-                        candidateIsViewing
-                          ? `/candidates/jobs/${job.jobId}`
-                          : `/companies/jobs/${job.jobId}`
-                      }
-                      className={cardStyles.link}
-                      style={{ maxWidth: "unset", width: "105%" }}
-                    >
-                      <JobCard job={job} companyProfileIsOpen={true} />
-                    </Link>
+                    <div style={{ width: "100%" }}>
+                      {!candidateIsViewing ? (
+                        <span>
+                          {today == convertToDate(job.deadline).toDateString()
+                            ? "Deadline has passed"
+                            : null}
+                        </span>
+                      ) : null}
+                      <Link
+                        href={
+                          candidateIsViewing
+                            ? `/candidates/jobs/${job.jobId}`
+                            : `/companies/jobs/${job.jobId}`
+                        }
+                        className={cardStyles.link}
+                        style={{ maxWidth: "unset", width: "105%" }}
+                      >
+                        <JobCard job={job} companyProfileIsOpen={true} />
+                      </Link>
+                    </div>
+
                     {!candidateIsViewing ? (
                       <span
                         onClick={deleteJob}
@@ -143,7 +157,7 @@ const CompanyProfile = ({
                   </div>
                 );
               })
-            : "Company does not currently have active job posts"}
+            : "No open positions"}
         </div>
         <div
           className={profileStyles.section}

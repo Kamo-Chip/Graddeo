@@ -6,11 +6,11 @@ What I do:
 - Facilitate communication between companies and universities
 
 Tasks
-- Cap the total number of job posts that a company can have and alert them to delete job posts that are close to deadline
-- Delete all information related to job when it is deleted (applied candidates, etc)
+- Cap the total number of job posts that a company can have
 - Add sign up pop-up when preview is clicked
 - Make about more personal
 - Find and fix bugs (check every route, component, etc)
+    - Team member upload. When you delete image and upload new one it does not save
 - Add delete profile for both candidates and companies 
 
 Ideas

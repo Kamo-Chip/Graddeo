@@ -292,6 +292,18 @@ const Jobs = ({ isPreview }) => {
           options={["🎂 Most benefits", "⌚ Latest"]}
         />
       </div>
+
+      {!isPreview ? (
+        <div className={jobStyles.buttonContainer}>
+          <button
+            onClick={() => router.push("/candidates/bookmarked-jobs")}
+            style={{ backgroundColor: "var(--color-1)" }}
+          >
+            View bookmarked jobs
+          </button>
+        </div>
+      ) : null}
+
       <div className={jobStyles.filtersList}>
         {filters
           ? filters.map((filter, idx) => {

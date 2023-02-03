@@ -1,9 +1,10 @@
 import jobStyles from "../../styles/jobs.module.css";
 import utilityStyles from "../../styles/utilities.module.css";
 import { MdCancel } from "react-icons/md";
+import { IoRemoveCircle } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { db, auth } from "../../firebase";
-import { collection, getDoc, doc } from "firebase/firestore";
+import { collection, getDoc, doc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import CustomSelect from "../../components/CustomSelect";
 import CandidateCard from "../../components/CandidateCard";
@@ -155,9 +156,7 @@ const CompanyCandidateList = () => {
       }
 
       if (roleList.length) {
-        roleIsValid = candidate.roles.some((role) =>
-          filters.includes(role)
-        );
+        roleIsValid = candidate.roles.some((role) => filters.includes(role));
       }
 
       if (sexList.length) {
@@ -262,9 +261,9 @@ const CompanyCandidateList = () => {
 
   const addFilterInput = (e) => {
     const source = e.currentTarget.id.split("-")[1];
-    const filterToAdd = capitaliseFirst(document
-      .querySelector(`#${source}`)
-      .value);
+    const filterToAdd = capitaliseFirst(
+      document.querySelector(`#${source}`).value
+    );
     if (checkFilterIsValid(filterToAdd)) {
       setFilters([...filters, filterToAdd]);
       document.querySelector(`#${source}`).value = "";
@@ -359,6 +358,16 @@ const CompanyCandidateList = () => {
     }
   };
 
+  const removeProspectiveCandidate = async (e) => {
+    let newProspectiveCandidates = candidates.filter(
+      (element) => element.candidateId != e.currentTarget.id.split("-")[1]
+    );
+    setCandidates(newProspectiveCandidates);
+    await updateDoc(doc(db, "companies", user.uid), {
+      prospectiveCandidates: newProspectiveCandidates,
+    });
+  };
+
   const getJobs = async () => {
     const ref = await getDoc(doc(db, "companies", user.uid));
     let data = ref.data().prospectiveCandidates;
@@ -427,7 +436,11 @@ const CompanyCandidateList = () => {
   }, [loading, user]);
 
   return (
-    <section className={jobStyles.container} id="candidates" style={{paddingTop: "7rem"}}>
+    <section
+      className={jobStyles.container}
+      id="candidates"
+      style={{ paddingTop: "7rem" }}
+    >
       <div
         style={{ display: "flex" }}
         className={`${jobStyles.searchContainer}`}
@@ -556,15 +569,37 @@ const CompanyCandidateList = () => {
         {candidatesToDisplay.length && !isLoading ? (
           candidatesToDisplay.map((candidate, idx) => {
             return (
-              <Link
-                href={`/companies/candidates/${candidate.candidateId}`}
+              <div
                 key={`candidate${idx}`}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  position: "relative",
+                }}
               >
                 <span className={utilityStyles.headerText}>
                   Applied for {candidate.appliedFor}
                 </span>
-                <CandidateCard candidate={candidate} />
-              </Link>
+                <Link
+                  href={`/companies/candidates/${candidate.candidateId}`}
+                  key={`candidate${idx}`}
+                >
+                  <CandidateCard candidate={candidate} />
+                </Link>
+                <span
+                  id={`rem-${candidate.candidateId}`}
+                  onClick={removeProspectiveCandidate}
+                  style={{
+                    position: "absolute",
+                    right: "0",
+                    top: "2.5rem",
+                    margin: ".5rem .5rem 0 0",
+                    cursor: "pointer",
+                  }}
+                >
+                  <MdCancel size="2rem" />
+                </span>
+              </div>
             );
           })
         ) : isLoading ? (

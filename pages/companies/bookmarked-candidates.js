@@ -65,24 +65,26 @@ const BookmarkedCandidates = () => {
               return (
                 <div
                   key={`candidate${idx}`}
-                  style={{ display: "flex", flexDirection: "row" }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    position: "relative",
+                  }}
                 >
-                  <div>
-                    <CandidateCard
-                      degree={element.degree}
-                      institution={element.institution}
-                      location={element.location}
-                      name={element.name}
-                      profilePhoto={element.profilePhoto}
-                      schoolYear={element.schoolYear}
-                      skills={element.skills}
-                    />
-                  </div>
+                  <CandidateCard candidate={element} />
+
                   <span
                     id={`rem-${element.candidateId}`}
                     onClick={removeBookmarkedCandidate}
+                    style={{
+                      position: "absolute",
+                      right: "0",
+                      top: "1rem",
+                      margin: ".5rem .5rem 0 0",
+                      cursor: "pointer",
+                    }}
                   >
-                    <MdBookmarkRemove />
+                    <MdBookmarkRemove size="2rem" />
                   </span>
                 </div>
               );
