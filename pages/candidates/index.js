@@ -1,19 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-import { getDoc, doc, collection } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { useRouter } from "next/router";
-import { useAuthState } from "react-firebase-hooks/auth";
-import candidateIndexStyles from "../../styles/indexCandidates.module.css";
+import routeIndexStyles from "../../styles/routeIndex.module.css";
 import utilityStyles from "../../styles/utilities.module.css";
 import Jobs from "../../sections/Jobs";
-import CompanyList from "./company-list";
 import CandidateCompanyPage from "../../sections/CandidateCompanyPage";
 import Image from "next/image";
+
 const CandidateLandingPage = () => {
   const provider = new GoogleAuthProvider();
   const router = useRouter();
-  const [user, loading] = useAuthState(auth);
   const [previewJobs, setPreviewJobs] = useState(true);
 
   const handleSubmit = async (e) => {
@@ -27,9 +25,11 @@ const CandidateLandingPage = () => {
           router.push("/candidates/jobs");
         } else {
           try {
-            const company = await getDoc(doc(db, "companies", user.uid));
+            const company = await getDoc(doc(db, "companies", result.user.uid));
             if (company.data()) {
-              window.alert("User already exists");
+              window.alert(
+                "This email is associated with a company account. Sign in on the company page"
+              );
               await signOut(auth);
               return;
             } else {
@@ -45,26 +45,9 @@ const CandidateLandingPage = () => {
     }
   };
 
-  useState(() => {
-    if (!loading && !user) {
-      router.push("/candidates");
-    }
-  }, [loading, user]);
-
   return (
-    <div className={candidateIndexStyles.container}>
-      <section
-        // style={{
-        //   display: "flex",
-        //   flexDirection: "column",
-        //   width: "100%",
-        //   alignItems: "center",
-        //   backgroundColor: "var(--color-4)",
-        //   paddingBottom: "2em ",
-        //   border: "solid #000 2px",
-        // }}
-        className={candidateIndexStyles.section1}
-      >
+    <div className={routeIndexStyles.container}>
+      <section className={routeIndexStyles.section1}>
         <h1>
           Launch your career
           <br />
@@ -76,17 +59,17 @@ const CandidateLandingPage = () => {
         >
           Sign up
         </button>
-        <div className={candidateIndexStyles.featuresContainer}>
-          <div className={candidateIndexStyles.feature}>
-            <span className={candidateIndexStyles.featureEmoji}>🤩</span>
+        <div className={routeIndexStyles.featuresContainer}>
+          <div className={routeIndexStyles.feature}>
+            <span className={routeIndexStyles.featureEmoji}>🤩</span>
             <span>The right jobs for you</span>
           </div>
-          <div className={candidateIndexStyles.feature}>
-            <span className={candidateIndexStyles.featureEmoji}>🔌</span>
+          <div className={routeIndexStyles.feature}>
+            <span className={routeIndexStyles.featureEmoji}>🔌</span>
             <span>Connect with employers</span>
           </div>
-          <div className={candidateIndexStyles.feature}>
-            <span className={candidateIndexStyles.featureEmoji}>💼</span>
+          <div className={routeIndexStyles.feature}>
+            <span className={routeIndexStyles.featureEmoji}>💼</span>
             <span>No work experience required</span>
           </div>
         </div>
@@ -106,10 +89,10 @@ const CandidateLandingPage = () => {
             color: "#fff",
             border: "solid #000 2px",
           }}
-          className={candidateIndexStyles.sectionPad}
+          className={routeIndexStyles.sectionPad}
         >
           <h2>Job hunting just got much easier</h2>
-          <p className={candidateIndexStyles.explanation}>
+          <p className={routeIndexStyles.explanation}>
             {
               'Graddeo is a job marketplace that emphasizes you - a junior looking to break into tech. A quick search through all the established job search sites, such as LinkedIn, will show you that you are missing one key requirement - experience. It is extremely demotivating when you can\'t find jobs that suit you, so ditch all those old platforms and find your dream job with us. Gone are the days of seeing "junior positions" that require 5 years of experience.'
             }
@@ -117,7 +100,7 @@ const CandidateLandingPage = () => {
         </section>
 
         <h2>How it works</h2>
-        <div className={candidateIndexStyles.explanation2}>
+        <div className={routeIndexStyles.explanation2}>
           <Image src="/profile-creation.jpg" alt="" width={403} height={494} />
           <p
             style={{
@@ -129,7 +112,7 @@ const CandidateLandingPage = () => {
             opportunities
           </p>
         </div>
-        <div className={candidateIndexStyles.explanation2}>
+        <div className={routeIndexStyles.explanation2}>
           <p
             style={{
               background: "var(--color-6)",
@@ -140,7 +123,7 @@ const CandidateLandingPage = () => {
           </p>
           <Image src="/jobsearch.png" alt="" width={409.5} height={490.75} />
         </div>
-        <div className={candidateIndexStyles.explanation2}>
+        <div className={routeIndexStyles.explanation2}>
           <Image src="/message-hr.jpg" alt="" width={402.5} height={499.1} />
           <p
             style={{
@@ -152,7 +135,7 @@ const CandidateLandingPage = () => {
             open roles
           </p>
         </div>
-        <div className={candidateIndexStyles.explanation2}>
+        <div className={routeIndexStyles.explanation2}>
           <p
             style={{
               background: "var(--color-1)",
@@ -166,16 +149,16 @@ const CandidateLandingPage = () => {
           <Image src="/apply.jpg" alt="" width={400.62} height={496.32} />
         </div>
         <h2>Why use Graddeo for your job search?</h2>
-        <div className={candidateIndexStyles.details}>
+        <div className={routeIndexStyles.details}>
           <Image src="/candidateindex.png" alt="" width={729} height={272} />
           <div
             style={{
               background: "var(--color-3)",
               color: "#000",
               border: "solid #000 2px",
-              paddingTop: "1em"
+              paddingTop: "1em",
             }}
-            className={candidateIndexStyles.sectionPad}
+            className={routeIndexStyles.sectionPad}
           >
             <div
               style={{

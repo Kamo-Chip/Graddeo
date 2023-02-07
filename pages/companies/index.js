@@ -4,7 +4,7 @@ import { getDoc, doc, collection } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
-import candidateIndexStyles from "../../styles/indexCandidates.module.css";
+import routeIndexStyles from "../../styles/routeIndex.module.css";
 import utilityStyles from "../../styles/utilities.module.css";
 import Jobs from "../../sections/Jobs";
 import CandidateCompanyPage from "../../sections/CandidateCompanyPage";
@@ -27,7 +27,7 @@ const CompanyLandingPage = () => {
           router.push("/companies/candidate-list");
         } else {
           try {
-            const company = await getDoc(doc(db, "candidates", user.uid));
+            const company = await getDoc(doc(db, "candidates", result.user.uid));
             if (company.data()) {
               window.alert("User already exists");
               await signOut(auth);
@@ -52,7 +52,7 @@ const CompanyLandingPage = () => {
   }, [loading, user]);
 
   return (
-    <div className={candidateIndexStyles.container}>
+    <div className={routeIndexStyles.container}>
       <section
         // style={{
         //   display: "flex",
@@ -62,7 +62,7 @@ const CompanyLandingPage = () => {
         //   backgroundColor: "var(--color-4)",
         //   paddingBottom: "2em ",
         // }}
-        className={candidateIndexStyles.section1}
+        className={routeIndexStyles.section1}
       >
         <h1>
           Invest in your future.
@@ -75,17 +75,17 @@ const CompanyLandingPage = () => {
         >
           Sign up
         </button>
-        <div className={candidateIndexStyles.featuresContainer}>
-          <div className={candidateIndexStyles.feature}>
-            <span className={candidateIndexStyles.featureEmoji}>🔍</span>
+        <div className={routeIndexStyles.featuresContainer}>
+          <div className={routeIndexStyles.feature}>
+            <span className={routeIndexStyles.featureEmoji}>🔍</span>
             <span>The right candidates for you</span>
           </div>
-          <div className={candidateIndexStyles.feature}>
-            <span className={candidateIndexStyles.featureEmoji}>🤝🏾</span>
+          <div className={routeIndexStyles.feature}>
+            <span className={routeIndexStyles.featureEmoji}>🤝🏾</span>
             <span>Connect with candidates</span>
           </div>
-          <div className={candidateIndexStyles.feature}>
-            <span className={candidateIndexStyles.featureEmoji}>🕺🏾</span>
+          <div className={routeIndexStyles.feature}>
+            <span className={routeIndexStyles.featureEmoji}>🕺🏾</span>
             <span>Only pay when you hire</span>
           </div>
         </div>
@@ -105,10 +105,10 @@ const CompanyLandingPage = () => {
             color: "#000",
             border: "solid #000 2px",
           }}
-          className={candidateIndexStyles.sectionPad}
+          className={routeIndexStyles.sectionPad}
         >
           <h2>Build for the future</h2>
-          <p className={candidateIndexStyles.explanation}>
+          <p className={routeIndexStyles.explanation}>
             {
               "Graddeo is a job marketplace that gives you access to eager and talented juniors. Hiring juniors means building for the future, and increases employee retention because they grow with you and become seniors down the line. While juniors need more time for training, their relative inexperience holds the opportunity for you to shape the team you want, thereby setting yourself up for long-term success."
             }
@@ -116,7 +116,7 @@ const CompanyLandingPage = () => {
         </section>
 
         <h2>How it works</h2>
-        <div className={candidateIndexStyles.explanation2}>
+        <div className={routeIndexStyles.explanation2}>
           <Image
             src="/company-creation.jpg"
             alt=""
@@ -134,7 +134,7 @@ const CompanyLandingPage = () => {
             in early talent
           </p>
         </div>
-        <div className={candidateIndexStyles.explanation2}>
+        <div className={routeIndexStyles.explanation2}>
           <p
             style={{
               background: "var(--color-6)",
@@ -145,7 +145,7 @@ const CompanyLandingPage = () => {
           </p>
           <Image src="/jobpost.jpg" alt="" width={406.69} height={510.54} />
         </div>
-        <div className={candidateIndexStyles.explanation2}>
+        <div className={routeIndexStyles.explanation2}>
           <Image
             src="/message-candidate.jpg"
             alt=""
@@ -161,7 +161,7 @@ const CompanyLandingPage = () => {
             <b>Meet with your top applicants</b> for interviews.
           </p>
         </div>
-        <div className={candidateIndexStyles.explanation2}>
+        <div className={routeIndexStyles.explanation2}>
           <p
             style={{
               background: "var(--color-7)",
@@ -174,7 +174,7 @@ const CompanyLandingPage = () => {
           <Image src="/filter.jpg" alt="" width={408.87} height={481.32} />
         </div>
         <h2>Why use Graddeo for your early talent recruiting?</h2>
-        <div className={candidateIndexStyles.details}>
+        <div className={routeIndexStyles.details}>
           <Image
             src="/companyindex.png"
             alt=""
@@ -188,7 +188,7 @@ const CompanyLandingPage = () => {
               paddingTop: "1em",
               border: "solid #000 2px",
             }}
-            className={candidateIndexStyles.sectionPad}
+            className={routeIndexStyles.sectionPad}
           >
             <div
               style={{

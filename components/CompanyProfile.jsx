@@ -3,7 +3,7 @@ import profileStyles from "../styles/profile.module.css";
 import utilityStyles from "../styles/utilities.module.css";
 import cardStyles from "../styles/card.module.css";
 import { HiUser, HiUsers } from "react-icons/hi";
-import { MdDelete, MdLogout } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import {
   BsInstagram,
   BsLinkedin,

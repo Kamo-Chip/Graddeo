@@ -46,7 +46,7 @@ const JobDetails = ({
           jobId: job.jobId,
         }),
       });
-      console.log("applying");
+      window.open(`http://${job.applicationURL}`);
     } else {
       router.push("/login");
     }
@@ -54,8 +54,6 @@ const JobDetails = ({
 
   return (
     <div className={utilityStyles.containerFlex}>
-      {console.log(bookmarkedJobs)}
-      {console.log(job)}
       <div className={utilityStyles.form}>
         <div className={jobDetailStyles.header}>
           <div
@@ -229,14 +227,14 @@ const JobDetails = ({
                   )}
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <span
-                      style={{ marginLeft: ".5rem" }}
+                      style={{ marginLeft: "1.5rem" }}
                       className={utilityStyles.headerTextNSmall}
                     >
                       {job.hiringManager.name}
                     </span>
                     <a
                       href={`mailto:${job.hiringManager.email}`}
-                      style={{ marginLeft: ".5rem", marginTop: ".5rem" }}
+                      style={{ marginLeft: "1.5rem", marginTop: ".5rem" }}
                       className={utilityStyles.formButton}
                     >
                       Message
@@ -269,9 +267,9 @@ const JobDetails = ({
                     key={`benefit${idx}`}
                     className={utilityStyles.itemBar}
                     style={{
-                      backgroundColor: "var(--color-5)",
-                      color: "#fff",
-                      marginBottom: ".5rem",
+                      backgroundColor: "#fff",
+                      color: "#000",
+                      margin: "0 .5rem .5rem 0"
                     }}
                   >
                     {benefit}
@@ -290,7 +288,7 @@ const JobDetails = ({
                   <div
                     key={`benefit${idx}`}
                     className={utilityStyles.itemBar}
-                    style={{ backgroundColor: "#fff", marginBottom: ".5rem" }}
+                    style={{ backgroundColor: "#fff", margin: "0 .5rem .5rem 0"}}
                   >
                     {benefit}
                   </div>
