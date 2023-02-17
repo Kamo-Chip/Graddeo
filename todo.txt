@@ -6,6 +6,7 @@ What I do:
 - Facilitate communication between companies and universities
 
 Tasks
+- Add location code for phone number (+27)
 - Cap the total number of job posts that a company can have
 - Add sign up pop-up when preview is clicked
 - Make about more personal

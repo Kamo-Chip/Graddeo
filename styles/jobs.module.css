@@ -14,7 +14,7 @@
   display: flex;
   align-items: center;
   border: solid #000 2px;
-  box-shadow: #000 5px 5px;
+  /* box-shadow: #000 5px 5px; */
   padding: .5em;
 }
 

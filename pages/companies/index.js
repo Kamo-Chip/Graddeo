@@ -103,7 +103,7 @@ const CompanyLandingPage = () => {
           style={{
             background: "var(--color-3)",
             color: "#000",
-            border: "solid #000 2px",
+            // border: "solid #000 2px",
           }}
           className={routeIndexStyles.sectionPad}
         >
@@ -186,7 +186,7 @@ const CompanyLandingPage = () => {
               background: "var(--color-1)",
               color: "#000",
               paddingTop: "1em",
-              border: "solid #000 2px",
+              // border: "solid #000 2px",
             }}
             className={routeIndexStyles.sectionPad}
           >

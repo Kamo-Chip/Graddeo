@@ -87,7 +87,7 @@ const CandidateLandingPage = () => {
           style={{
             background: "var(--color-5)",
             color: "#fff",
-            border: "solid #000 2px",
+            // border: "solid #000 2px",
           }}
           className={routeIndexStyles.sectionPad}
         >
@@ -155,7 +155,7 @@ const CandidateLandingPage = () => {
             style={{
               background: "var(--color-3)",
               color: "#000",
-              border: "solid #000 2px",
+              // border: "solid #000 2px",
               paddingTop: "1em",
             }}
             className={routeIndexStyles.sectionPad}

@@ -18,7 +18,7 @@
   width: 300px;
   text-align: center;
   font-size: 1.5rem;
-  font-family: clashDisplayRegular;
+  font-family: satoshi;
   font-weight: bold;
 }
 
@@ -48,7 +48,7 @@
 .explanation2 p {
   font-size: 2rem;
   padding: .5em 2em;
-  border: solid #000 2px;
+  /* border: solid #000 2px; */
 }
 
 .details {
@@ -72,6 +72,7 @@
 
 .sectionPad {
   padding: 0em 2em 1em 2em;
+  width: 90%;
 }
 
 .section1 {
@@ -81,7 +82,7 @@
   align-items: center;
   background-color: var(--color-4);
   padding-bottom: 2em;
-  border: solid #000 2px;
+  /* border: solid #000 2px; */
 }
 
 @media screen and (max-width: 1024px){
@@ -107,6 +108,10 @@
 }
 
 @media screen and (max-width: 768px) {
+  .sectionPad {
+    width: 100%;
+  }
+
   .explanation2 {
     flex-direction: column;
     justify-content: center;

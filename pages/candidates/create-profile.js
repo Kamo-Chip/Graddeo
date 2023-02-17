@@ -693,7 +693,7 @@ const CreateCandidateProfile = () => {
           />
           <FieldContainer
             name="gender"
-            label="Biological Sex"
+            label="Gender"
             smallText="Will be beneficial in the case that companies are looking to
             diversify their team. For example looking to employ more women"
             fieldType={

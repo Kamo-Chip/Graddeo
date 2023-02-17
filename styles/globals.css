@@ -77,20 +77,20 @@ input, select, textarea {
 button {
   border-radius: 5px;
   width: fit-content;
-  border: solid #000 2px;
+  border: none;
+  /* border: solid #000 2px; */
   padding: 0.5em;
   color: #000;
   cursor: pointer;
-  font-family: clashDisplayRegular;
-  font-weight: 600;
+  font-family: clashDisplayMedium;
   padding: .35em 1em;
-  box-shadow: #000 3px 3px;
+  /* box-shadow: #000 3px 3px; */
   font-size: 1.125rem;
-  transition: box-shadow 500ms;
+  transition: transform 500ms;
 }
 
 button:hover {
-  box-shadow: none;
+  transform: translateY(-5px);
 }
 
 input:focus,
